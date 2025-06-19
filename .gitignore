@@ -1,0 +1,38 @@
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Plugin directories
+plugins/
+dot_config/*/plugins/
+
+# Vim/Neovim
+*.swp
+*.swo
+*.swn
+*~
+.netrwhist
+lazy-lock.json
+
+# Misc
+*.lock
+*.log
+tags
+.git
+node_modules/
+
+
+# Neovim specific
+tt.*
+.tests
+doc/tags
+debug
+.repro
+foo.*
+*.log
+data

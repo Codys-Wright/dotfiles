@@ -36,3 +36,5 @@ debug
 foo.*
 *.log
 data
+dot_config/nvim.bak/
+dot_config/tmux.bak/

@@ -1,3 +1,7 @@
 *key
 .idea
 result
+
+secrets.json
+.DS.Store
+

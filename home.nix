@@ -23,6 +23,8 @@
     killall
     mosh
     procs
+    mprocs
+    yazi
     ripgrep
     sd
     tmux
@@ -141,18 +143,18 @@ in {
         side-by-side = true;
         navigate = true;
       };
-      userEmail = ""; # FIXME: set your git email
-      userName = ""; #FIXME: set your git username
+      userEmail = "acodywright@gmail.com"; # FIXME: set your git email
+      userName = "codys-wright"; #FIXME: set your git username
       extraConfig = {
         # FIXME: uncomment the next lines if you want to be able to clone private https repos
-        # url = {
-        #   "https://oauth2:${secrets.github_token}@github.com" = {
-        #     insteadOf = "https://github.com";
-        #   };
-        #   "https://oauth2:${secrets.gitlab_token}@gitlab.com" = {
-        #     insteadOf = "https://gitlab.com";
-        #   };
-        # };
+        url = {
+          "https://oauth2:${secrets.github_token}@github.com" = {
+            insteadOf = "https://github.com";
+          };
+          "https://oauth2:${secrets.gitlab_token}@gitlab.com" = {
+            insteadOf = "https://gitlab.com";
+          };
+        };
         push = {
           default = "current";
           autoSetupRemote = true;
@@ -182,7 +184,9 @@ in {
           }
           + "/extras/kanagawa.fish")}
 
+
         set -U fish_greeting
+        fish_add_path --append /mnt/c/Users/Cody/scoop/apps/win32yank/0.1.1/
       '';
       functions = {
         refresh = "source $HOME/.config/fish/config.fish";
@@ -229,8 +233,8 @@ in {
         pbcopy = "/mnt/c/Windows/System32/clip.exe";
         pbpaste = "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -command 'Get-Clipboard'";
         explorer = "/mnt/c/Windows/explorer.exe";
-        
-        # To use code as the command, uncomment the line below. Be sure to replace [my-user] with your username. 
+
+        # To use code as the command, uncomment the line below. Be sure to replace [my-user] with your username.
         # If your code binary is located elsewhere, adjust the path as needed.
         # code = "/mnt/c/Users/[my-user]/AppData/Local/Programs/'Microsoft VS Code'/bin/code";
       };

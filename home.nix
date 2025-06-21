@@ -271,8 +271,21 @@ in {
     };
   };
 
-  xdg.configFile."nvim" = {
-    source = ./nvim;
-    recursive = true;
+
+# Symlink config and lua, but copy the lock file
+  xdg.configFile."nvim/init.lua".source = ./nvim/init.lua;
+  xdg.configFile."nvim/lua".source = {
+	  source = ./nvim/lua;
+	  recursive = true;
+  };
+
+  xdg.configFile."nvim/lazy-lock.json" = {
+    source = lazyLockJson;
+    onChange = ''
+      cp ${lazyLockJson} $HOME/.config/nvim/lazy-lock.json
+    '';
+    # `onChange` helps keep Nix from being overly aggressive about overwriting it
+    # but you can omit it if you want
+    # NOTE: This is still a copy, so it is writable
   };
 }

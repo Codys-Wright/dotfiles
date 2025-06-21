@@ -153,3 +153,15 @@ this project uses a flat layout without any nesting or modularization.
   - NixOS options are set here
 - `home.nix` is where packages, dotfiles, terminal tools, environment variables
   and aliases are configured
+
+## Tmux Plugin Manager (TPM) Setup
+
+This repo uses [TPM](https://github.com/tmux-plugins/tpm) as a git submodule for managing tmux plugins.
+
+**After cloning this repository, run:**
+
+```bash
+git submodule update --init --recursive
+```
+
+This will ensure TPM is installed in the correct location for tmux to use.

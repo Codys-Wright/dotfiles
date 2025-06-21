@@ -6,6 +6,7 @@
   nix-index-database,
   ...
 }: let
+  nvimConfig = ./nvim;
   unstable-packages = with pkgs.unstable; [
     # FIXME: select your core binaries that you always want on the bleeding-edge
     bat
@@ -78,6 +79,24 @@ in {
     nix-index-database.hmModules.nix-index
   ];
 
+
+home.file.".config/nvim/init.lua".source = "${nvimConfig}/init.lua";
+
+home.file.".config/nvim/lua" = {
+source = "${nvimConfig}/lua";
+recursive = true;
+};
+
+home.file.".config/nvim/lazy-lock/json" = {
+source = "${nvimConfig}/lazy-lock.json";
+onChange = ''
+cp ${nvimConfig}/lazy-lock.json" $HOME/.config/nvim/lazy-lock.json;
+'';
+};
+
+
+home.stateVersion = "23.11";
+
   home.stateVersion = "22.11";
 
   home = {
@@ -98,6 +117,9 @@ in {
       # pkgs.some-package
       # pkgs.unstable.some-other-package
     ];
+
+
+
 
   programs = {
     home-manager.enable = true;
@@ -272,20 +294,4 @@ in {
   };
 
 
-# Symlink config and lua, but copy the lock file
-  xdg.configFile."nvim/init.lua".source = ./nvim/init.lua;
-  xdg.configFile."nvim/lua".source = {
-	  source = ./nvim/lua;
-	  recursive = true;
-  };
-
-  xdg.configFile."nvim/lazy-lock.json" = {
-    source = lazyLockJson;
-    onChange = ''
-      cp ${lazyLockJson} $HOME/.config/nvim/lazy-lock.json
-    '';
-    # `onChange` helps keep Nix from being overly aggressive about overwriting it
-    # but you can omit it if you want
-    # NOTE: This is still a copy, so it is writable
-  };
 }

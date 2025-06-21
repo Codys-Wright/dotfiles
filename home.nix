@@ -72,6 +72,13 @@
     shellcheck
     shfmt
     statix # nix
+
+
+    #c compilers
+    gcc
+    clang
+
+
   ];
 in {
   imports = [
@@ -271,8 +278,11 @@ in {
     };
   };
 
-  xdg.configFile."nvim" = {
-    source = ./nvim;
+  xdg.configFile."nvim/init.lua" = {
+    source = ./nixos-modules/user/app/nvim/init.lua;
+  };
+  xdg.configFile."nvim/lua" = {
+    source = ./nixos-modules/user/app/nvim/lua;
     recursive = true;
   };
 }

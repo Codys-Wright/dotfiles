@@ -1,3 +1,4 @@
+#comment
 {
   description = "NixOS configuration";
 

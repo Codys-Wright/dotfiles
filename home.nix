@@ -253,5 +253,26 @@ in {
         }
       ];
     };
+
+    neovim = {
+      enable = true;
+      package = pkgs.neovim-unwrapped;
+
+      withNodeJs = true;
+      withPython3 = true;
+      withRuby = true;
+
+      extraPackages = with pkgs; [
+        nil # Nix language server
+        nodePackages.vscode-langservers-extracted
+        nodePackages.yaml-language-server
+        tree-sitter
+      ];
+    };
+  };
+
+  xdg.configFile."nvim" = {
+    source = ./nvim;
+    recursive = true;
   };
 }

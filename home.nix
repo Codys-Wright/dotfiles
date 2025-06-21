@@ -79,24 +79,6 @@ in {
     nix-index-database.hmModules.nix-index
   ];
 
-
-home.file.".config/nvim/init.lua".source = "${nvimConfig}/init.lua";
-
-home.file.".config/nvim/lua" = {
-source = "${nvimConfig}/lua";
-recursive = true;
-};
-
-home.file.".config/nvim/lazy-lock/json" = {
-source = "${nvimConfig}/lazy-lock.json";
-onChange = ''
-cp ${nvimConfig}/lazy-lock.json" $HOME/.config/nvim/lazy-lock.json;
-'';
-};
-
-
-home.stateVersion = "23.11";
-
   home.stateVersion = "22.11";
 
   home = {
@@ -106,6 +88,21 @@ home.stateVersion = "23.11";
     sessionVariables.EDITOR = "nvim";
     # FIXME: set your preferred $SHELL
     sessionVariables.SHELL = "/etc/profiles/per-user/${username}/bin/fish";
+
+    # Neovim configuration files
+    file.".config/nvim/init.lua".source = "${nvimConfig}/init.lua";
+    file.".config/nvim/lazy-lock.json".text = builtins.readFile "${nvimConfig}/lazy-lock.json";
+    file.".config/nvim/lua" = {
+      source = "${nvimConfig}/lua";
+      recursive = true;
+    };
+    file.".config/nvim/.stylua.toml".source = "${nvimConfig}/.stylua.toml";
+    file.".config/nvim/stylua.toml".source = "${nvimConfig}/stylua.toml";
+    file.".config/nvim/.gitignore".source = "${nvimConfig}/.gitignore";
+    file.".config/nvim/.neoconf.json".source = "${nvimConfig}/.neoconf.json";
+    file.".config/nvim/README.md".source = "${nvimConfig}/README.md";
+    file.".config/nvim/LICENSE".source = "${nvimConfig}/LICENSE";
+    file.".config/nvim/lazyvim.json".source = "${nvimConfig}/lazyvim.json";
   };
 
   home.packages =
@@ -117,9 +114,6 @@ home.stateVersion = "23.11";
       # pkgs.some-package
       # pkgs.unstable.some-other-package
     ];
-
-
-
 
   programs = {
     home-manager.enable = true;
@@ -221,6 +215,7 @@ home.stateVersion = "23.11";
             set -gx $arr[1] $arr[2]
           end
         '';
+        sync-lazy-lock = "cp ~/.config/nvim/lazy-lock.json ~/Documents/Development/z-throwaway/dotfiles%20test/nvim/lazy-lock.json && echo 'Lazy lock file synced to dotfiles'";
       };
       shellAbbrs =
         {
@@ -293,5 +288,28 @@ home.stateVersion = "23.11";
     };
   };
 
+  systemd.user.paths.lazy-lock-watcher = {
+    Unit = {
+      Description = "Watch for lazy-lock.json changes";
+      After = "graphical-session.target";
+    };
+    Path = {
+      PathChanged = "%h/.config/nvim/lazy-lock.json";
+    };
+    Install = {
+      WantedBy = "paths.target";
+    };
+  };
 
+  systemd.user.services.lazy-lock-watcher = {
+    Unit = {
+      Description = "Sync lazy-lock.json on change";
+      After = "graphical-session.target";
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = "${pkgs.bash}/bin/bash -c 'cp ~/.config/nvim/lazy-lock.json ~/Documents/Development/z-throwaway/dotfiles%20test/nvim/lazy-lock.json && echo \"$(date): Lazy lock file synced\" >> ~/.local/share/lazy-lock-sync.log'";
+      User = username;
+    };
+  }; 
 }

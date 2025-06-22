@@ -18,6 +18,9 @@
         username = "fasttrackstudio"; # username
         name = "Fast Track Studio"; # name/identifier
         shell = "fish"; # default shell
+        email = "acodywright@gmail.com"; # git email
+        gitUsername = "codys-wright"; # git username
+        enableGitOAuth = true; # enable OAuth for private repos
       };
 
       secrets = builtins.fromJSON (builtins.readFile "${self}/secrets.json");

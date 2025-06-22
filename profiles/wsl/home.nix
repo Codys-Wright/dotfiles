@@ -86,7 +86,13 @@ in {
     nix-index-database.hmModules.nix-index
     ../../nixos-modules/user/app/terminal/tmux/tmux.nix
     ../../nixos-modules/user/app/nvim/nvim.nix
+    ../../nixos-modules/user/app/git/git.nix
+    ../../nixos-modules/user/app/git/gitui.nix
   ];
+
+  # Custom module configuration
+  my.git.enable = true;
+  my.gitui.enable = true;
 
   home.stateVersion = "22.11";
 
@@ -114,6 +120,7 @@ in {
     nix-index.enable = true;
     nix-index.enableFishIntegration = true;
     nix-index-database.comma.enable = true;
+
 
     # FIXME: disable this if you don't want to use the starship prompt
     starship.enable = true;
@@ -144,39 +151,6 @@ in {
     direnv.enable = true;
     direnv.nix-direnv.enable = true;
 
-    git = {
-      enable = true;
-      package = pkgs.unstable.git;
-      delta.enable = true;
-      delta.options = {
-        line-numbers = true;
-        side-by-side = true;
-        navigate = true;
-      };
-      userEmail = "acodywright@gmail.com"; # FIXME: set your git email
-      userName = "codys-wright"; #FIXME: set your git username
-      extraConfig = {
-        # FIXME: uncomment the next lines if you want to be able to clone private https repos
-        url = {
-          "https://oauth2:${secrets.github_token}@github.com" = {
-            insteadOf = "https://github.com";
-          };
-          "https://oauth2:${secrets.gitlab_token}@gitlab.com" = {
-            insteadOf = "https://gitlab.com";
-          };
-        };
-        push = {
-          default = "current";
-          autoSetupRemote = true;
-        };
-        merge = {
-          conflictstyle = "diff3";
-        };
-        diff = {
-          colorMoved = "default";
-        };
-      };
-    };
 
     # FIXME: This is my fish config - you can fiddle with it if you want
     fish = {

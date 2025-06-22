@@ -1,0 +1,30 @@
+{
+  config,
+  pkgs,
+  ...
+}: {
+  programs.neovim = {
+    enable = true;
+    package = pkgs.neovim-unwrapped;
+
+    withNodeJs = true;
+    withPython3 = true;
+    withRuby = true;
+
+    extraPackages = with pkgs; [
+      nil # Nix language server
+      nodePackages.vscode-langservers-extracted
+      nodePackages.yaml-language-server
+      tree-sitter
+    ];
+  };
+
+  # Configure nvim config files
+  xdg.configFile."nvim/init.lua" = {
+    source = ./init.lua;
+  };
+  xdg.configFile."nvim/lua" = {
+    source = ./lua;
+    recursive = true;
+  };
+}

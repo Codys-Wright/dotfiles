@@ -43,7 +43,7 @@
 
   home-manager.users.${userSettings.username} = {
     imports = [
-      (./. + "/profiles" + ("/" + systemSettings.profile) + "/home.nix")
+      (../../. + "/profiles" + ("/" + systemSettings.profile) + "/home.nix")
     ];
   };
 

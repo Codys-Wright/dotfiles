@@ -6,7 +6,7 @@
   ...
 }: {
   imports = [
-    ../../wsl.nix
+    ./wsl.nix
   ];
 
   # Use systemSettings and userSettings passed from flake

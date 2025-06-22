@@ -28,7 +28,6 @@
     yazi
     ripgrep
     sd
-    tmux
     tree
     unzip
     vim
@@ -85,6 +84,8 @@
 in {
   imports = [
     nix-index-database.hmModules.nix-index
+    ../../nixos-modules/user/app/terminal/tmux/tmux.nix
+    ../../nixos-modules/user/app/nvim/nvim.nix
   ];
 
   home.stateVersion = "22.11";
@@ -156,14 +157,14 @@ in {
       userName = "codys-wright"; #FIXME: set your git username
       extraConfig = {
         # FIXME: uncomment the next lines if you want to be able to clone private https repos
-        # url = {
-        #   "https://oauth2:${secrets.github_token}@github.com" = {
-        #     insteadOf = "https://github.com";
-        #   };
-        #   "https://oauth2:${secrets.gitlab_token}@gitlab.com" = {
-        #     insteadOf = "https://gitlab.com";
-        #   };
-        # };
+        url = {
+          "https://oauth2:${secrets.github_token}@github.com" = {
+            insteadOf = "https://github.com";
+          };
+          "https://oauth2:${secrets.gitlab_token}@gitlab.com" = {
+            insteadOf = "https://gitlab.com";
+          };
+        };
         push = {
           default = "current";
           autoSetupRemote = true;
@@ -262,29 +263,5 @@ in {
         }
       ];
     };
-
-    neovim = {
-      enable = true;
-      package = pkgs.neovim-unwrapped;
-
-      withNodeJs = true;
-      withPython3 = true;
-      withRuby = true;
-
-      extraPackages = with pkgs; [
-        nil # Nix language server
-        nodePackages.vscode-langservers-extracted
-        nodePackages.yaml-language-server
-        tree-sitter
-      ];
-    };
-  };
-
-  xdg.configFile."nvim/init.lua" = {
-    source = ../../nixos-modules/user/app/nvim/init.lua;
-  };
-  xdg.configFile."nvim/lua" = {
-    source = ../../nixos-modules/user/app/nvim/lua;
-    recursive = true;
   };
 }

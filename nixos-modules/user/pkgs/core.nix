@@ -20,37 +20,43 @@
   };
 
   config = lib.mkIf config.my.packages.core.enable {
-    home.packages = with pkgs; [
-      # Essential CLI utilities
-      bat
-      bottom
-      coreutils
-      curl
-      du-dust
-      fd
-      findutils
-      fx
-      htop
-      jq
-      killall
-      mosh
-      procs
-      mprocs
-      yazi
-      ripgrep
-      sd
-      tree
-      unzip
-      vim
-      wget
-      zip
-    ] ++ lib.optionals config.my.packages.core.includeUnstable (with pkgs.unstable; [
-      # Bleeding-edge versions when available
-      bat
-      bottom
-      fd
-      ripgrep
-      tree
-    ]);
+    home.packages = with pkgs; 
+      # Packages available in both stable and unstable (use unstable if enabled)
+      (if config.my.packages.core.includeUnstable 
+       then (with pkgs.unstable; [
+         bat
+         bottom
+         fd
+         ripgrep
+         tree
+       ])
+       else [
+         bat
+         bottom
+         fd
+         ripgrep
+         tree
+       ]) ++
+      
+      # Packages that we always use from stable
+      [
+        coreutils
+        curl
+        du-dust
+        findutils
+        fx
+        htop
+        jq
+        killall
+        mosh
+        procs
+        mprocs
+        yazi
+        sd
+        unzip
+        vim
+        wget
+        zip
+      ];
   };
 }

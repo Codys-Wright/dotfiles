@@ -1,89 +1,30 @@
 {
-  # FIXME: uncomment the next line if you want to reference your GitHub/GitLab access tokens and other secrets
   secrets,
   pkgs,
   userSettings,
   systemSettings,
   nix-index-database,
   ...
-}: let
-  unstable-packages = with pkgs.unstable; [
-    # FIXME: select your core binaries that you always want on the bleeding-edge
-    bat
-    bottom
-    coreutils
-    curl
-    du-dust
-    fd
-    findutils
-    fx
-    git
-    git-crypt
-    htop
-    jq
-    killall
-    mosh
-    procs
-    mprocs
-    yazi
-    ripgrep
-    sd
-    tree
-    unzip
-    vim
-    wget
-    zip
-
-    #AI related stuff
-    claude-code
-  ];
-
-  stable-packages = with pkgs; [
-    # FIXME: customize these stable packages to your liking for the languages that you use
-
-    # FIXME: you can add plugins, change keymaps etc using (jeezyvim.nixvimExtend {})
-    # https://github.com/LGUG2Z/JeezyVim#extending
-    jeezyvim
-
-    # key tools
-    gh # for bootstrapping
-    just
-
-    # core languages
-    rustup
-
-    # rust stuff
-    cargo-cache
-    cargo-expand
-
-    # local dev stuf
-    mkcert
-    httpie
-
-    # treesitter
-    tree-sitter
-
-    # language servers
-    nodePackages.vscode-langservers-extracted # html, css, json, eslint
-    nodePackages.yaml-language-server
-    nil # nix
-
-    # formatters and linters
-    alejandra # nix
-    deadnix # nix
-    nodePackages.prettier
-    shellcheck
-    shfmt
-    statix # nix
-
-    #c compilers
-    gcc
-
-    gnumake
-  ];
-in {
+}: {
   imports = [
+    # NixOS home-manager integrations
     nix-index-database.hmModules.nix-index
+    
+    # Package collections
+    ../../nixos-modules/user/pkgs/core.nix
+    ../../nixos-modules/user/pkgs/development.nix
+    ../../nixos-modules/user/pkgs/nix-tools.nix
+    ../../nixos-modules/user/pkgs/ai-tools.nix
+    
+    # Language support
+    ../../nixos-modules/user/lang/lang.nix
+    
+    # Shell configuration
+    ../../nixos-modules/user/shell/fish.nix
+    ../../nixos-modules/user/shell/starship.nix
+    ../../nixos-modules/user/shell/cli-integrations.nix
+    
+    # App modules
     ../../nixos-modules/user/app/terminal/tmux/tmux.nix
     ../../nixos-modules/user/app/nvim/nvim.nix
     ../../nixos-modules/user/app/git/git.nix
@@ -91,158 +32,70 @@ in {
   ];
 
   # WSL Profile Configuration
-  # Enable git with OAuth for development work
-  my.git = {
-    enable = true;
-    enableOAuth = true; # Enable for private repo access
-    enableDelta = true; # Better diff viewing
+  # Enable package collections for WSL development environment
+  my.packages = {
+    core.enable = true;                    # Essential CLI utilities
+    development.enable = true;             # Development tools and LSPs
+    nixTools.enable = true;                # Nix formatting and linting
+    aiTools.enable = true;                 # AI development tools
   };
   
-  # Enable gitui for terminal git interface
-  my.gitui.enable = true;
+  # Enable language support for WSL development
+  my.languages = {
+    rust.enable = true;                    # Rust development
+    cc.enable = true;                      # C/C++ development
+    python.enable = true;                  # Python development
+    # android.enable = false;              # Not needed for WSL
+    # godot.enable = false;                # Not needed for WSL  
+    # haskell.enable = false;              # Not needed for WSL
+  };
+  
+  # Enable shell configuration for WSL
+  my.shell = {
+    fish = {
+      enable = true;
+      enableWSLIntegration = true;         # WSL clipboard and explorer integration
+      enableKanagawaTheme = true;          # Consistent theming
+    };
+    starship.enable = true;                # Modern prompt
+    cliIntegrations.enable = true;         # FZF, zoxide, direnv, etc.
+  };
+  
+  # Enable development apps for WSL
+  my.git = {
+    enable = true;
+    enableOAuth = true;                    # Enable for private repo access
+    enableDelta = true;                    # Better diff viewing
+  };
+  
+  my.gitui.enable = true;                  # Terminal git interface
 
   home.stateVersion = "22.11";
 
   home = {
-    username = "${userSettings.username}";
+    username = userSettings.username;
     homeDirectory = "/home/${userSettings.username}";
-
-    sessionVariables.EDITOR = "nvim";
-    # FIXME: set your preferred $SHELL
-    sessionVariables.SHELL = "/etc/profiles/per-user/${userSettings.username}/bin/${userSettings.shell}";
+    
+    sessionVariables = {
+      EDITOR = userSettings.editor;
+      TERM = userSettings.term;
+      BROWSER = userSettings.browser;
+    };
   };
 
-  home.packages =
-    stable-packages
-    ++ unstable-packages
-    ++
-    # FIXME: you can add anything else that doesn't fit into the above two lists in here
-    [
-      # pkgs.some-package
-      # pkgs.unstable.some-other-package
-    ];
+  # WSL-specific packages not covered by collections
+  home.packages = with pkgs; [
+    # JeezyVim for enhanced neovim experience
+    jeezyvim
+    
+    # Additional packages specific to WSL development
+    # Add packages here that don't fit into the modular collections
+  ];
 
   programs = {
     home-manager.enable = true;
-    nix-index.enable = true;
-    nix-index.enableFishIntegration = true;
     nix-index-database.comma.enable = true;
-
-
-    # FIXME: disable this if you don't want to use the starship prompt
-    starship.enable = true;
-    starship.settings = {
-      aws.disabled = true;
-      gcloud.disabled = true;
-      kubernetes.disabled = false;
-      git_branch.style = "242";
-      directory.style = "blue";
-      directory.truncate_to_repo = false;
-      directory.truncation_length = 8;
-      python.disabled = true;
-      ruby.disabled = true;
-      hostname.ssh_only = false;
-      hostname.style = "bold green";
-    };
-
-    # FIXME: disable whatever you don't want
-    fzf.enable = true;
-    fzf.enableFishIntegration = true;
-    lsd.enable = true;
-    lsd.enableAliases = true;
-    zoxide.enable = true;
-    zoxide.enableFishIntegration = true;
-    zoxide.options = ["--cmd cd"];
-    broot.enable = true;
-    broot.enableFishIntegration = true;
-    direnv.enable = true;
-    direnv.nix-direnv.enable = true;
-
-
-    # FIXME: This is my fish config - you can fiddle with it if you want
-    fish = {
-      enable = true;
-      # FIXME: run 'scoop install win32yank' on Windows, then add this line with your Windows username to the bottom of interactiveShellInit
-      # fish_add_path --append /mnt/c/Users/<Your Windows Username>/scoop/apps/win32yank/0.1.1
-      interactiveShellInit = ''
-        ${pkgs.any-nix-shell}/bin/any-nix-shell fish --info-right | source
-
-        ${pkgs.lib.strings.fileContents (pkgs.fetchFromGitHub {
-            owner = "rebelot";
-            repo = "kanagawa.nvim";
-            rev = "de7fb5f5de25ab45ec6039e33c80aeecc891dd92";
-            sha256 = "sha256-f/CUR0vhMJ1sZgztmVTPvmsAgp0kjFov843Mabdzvqo=";
-          }
-          + "/extras/kanagawa.fish")}
-
-
-        set -U fish_greeting
-        fish_add_path --append /mnt/c/Users/Cody/scoop/apps/win32yank/0.1.1/
-      '';
-      functions = {
-        refresh = "source $HOME/.config/fish/config.fish";
-        take = ''mkdir -p -- "$1" && cd -- "$1"'';
-        ttake = "cd $(mktemp -d)";
-        show_path = "echo $PATH | tr ' ' '\n'";
-        posix-source = ''
-          for i in (cat $argv)
-            set arr (echo $i |tr = \n)
-            set -gx $arr[1] $arr[2]
-          end
-        '';
-      };
-      shellAbbrs =
-        {
-          gc = "nix-collect-garbage --delete-old";
-        }
-        # navigation shortcuts
-        // {
-          ".." = "cd ..";
-          "..." = "cd ../../";
-          "...." = "cd ../../../";
-          "....." = "cd ../../../../";
-        }
-        # git shortcuts
-        // {
-          gapa = "git add --patch";
-          grpa = "git reset --patch";
-          gst = "git status";
-          gdh = "git diff HEAD";
-          gp = "git push";
-          gph = "git push -u origin HEAD";
-          gco = "git checkout";
-          gcob = "git checkout -b";
-          gcm = "git checkout master";
-          gcd = "git checkout develop";
-          gsp = "git stash push -m";
-          gsa = "git stash apply stash^{/";
-          gsl = "git stash list";
-        };
-      shellAliases = {
-        jvim = "nvim";
-        lvim = "nvim";
-        pbcopy = "/mnt/c/Windows/System32/clip.exe";
-        pbpaste = "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -command 'Get-Clipboard'";
-        explorer = "/mnt/c/Windows/explorer.exe";
-
-        # To use code as the command, uncomment the line below. Be sure to replace [my-user] with your username.
-        # If your code binary is located elsewhere, adjust the path as needed.
-        # code = "/mnt/c/Users/[my-user]/AppData/Local/Programs/'Microsoft VS Code'/bin/code";
-      };
-      plugins = [
-        {
-          inherit (pkgs.fishPlugins.autopair) src;
-          name = "autopair";
-        }
-        {
-          inherit (pkgs.fishPlugins.done) src;
-          name = "done";
-        }
-        {
-          inherit (pkgs.fishPlugins.sponge) src;
-          name = "sponge";
-        }
-      ];
-    };
+    
+    # Additional programs not covered by shell modules can be configured here
   };
 }

@@ -79,6 +79,45 @@ nixos-modules/user/app/
 - **gitui.nix**: GitUI terminal interface module
 - Add new apps in `nixos-modules/user/app/` and import in profile's home.nix
 
+### Usage Examples
+```nix
+# In profile home.nix
+{
+  imports = [
+    ../../nixos-modules/user/lang/lang.nix
+  ];
+  
+  # Enable specific languages for this profile
+  my.languages = {
+    rust.enable = true;        # Enables rustup
+    cc.enable = true;          # Enables gcc, cmake, autotools
+    python.enable = true;      # Enables python3Full, imath, pystring
+    android.enable = false;    # Disabled for this profile
+  };
+}
+```
+
+### Package Collections (`nixos-modules/user/pkgs/`)
+- **core.nix**: Essential CLI utilities (bat, fd, ripgrep, tree, etc.)
+- **development.nix**: Development tools and language servers (language-agnostic)
+- **rust.nix**: Rust ecosystem tools (rustup, cargo utilities) - *deprecated, use lang.nix*
+- **nix-tools.nix**: Nix formatting and linting tools
+- **ai-tools.nix**: AI development assistance tools
+
+### Language Support (`nixos-modules/user/lang/`)
+- **lang.nix**: Unified language support with per-language enable options
+  - `my.languages.rust.enable` - Rust development (rustup)
+  - `my.languages.cc.enable` - C/C++ development (gcc, cmake, autotools)
+  - `my.languages.python.enable` - Python development (python3Full, packages)
+  - `my.languages.haskell.enable` - Haskell development (stack, language server)
+  - `my.languages.android.enable` - Android development (tools, udev rules)
+  - `my.languages.godot.enable` - Godot game development
+
+### Shell Modules (`nixos-modules/user/shell/`)
+- **fish.nix**: Fish shell configuration with WSL integration
+- **starship.nix**: Starship prompt configuration
+- **cli-integrations.nix**: FZF, zoxide, broot, direnv integrations
+
 ### Module Development
 - **See nixos-modules/README.md** for detailed guide on creating custom modules
 - Follow LibrePhoenix pattern: `imports`, `options`, `config` sections

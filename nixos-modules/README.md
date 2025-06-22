@@ -201,6 +201,53 @@ nixos-modules/
     └── shell/                  # Shell configurations
 ```
 
+## Example Module: Language Support (lang.nix)
+
+```nix
+{ config, lib, pkgs, ... }:
+
+{
+  imports = [ ];
+  
+  options = {
+    my.languages = {
+      rust.enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Enable Rust development tools";
+      };
+      
+      python = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = "Enable Python development tools";
+        };
+        
+        includePackages = lib.mkOption {
+          type = lib.types.bool;
+          default = true;
+          description = "Include additional Python packages";
+        };
+      };
+    };
+  };
+  
+  config = {
+    home.packages = with pkgs; 
+      (lib.optionals config.my.languages.rust.enable [
+        rustup
+      ]) ++
+      (lib.optionals config.my.languages.python.enable ([
+        python3Full
+      ] ++ lib.optionals config.my.languages.python.includePackages [
+        imath
+        pystring
+      ]));
+  };
+}
+```
+
 ## Example Module: git.nix
 
 ```nix

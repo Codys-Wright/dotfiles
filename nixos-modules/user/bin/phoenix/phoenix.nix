@@ -268,12 +268,11 @@ in {
 
             # Step 3: Rebuild system
             echo "=== Building NixOS system configuration ==="
-            sudo nixos-rebuild switch --flake ${configDir} &> nixos-switch.log || (
-              echo "Build failed! Error log:"
-              cat nixos-switch.log | grep --color error
+            if ! sudo nixos-rebuild switch --flake ${configDir}; then
+              echo "Build failed!"
               popd > /dev/null
               exit 1
-            )
+            fi
 
             # Step 4: Fix permissions and rebuild home-manager
             sudo chown -R 1000:users ~/.cache/nix 2>/dev/null || true
@@ -400,12 +399,11 @@ in {
 
               # Step 2: Rebuild system
               echo "=== Building NixOS system configuration ==="
-              sudo nixos-rebuild switch --flake ${configDir} &> nixos-switch.log || (
-                echo "Build failed! Error log:"
-                cat nixos-switch.log | grep --color error
+              if ! sudo nixos-rebuild switch --flake ${configDir}; then
+                echo "Build failed!"
                 popd > /dev/null
                 exit 1
-              )
+              fi
 
               # Step 3: Fix permissions and rebuild home-manager
               sudo chown -R 1000:users ~/.cache/nix 2>/dev/null || true

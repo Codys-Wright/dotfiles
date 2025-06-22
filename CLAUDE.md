@@ -157,6 +157,15 @@ Individual application configurations:
   - Language server integration
   - Plugin management
 
+### Bin Modules (`nixos-modules/user/bin/`)
+
+System management and utility commands:
+
+- **`phoenix/phoenix.nix`**: Phoenix configuration management
+  - `my.phoenix.enable` - Enable Phoenix commands
+  - Interactive development workflow (edit + sync)
+  - Command aliases: `phe` (edit), `phs` (sync), `phu` (update), etc.
+
 ## Profile Examples
 
 ### WSL Development Profile
@@ -181,6 +190,9 @@ Individual application configurations:
     # App modules
     ../../nixos-modules/user/app/git/git.nix
     ../../nixos-modules/user/app/git/gitui.nix
+    
+    # Bin modules  
+    ../../nixos-modules/user/bin/phoenix/phoenix.nix
   ];
 
   # Enable package collections for development
@@ -374,6 +386,43 @@ sudo nixos-rebuild dry-build --flake ~/configuration
 - Follow LibrePhoenix pattern: `imports`, `options`, `config` sections
 - Use proper option types and defaults
 - Test modules individually before integrating
+
+### Shell Alias System
+Modules can define their own shell aliases that are automatically collected by the shell configuration:
+
+**In any module (example: mymodule.nix):**
+```nix
+options = {
+  my.mymodule.enable = lib.mkOption { ... };
+  
+  my.mymodule.aliases = lib.mkOption {
+    type = lib.types.attrsOf lib.types.str;
+    default = {
+      mm = "mymodule command";
+      mmc = "mymodule --config";
+    };
+    description = "Module command aliases";
+  };
+};
+```
+
+**In shell/fish.nix:**
+```nix
+shellAliases = {
+  # Built-in aliases
+} // lib.optionalAttrs (config.my.mymodule.enable or false) (config.my.mymodule.aliases or {});
+```
+
+**Benefits:**
+- **Shell-agnostic**: Works with fish, bash, zsh, etc.
+- **Modular**: Aliases stay with their modules
+- **Conditional**: Only added when module is enabled
+- **Customizable**: Users can override defaults per-module
+- **Reusable**: Profiles can selectively enable alias sets
+
+**Current alias modules:**
+- **Phoenix**: `phe` (edit), `phqe` (quick-edit), `phs` (sync), `phsu` (sync user), `phss` (sync system), `phu` (update), `phg` (upgrade), `phr` (refresh), `phpl` (pull), `phh` (harden), `phsf` (soften), `phgc` (gc)
+- **Git**: `gs` (status), `ga` (add), `gc` (commit), `gca` (commit -a), `gcam` (commit -am), `gp` (push), `gpl` (pull), `gd` (diff), `gds` (diff --staged), `gl` (log --oneline), `gb` (branch), `gco` (checkout), `gcb` (checkout -b)
 
 ## Maintenance
 

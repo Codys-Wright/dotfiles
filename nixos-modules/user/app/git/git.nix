@@ -41,6 +41,26 @@
       default = false;
       description = "Enable GPG signed commits";
     };
+
+    my.git.aliases = lib.mkOption {
+      type = lib.types.attrsOf lib.types.str;
+      default = {
+        gs = "git status";
+        ga = "git add";
+        gc = "git commit";
+        gca = "git commit -a";
+        gcam = "git commit -am";
+        gp = "git push";
+        gpl = "git pull";
+        gd = "git diff";
+        gds = "git diff --staged";
+        gl = "git log --oneline";
+        gb = "git branch";
+        gco = "git checkout";
+        gcb = "git checkout -b";
+      };
+      description = "Git command aliases";
+    };
   };
 
   config = {

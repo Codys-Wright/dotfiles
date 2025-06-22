@@ -65,30 +65,19 @@
         "..." = "cd ../../";
         "...." = "cd ../../../";
         "....." = "cd ../../../../";
-        # Git shortcuts
-        gapa = "git add --patch";
-        grpa = "git reset --patch";
-        gst = "git status";
-        gdh = "git diff HEAD";
-        gp = "git push";
-        gph = "git push -u origin HEAD";
-        gco = "git checkout";
-        gcob = "git checkout -b";
-        gcm = "git checkout master";
-        gcd = "git checkout develop";
-        gsp = "git stash push -m";
-        gsa = "git stash apply stash^{/";
-        gsl = "git stash list";
       };
       
       shellAliases = {
+        # Built-in fish aliases
         jvim = "nvim";
         lvim = "nvim";
       } // lib.optionalAttrs config.my.shell.fish.enableWSLIntegration {
+        # WSL-specific aliases
         pbcopy = "/mnt/c/Windows/System32/clip.exe";
         pbpaste = "/mnt/c/Windows/System32/WindowsPowerShell/v1.0/powershell.exe -command 'Get-Clipboard'";
         explorer = "/mnt/c/Windows/explorer.exe";
-      };
+      } // lib.optionalAttrs (config.my.phoenix.enable or false) (config.my.phoenix.aliases or {})
+        // lib.optionalAttrs (config.my.git.enable or false) (config.my.git.aliases or {});
       
       plugins = [
         {

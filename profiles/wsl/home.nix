@@ -29,6 +29,9 @@
     ../../nixos-modules/user/app/nvim/nvim.nix
     ../../nixos-modules/user/app/git/git.nix
     ../../nixos-modules/user/app/git/gitui.nix
+    
+    # Bin modules
+    ../../nixos-modules/user/bin/phoenix/phoenix.nix
   ];
 
   # WSL Profile Configuration
@@ -69,6 +72,7 @@
   };
   
   my.gitui.enable = true;                  # Terminal git interface
+  my.phoenix.enable = true;                # Phoenix configuration management
 
   home.stateVersion = "22.11";
 
@@ -90,6 +94,7 @@
     
     # Additional packages specific to WSL development
     # Add packages here that don't fit into the modular collections
+    # Note: Phoenix is available system-wide via nixos-modules/system/bin/phoenix
   ];
 
   programs = {

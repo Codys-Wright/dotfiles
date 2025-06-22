@@ -7,13 +7,6 @@
   inputs,
   ...
 }: {
-  imports = [
-    ../../nixos-modules/system/bin/phoenix/phoenix.nix
-  ];
-  
-  # Enable Phoenix configuration management
-  my.phoenix.enable = true;
-  
   # Use systemSettings for timezone
   time.timeZone = systemSettings.timezone;
 

@@ -291,9 +291,12 @@ in {
             # Step 6: Auto-commit
             if ! git diff --quiet || ! git diff --cached --quiet; then
               echo "=== Committing changes ==="
-              gen=$(nixos-rebuild list-generations | grep current || echo "Generation info unavailable")
+              gen_num=$(sudo nix-env --list-generations -p /nix/var/nix/profiles/system | tail -1 | awk '{print $1}' 2>/dev/null || echo "unknown")
+              timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+              nixos_version=$(nixos-version 2>/dev/null || echo "unknown")
+              commit_msg="$gen_num current  $timestamp  $nixos_version"
               git add -A
-              git commit -m "$gen" || echo "Warning: Commit failed or no changes to commit"
+              git commit -m "$commit_msg" || echo "Warning: Commit failed or no changes to commit"
             else
               echo "No changes to commit."
             fi
@@ -425,9 +428,12 @@ in {
               if [ "$NO_COMMIT" = false ]; then
                 if ! git diff --quiet || ! git diff --cached --quiet; then
                   echo "=== Committing changes ==="
-                  gen=$(nixos-rebuild list-generations | grep current || echo "Generation info unavailable")
+                  gen_num=$(sudo nix-env --list-generations -p /nix/var/nix/profiles/system | tail -1 | awk '{print $1}' 2>/dev/null || echo "unknown")
+                  timestamp=$(date '+%Y-%m-%d %H:%M:%S')
+                  nixos_version=$(nixos-version 2>/dev/null || echo "unknown")
+                  commit_msg="$gen_num current  $timestamp  $nixos_version"
                   git add -A
-                  git commit -m "$gen" || echo "Warning: Commit failed or no changes to commit"
+                  git commit -m "$commit_msg" || echo "Warning: Commit failed or no changes to commit"
                 else
                   echo "No changes to commit."
                 fi

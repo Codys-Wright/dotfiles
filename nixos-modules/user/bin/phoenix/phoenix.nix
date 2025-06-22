@@ -28,7 +28,12 @@ let
 
     # Rebuild home-manager
     echo "Building Home Manager configuration..."
-    home-manager switch --flake $CONFIG_DIR
+    if command -v home-manager >/dev/null 2>&1; then
+      home-manager switch --flake $CONFIG_DIR
+    else
+      echo "home-manager command not found, skipping user configuration rebuild"
+      echo "Note: User configuration changes will take effect after next login"
+    fi
 
     # Run post-sync hooks
     echo "Running post-sync hooks..."
@@ -57,7 +62,12 @@ let
 
     # Rebuild home-manager
     echo "Building Home Manager configuration..."
-    home-manager switch --flake $CONFIG_DIR
+    if command -v home-manager >/dev/null 2>&1; then
+      home-manager switch --flake $CONFIG_DIR
+    else
+      echo "home-manager command not found, skipping user configuration rebuild"
+      echo "Note: User configuration changes will take effect after next login"
+    fi
 
     # Run post-sync hooks
     echo "Running post-sync hooks..."
@@ -268,7 +278,12 @@ in {
             # Step 4: Fix permissions and rebuild home-manager
             sudo chown -R 1000:users ~/.cache/nix 2>/dev/null || true
             echo "=== Building Home Manager configuration ==="
-            home-manager switch --flake ${configDir}
+            if command -v home-manager >/dev/null 2>&1; then
+              home-manager switch --flake ${configDir}
+            else
+              echo "home-manager command not found, skipping user configuration rebuild"
+              echo "Note: User configuration changes will take effect after next login"
+            fi
 
             # Step 5: Format code
             echo "=== Formatting configuration ==="
@@ -322,7 +337,12 @@ in {
               echo "=== Phoenix Sync: User Only ==="
               sudo chown -R 1000:users ~/.cache/nix 2>/dev/null || true
               echo "Building Home Manager configuration..."
-              home-manager switch --flake ${configDir}
+              if command -v home-manager >/dev/null 2>&1; then
+                home-manager switch --flake ${configDir}
+              else
+                echo "home-manager command not found, skipping user configuration rebuild"
+                echo "Note: User configuration changes will take effect after next login"
+              fi
               echo "Running post-sync hooks..."
               if pgrep tmux > /dev/null 2>&1; then
                 echo "Reloading tmux configuration..."
@@ -342,6 +362,36 @@ in {
                 echo "=== Configuration Changes ==="
                 if git diff --quiet; then
                   echo "No changes detected."
+                  echo ""
+                  echo "What would you like to do?"
+                  echo "1) Continue with rebuild (useful for package updates)"
+                  echo "2) Update flake inputs and rebuild"
+                  echo "3) Exit without doing anything"
+                  echo ""
+                  printf "Choose an option (1-3): "
+                  read -r choice
+                  echo ""
+
+                  case "$choice" in
+                    "1")
+                      echo "Continuing with rebuild..."
+                      ;;
+                    "2")
+                      echo "Updating flake inputs first..."
+                      nix flake update
+                      echo "Flake inputs updated. Continuing with rebuild..."
+                      ;;
+                    "3")
+                      echo "Exiting without changes."
+                      popd > /dev/null
+                      exit 0
+                      ;;
+                    *)
+                      echo "Invalid choice. Exiting."
+                      popd > /dev/null
+                      exit 1
+                      ;;
+                  esac
                 else
                   git diff -U0 *.nix profiles/**/*.nix 2>/dev/null || git diff -U0 *.nix
                 fi
@@ -360,7 +410,12 @@ in {
               # Step 3: Fix permissions and rebuild home-manager
               sudo chown -R 1000:users ~/.cache/nix 2>/dev/null || true
               echo "=== Building Home Manager configuration ==="
-              home-manager switch --flake ${configDir}
+              if command -v home-manager >/dev/null 2>&1; then
+                home-manager switch --flake ${configDir}
+              else
+                echo "home-manager command not found, skipping user configuration rebuild"
+                echo "Note: User configuration changes will take effect after next login"
+              fi
 
               # Step 4: Format code (unless --no-format)
               if [ "$NO_FORMAT" = false ]; then

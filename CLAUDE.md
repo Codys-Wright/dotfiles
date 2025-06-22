@@ -62,7 +62,15 @@ nixos-modules/user/app/
 ### App Modules
 - **tmux.nix**: Handles tmux config, TPM (plugin manager), auto-installs plugins
 - **nvim.nix**: Handles neovim config, LSPs, config files
+- **git.nix**: Custom git module with configurable options (OAuth, delta, etc.)
+- **gitui.nix**: GitUI terminal interface module
 - Add new apps in `nixos-modules/user/app/` and import in profile's home.nix
+
+### Module Development
+- **See nixos-modules/README.md** for detailed guide on creating custom modules
+- Follow LibrePhoenix pattern: `imports`, `options`, `config` sections
+- Use `my.moduleName.*` for custom options with proper types and defaults
+- Leverage conditional configuration with `if-then-else` patterns
 
 ### Dependencies
 - Git is available system-wide (don't duplicate in app modules)

@@ -14,13 +14,17 @@
       };
 
       # ----- USER SETTINGS ----- #
-      userSettings = {
+      userSettings = rec {
         username = "fasttrackstudio"; # username
         name = "Fast Track Studio"; # name/identifier
+        email = "acodywright@gmail.com"; # email address
         shell = "fish"; # default shell
-        email = "acodywright@gmail.com"; # git email
-        gitUsername = "codys-wright"; # git username
-        enableGitOAuth = true; # enable OAuth for private repos
+        term = "ghostty"; # terminal selection
+        editor = "nvim"; # editor selection
+        browser = "firefox"; # browser selection
+        theme = "kanagawa"; # theme selection
+        font = "Intel One Mono"; # font selection
+        # fontPkg resolved in modules that need it
       };
 
       secrets = builtins.fromJSON (builtins.readFile "${self}/secrets.json");
@@ -31,7 +35,7 @@
         config = {
           allowUnfree = true;
           permittedInsecurePackages = [
-            # FIXME:: add any insecure packages you absolutely need here
+            # INFO:: add any insecure packages you absolutely need here
           ];
         };
 

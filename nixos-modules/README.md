@@ -58,11 +58,16 @@ options = {
 };
 ```
 
-### Using External Variables (userSettings)
+### Using Special Args (userSettings/systemSettings)
 
-Options can pull defaults from global `userSettings`:
+This configuration follows the [LibrePhoenix special args pattern](https://librephoenix.com/2024-01-28-program-a-modular-control-center-for-your-config-using-special-args-in-nixos-flakes.html) for centralized configuration management.
+
+Options can pull defaults from structured `userSettings` attribute sets:
 
 ```nix
+# Module parameters - include userSettings from special args
+{ config, lib, pkgs, userSettings, systemSettings, ... }:
+
 options = {
   my.git.userEmail = lib.mkOption {
     type = lib.types.str;
@@ -70,12 +75,60 @@ options = {
     description = "Git user email address";
   };
 
-  my.git.enableFeature = lib.mkOption {
+  my.git.enableOAuth = lib.mkOption {
     type = lib.types.bool;
-    default = userSettings.enableGitFeature or false;
-    description = "Enable special git feature";
+    default = userSettings.git.enableOAuth or false;
+    description = "Enable OAuth authentication";
+  };
+
+  my.terminal.defaultApp = lib.mkOption {
+    type = lib.types.str;
+    default = userSettings.terminal.defaultTerminal or "ghostty";
+    description = "Default terminal application";
   };
 };
+```
+
+### UserSettings Structure
+
+The `userSettings` attribute set contains **only essential variables** following the LibrePhoenix pattern:
+
+```nix
+userSettings = rec {
+  # User identity
+  username = "user";
+  name = "User Name";
+  email = "user@example.com";
+  
+  # App selections (what apps to use, not how to configure them)
+  shell = "fish";
+  term = "ghostty";
+  editor = "nvim";
+  browser = "firefox";
+  
+  # UI preferences
+  theme = "kanagawa";
+  font = "Intel One Mono";
+};
+```
+
+### Profile-Specific Configuration
+
+App-specific configurations are handled at the **profile level**, not in userSettings:
+
+```nix
+# In profiles/wsl/home.nix
+{
+  # Git configuration for WSL development environment
+  my.git = {
+    enable = true;
+    enableOAuth = true;  # Enable for private repos
+    enableDelta = true;  # Better diff viewing
+  };
+  
+  # Enable terminal git interface
+  my.gitui.enable = true;
+}
 ```
 
 ## Configuration Patterns
@@ -227,25 +280,33 @@ nixos-modules/
 - Keep module names descriptive and consistent
 - Group related options under the same namespace
 
-### 2. Default Values
-- Always provide sensible defaults
-- Use `userSettings` for global configuration
-- Use `or` operator for fallback values
+### 2. Special Args Usage
+- Include `userSettings` and `systemSettings` in module parameters when needed
+- Use essential userSettings variables (username, name, email, app selections)
+- Keep userSettings minimal - app-specific configuration goes in profiles
+- Use `rec` attribute sets in flake.nix for self-referencing values
 
-### 3. Type Safety
+### 3. Default Values
+- Always provide sensible defaults independent of userSettings structure
+- Use essential userSettings for identity: `userSettings.name`, `userSettings.email`
+- Use `or` operator for graceful fallbacks: `userSettings.email or "user@example.com"`
+- App-specific settings should have sensible defaults and be configured at profile level
+
+### 4. Type Safety
 - Always specify `type` in `lib.mkOption`
 - Use appropriate types: `bool`, `str`, `int`, `package`, `listOf`, etc.
 - Provide clear descriptions
 
-### 4. Conditional Logic
+### 5. Conditional Logic
 - Use `if-then-else` for conditional configuration
 - Use `//` operator to merge attribute sets
 - Keep conditions readable and well-commented
 
-### 5. Module Organization
+### 6. Module Organization
 - One module per tool/application
 - Group related modules in directories
 - Keep configuration files alongside modules
+- Follow the "control center" pattern for centralized configuration
 
 ## Common Option Types
 

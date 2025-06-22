@@ -20,13 +20,13 @@
 
     my.git.userName = lib.mkOption {
       type = lib.types.str;
-      default = userSettings.gitUsername or userSettings.name or "user";
+      default = userSettings.name or "user";
       description = "Git user name";
     };
 
     my.git.enableOAuth = lib.mkOption {
       type = lib.types.bool;
-      default = userSettings.enableGitOAuth or false;
+      default = false;
       description = "Enable OAuth authentication for GitHub and GitLab";
     };
 
@@ -34,6 +34,12 @@
       type = lib.types.bool;
       default = true;
       description = "Enable delta diff viewer";
+    };
+
+    my.git.enableSignedCommits = lib.mkOption {
+      type = lib.types.bool;
+      default = false;
+      description = "Enable GPG signed commits";
     };
   };
 

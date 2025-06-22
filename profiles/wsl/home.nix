@@ -90,8 +90,15 @@ in {
     ../../nixos-modules/user/app/git/gitui.nix
   ];
 
-  # Custom module configuration
-  my.git.enable = true;
+  # WSL Profile Configuration
+  # Enable git with OAuth for development work
+  my.git = {
+    enable = true;
+    enableOAuth = true; # Enable for private repo access
+    enableDelta = true; # Better diff viewing
+  };
+  
+  # Enable gitui for terminal git interface
   my.gitui.enable = true;
 
   home.stateVersion = "22.11";

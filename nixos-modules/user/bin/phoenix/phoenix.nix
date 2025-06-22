@@ -292,9 +292,7 @@ in {
             if ! git diff --quiet || ! git diff --cached --quiet; then
               echo "=== Committing changes ==="
               gen_num=$(sudo nix-env --list-generations -p /nix/var/nix/profiles/system | tail -1 | awk '{print $1}' 2>/dev/null || echo "unknown")
-              timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-              nixos_version=$(nixos-version 2>/dev/null || echo "unknown")
-              commit_msg="$gen_num current  $timestamp  $nixos_version"
+              commit_msg="{phoenix} gen $gen_num"
               git add -A
               git commit -m "$commit_msg" || echo "Warning: Commit failed or no changes to commit"
             else
@@ -429,9 +427,7 @@ in {
                 if ! git diff --quiet || ! git diff --cached --quiet; then
                   echo "=== Committing changes ==="
                   gen_num=$(sudo nix-env --list-generations -p /nix/var/nix/profiles/system | tail -1 | awk '{print $1}' 2>/dev/null || echo "unknown")
-                  timestamp=$(date '+%Y-%m-%d %H:%M:%S')
-                  nixos_version=$(nixos-version 2>/dev/null || echo "unknown")
-                  commit_msg="$gen_num current  $timestamp  $nixos_version"
+                  commit_msg="{phoenix} gen $gen_num"
                   git add -A
                   git commit -m "$commit_msg" || echo "Warning: Commit failed or no changes to commit"
                 else

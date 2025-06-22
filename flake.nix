@@ -2,96 +2,107 @@
 {
   description = "Personal NixOs Configuration";
 
-
-  outputs = inputs:
+  outputs = inputs @ {self, ...}:
     with inputs; let
-      secrets = builtins.fromJSON (builtins.readFile "${self}/secrets.json");
+    # ---- SYSTEM SETTINGS ---- #
+    systemSettings = {
+      system = "x86_64-linux"; # system arch
+      hostname = "nixos"; # hostname
+      profile = "wsl"; # select a profile defined from profiles directory
+      timezone = "America/Los_Angeles"; # select timezone
+      locale = "en_US.UTF-8"; # select locale
+    };
 
-      nixpkgsWithOverlays = system: (import nixpkgs rec {
-        inherit system;
+    # ----- USER SETTINGS ----- #
+    userSettings = {
+      username = "fasttrackstudio"; # username
+      name = "Fast Track Studio"; # name/identifier
+      shell = "fish"; # default shell
+    };
 
-        config = {
-          allowUnfree = true;
-          permittedInsecurePackages = [
-            # FIXME:: add any insecure packages you absolutely need here
-          ];
-        };
+    secrets = builtins.fromJSON (builtins.readFile "${self}/secrets.json");
 
-        overlays = [
-          nur.overlays.default
-          jeezyvim.overlays.default
+    nixpkgsWithOverlays = system: (import nixpkgs rec {
+      inherit system;
 
-          (_final: prev: {
-            unstable = import nixpkgs-unstable {
-              inherit (prev) system;
-              inherit config;
-            };
-          })
+      config = {
+        allowUnfree = true;
+        permittedInsecurePackages = [
+          # FIXME:: add any insecure packages you absolutely need here
         ];
-      });
-
-      configurationDefaults = args: {
-        home-manager.useGlobalPkgs = true;
-        home-manager.useUserPackages = true;
-        home-manager.backupFileExtension = "hm-backup";
-        home-manager.extraSpecialArgs = args;
       };
 
-      argDefaults = {
-        inherit secrets inputs self nix-index-database;
-        channels = {
-          inherit nixpkgs nixpkgs-unstable;
-        };
-      };
+      overlays = [
+        nur.overlays.default
+        jeezyvim.overlays.default
 
-      mkNixosConfiguration = {
-        system ? "x86_64-linux",
-        hostname,
-        username,
-        args ? {},
-        modules,
-      }: let
-        specialArgs = argDefaults // {inherit hostname username;} // args;
-      in
-        nixpkgs.lib.nixosSystem {
-          inherit system specialArgs;
-          pkgs = nixpkgsWithOverlays system;
-          modules =
-            [
-              (configurationDefaults specialArgs)
-              home-manager.nixosModules.home-manager
-            ]
-            ++ modules;
-        };
-    in {
-      formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
+        (_final: prev: {
+          unstable = import nixpkgs-unstable {
+            inherit (prev) system;
+            inherit config;
+          };
+        })
+      ];
+    });
 
-      nixosConfigurations.nixos = mkNixosConfiguration {
-        hostname = "nixos";
-        username = "fasttrackstudio"; # FIXME: replace with your own username!
-        modules = [
-          nixos-wsl.nixosModules.wsl
-          ./wsl.nix
-        ];
+    configurationDefaults = args: {
+      home-manager.useGlobalPkgs = true;
+      home-manager.useUserPackages = true;
+      home-manager.backupFileExtension = "hm-backup";
+      home-manager.extraSpecialArgs = args;
+    };
+
+    argDefaults = {
+      inherit secrets inputs self nix-index-database systemSettings userSettings;
+      channels = {
+        inherit nixpkgs nixpkgs-unstable;
       };
     };
+
+    mkNixosConfiguration = {
+      system ? systemSettings.system,
+      hostname ? systemSettings.hostname,
+      username ? userSettings.username,
+      args ? {},
+      modules,
+    }: let
+      specialArgs = argDefaults // {inherit hostname username;} // args;
+    in
+      nixpkgs.lib.nixosSystem {
+        inherit system specialArgs;
+        pkgs = nixpkgsWithOverlays system;
+        modules =
+          [
+            (configurationDefaults specialArgs)
+            home-manager.nixosModules.home-manager
+          ]
+          ++ modules;
+      };
+  in {
+    formatter.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.alejandra;
+
+    nixosConfigurations.nixos = mkNixosConfiguration {
+      modules = [
+        nixos-wsl.nixosModules.wsl
+        (./. + "/profiles" + ("/" + systemSettings.profile) + "/configuration.nix")
+      ];
+    };
+  };
   inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
-  nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
-  nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    home-manager.url = "github:nix-community/home-manager/release-24.11";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-  home-manager.url = "github:nix-community/home-manager/release-24.11";
-  home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    nur.url = "github:nix-community/NUR";
 
-  nur.url = "github:nix-community/NUR";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL";
+    nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
 
-  nixos-wsl.url = "github:nix-community/NixOS-WSL";
-  nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
+    nix-index-database.url = "github:Mic92/nix-index-database";
+    nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
-  nix-index-database.url = "github:Mic92/nix-index-database";
-  nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
-
-  jeezyvim.url = "github:LGUG2Z/JeezyVim";
-
+    jeezyvim.url = "github:LGUG2Z/JeezyVim";
   };
 }

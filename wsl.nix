@@ -1,16 +1,16 @@
 {
   # FIXME: uncomment the next line if you want to reference your GitHub/GitLab access tokens and other secrets
   secrets,
-  username,
-  hostname,
+  systemSettings,
+  userSettings,
   pkgs,
   inputs,
   ...
 }: {
-  # FIXME: change to your tz! look it up with "timedatectl list-timezones"
-  time.timeZone = "America/Los_Angeles";
+  # Use systemSettings for timezone
+  time.timeZone = systemSettings.timezone;
 
-  networking.hostName = "${hostname}";
+  networking.hostName = systemSettings.hostname;
 
   # FIXME: change your shell here if you don't want fish
   programs.fish.enable = true;
@@ -24,10 +24,10 @@
   # FIXME: uncomment the next line to enable SSH
   # services.openssh.enable = true;
 
-  users.users.${username} = {
+  users.users.${userSettings.username} = {
     isNormalUser = true;
-    # FIXME: change your shell here if you don't want fish
-    shell = pkgs.fish;
+    # Use shell from userSettings
+    shell = pkgs.${userSettings.shell};
     extraGroups = [
       "wheel"
       # FIXME: uncomment the next line if you want to run docker without sudo
@@ -41,9 +41,9 @@
     # ];
   };
 
-  home-manager.users.${username} = {
+  home-manager.users.${userSettings.username} = {
     imports = [
-      ./home.nix
+      (./. + "/profiles" + ("/" + systemSettings.profile) + "/home.nix")
     ];
   };
 
@@ -54,7 +54,7 @@
     wslConf.automount.root = "/mnt";
     wslConf.interop.appendWindowsPath = false;
     wslConf.network.generateHosts = false;
-    defaultUser = username;
+    defaultUser = userSettings.username;
     startMenuLaunchers = true;
 
     # Enable integration with Docker Desktop (needs to be installed)
@@ -87,7 +87,7 @@
 
   nix = {
     settings = {
-      trusted-users = [username];
+      trusted-users = [userSettings.username];
       # FIXME: use your access tokens from secrets.json here to be able to clone private repos on GitHub and GitLab
       access-tokens = [
         "github.com=${secrets.github_token}"

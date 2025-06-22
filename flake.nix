@@ -25,6 +25,7 @@
         theme = "kanagawa"; # theme selection
         font = "Intel One Mono"; # font selection
         # fontPkg resolved in modules that need it
+        dotfilesDir = "/home/${username}/configuration"; # dotfiles directory
       };
 
       secrets = builtins.fromJSON (builtins.readFile "${self}/secrets.json");

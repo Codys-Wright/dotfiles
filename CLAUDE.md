@@ -64,63 +64,332 @@ nixos-modules/user/app/
   └── terminal/tmux/tmux.nix      # Tmux configuration module
 ```
 
-### Key Variables
-- `systemSettings`: hostname, profile, timezone, locale, system
-- `userSettings`: Essential user variables only:
-  - `username`, `name`, `email` - User identity
-  - `shell`, `term`, `editor`, `browser` - App selections
-  - `theme`, `font` - UI preferences
-- **App-specific settings**: Configured at profile level (e.g., OAuth settings in `profiles/wsl/home.nix`)
+### Configuration Variables
 
-### App Modules
-- **tmux.nix**: Handles tmux config, TPM (plugin manager), auto-installs plugins
-- **nvim.nix**: Handles neovim config, LSPs, config files
-- **git.nix**: Custom git module with configurable options (OAuth, delta, etc.)
-- **gitui.nix**: GitUI terminal interface module
-- Add new apps in `nixos-modules/user/app/` and import in profile's home.nix
+#### System Settings (`systemSettings`)
+Essential system-level configuration:
+- `system`: Architecture (x86_64-linux)
+- `hostname`: System hostname
+- `profile`: Profile selector ("wsl", "desktop", "server", etc.)
+- `timezone`: System timezone
+- `locale`: System locale
 
-### Usage Examples
+#### User Settings (`userSettings`)
+Essential user identity and app selections:
+- **Identity**: `username`, `name`, `email`
+- **App Selections**: `shell`, `term`, `editor`, `browser`
+- **UI Preferences**: `theme`, `font`
+- **Profile-specific settings**: Configured at profile level
+
+## Modular Architecture
+
+### Package Collections (`nixos-modules/user/pkgs/`)
+
+Reusable package groups that can be enabled per-profile:
+
+- **`core.nix`**: Essential CLI utilities
+  - `my.packages.core.enable` - Core tools (bat, fd, ripgrep, tree, curl, etc.)
+  - `my.packages.core.includeUnstable` - Use bleeding-edge versions when available
+
+- **`development.nix`**: Language-agnostic development tools
+  - `my.packages.development.enable` - Dev tools (gh, just, git-crypt, mkcert, httpie)
+  - `my.packages.development.includeLanguageServers` - LSPs (HTML, CSS, JSON, YAML, Nix)
+  - `my.packages.development.includeFormatters` - Code formatters (prettier, shellcheck)
+
+- **`nix-tools.nix`**: Nix ecosystem tools
+  - `my.packages.nixTools.enable` - Nix tools (alejandra, statix, deadnix)
+
+- **`ai-tools.nix`**: AI development assistance
+  - `my.packages.aiTools.enable` - AI tools (claude-code)
+
+### Language Support (`nixos-modules/user/lang/`)
+
+**`lang.nix`**: Unified language development environments
+
 ```nix
-# In profile home.nix
+my.languages = {
+  rust.enable = true;              # Rust development (rustup)
+  cc.enable = true;                # C/C++ (gcc, cmake, autotools)
+  python = {
+    enable = true;                 # Python development
+    includePackages = true;        # Additional packages (imath, pystring)
+  };
+  haskell.enable = false;          # Haskell (stack, language server)
+  android.enable = false;          # Android development tools
+  godot.enable = false;            # Godot game development
+};
+```
+
+### Shell Configuration (`nixos-modules/user/shell/`)
+
+- **`fish.nix`**: Fish shell with extensive configuration
+  - `my.shell.fish.enable` - Enable Fish shell
+  - `my.shell.fish.enableWSLIntegration` - WSL clipboard/explorer integration
+  - `my.shell.fish.enableKanagawaTheme` - Consistent color theming
+
+- **`starship.nix`**: Modern cross-shell prompt
+  - `my.shell.starship.enable` - Enable Starship prompt
+  - `my.shell.starship.enableGitIntegration` - Git branch display
+  - `my.shell.starship.enableCloudIntegration` - AWS/GCloud/K8s display
+
+- **`cli-integrations.nix`**: Enhanced CLI tools
+  - `my.shell.cliIntegrations.enable` - Enable all CLI integrations
+  - Includes: FZF (fuzzy finder), zoxide (smart cd), broot (tree navigator), direnv, lsd (modern ls)
+
+### App Modules (`nixos-modules/user/app/`)
+
+Individual application configurations:
+
+- **`git/git.nix`**: Git configuration
+  - `my.git.enable` - Enable git configuration
+  - `my.git.enableOAuth` - OAuth for private repos
+  - `my.git.enableDelta` - Enhanced diff viewer
+  - `my.git.enableSignedCommits` - GPG commit signing
+
+- **`git/gitui.nix`**: Terminal git interface
+  - `my.gitui.enable` - Enable gitui
+
+- **`terminal/tmux/tmux.nix`**: Terminal multiplexer
+  - TPM plugin manager with auto-installation
+  - Custom configuration and key bindings
+
+- **`nvim/nvim.nix`**: Neovim editor configuration
+  - Language server integration
+  - Plugin management
+
+## Profile Examples
+
+### WSL Development Profile
+```nix
+# profiles/wsl/home.nix
 {
   imports = [
+    # Package collections
+    ../../nixos-modules/user/pkgs/core.nix
+    ../../nixos-modules/user/pkgs/development.nix
+    ../../nixos-modules/user/pkgs/nix-tools.nix
+    ../../nixos-modules/user/pkgs/ai-tools.nix
+    
+    # Language support
     ../../nixos-modules/user/lang/lang.nix
+    
+    # Shell configuration
+    ../../nixos-modules/user/shell/fish.nix
+    ../../nixos-modules/user/shell/starship.nix
+    ../../nixos-modules/user/shell/cli-integrations.nix
+    
+    # App modules
+    ../../nixos-modules/user/app/git/git.nix
+    ../../nixos-modules/user/app/git/gitui.nix
   ];
+
+  # Enable package collections for development
+  my.packages = {
+    core.enable = true;
+    development.enable = true;
+    nixTools.enable = true;
+    aiTools.enable = true;
+  };
   
-  # Enable specific languages for this profile
+  # Enable languages for WSL development
   my.languages = {
-    rust.enable = true;        # Enables rustup
-    cc.enable = true;          # Enables gcc, cmake, autotools
-    python.enable = true;      # Enables python3Full, imath, pystring
-    android.enable = false;    # Disabled for this profile
+    rust.enable = true;
+    cc.enable = true;
+    python.enable = true;
+  };
+  
+  # Configure shell for WSL
+  my.shell = {
+    fish = {
+      enable = true;
+      enableWSLIntegration = true;
+    };
+    starship.enable = true;
+    cliIntegrations.enable = true;
+  };
+  
+  # Enable git with OAuth for private repos
+  my.git = {
+    enable = true;
+    enableOAuth = true;
+    enableDelta = true;
   };
 }
 ```
 
-### Package Collections (`nixos-modules/user/pkgs/`)
-- **core.nix**: Essential CLI utilities (bat, fd, ripgrep, tree, etc.)
-- **development.nix**: Development tools and language servers (language-agnostic)
-- **rust.nix**: Rust ecosystem tools (rustup, cargo utilities) - *deprecated, use lang.nix*
-- **nix-tools.nix**: Nix formatting and linting tools
-- **ai-tools.nix**: AI development assistance tools
+### Server Profile (Example)
+```nix
+# profiles/server/home.nix - Minimal server setup
+{
+  imports = [
+    ../../nixos-modules/user/pkgs/core.nix
+    ../../nixos-modules/user/shell/fish.nix
+    ../../nixos-modules/user/app/git/git.nix
+  ];
 
-### Language Support (`nixos-modules/user/lang/`)
-- **lang.nix**: Unified language support with per-language enable options
-  - `my.languages.rust.enable` - Rust development (rustup)
-  - `my.languages.cc.enable` - C/C++ development (gcc, cmake, autotools)
-  - `my.languages.python.enable` - Python development (python3Full, packages)
-  - `my.languages.haskell.enable` - Haskell development (stack, language server)
-  - `my.languages.android.enable` - Android development (tools, udev rules)
-  - `my.languages.godot.enable` - Godot game development
+  # Minimal package set for servers
+  my.packages.core.enable = true;
+  
+  # Basic shell without WSL integrations
+  my.shell.fish.enable = true;
+  
+  # Git without OAuth (use SSH keys)
+  my.git = {
+    enable = true;
+    enableOAuth = false;
+  };
+}
+```
 
-### Shell Modules (`nixos-modules/user/shell/`)
-- **fish.nix**: Fish shell configuration with WSL integration
-- **starship.nix**: Starship prompt configuration
-- **cli-integrations.nix**: FZF, zoxide, broot, direnv integrations
+## Adding New Profiles
 
-### Module Development
+To create a new profile (e.g., "desktop", "gaming", "minimal"):
+
+1. **Create profile directory**: `profiles/desktop/`
+2. **Create configuration.nix**: System-level configuration
+3. **Create home.nix**: User-level configuration with module imports
+4. **Update flake.nix**: Set `systemSettings.profile = "desktop"`
+
+```nix
+# profiles/desktop/home.nix - Example desktop profile
+{
+  imports = [
+    # All package collections
+    ../../nixos-modules/user/pkgs/core.nix
+    ../../nixos-modules/user/pkgs/development.nix
+    ../../nixos-modules/user/lang/lang.nix
+    
+    # Desktop-specific apps
+    # Add browser, media, gaming modules here
+  ];
+
+  # Desktop-focused configuration
+  my.packages = {
+    core.enable = true;
+    development.enable = false;  # Minimal dev tools
+  };
+  
+  my.languages = {
+    # Enable only languages you need
+    python.enable = true;
+  };
+}
+```
+
+## Common Usage Patterns
+
+### Quick Package Management
+```nix
+# Disable bleeding-edge versions for stability
+my.packages.core.includeUnstable = false;
+
+# Minimal development setup
+my.packages.development = {
+  enable = true;
+  includeLanguageServers = false;
+  includeFormatters = false;
+};
+
+# Language-specific development
+my.languages = {
+  rust.enable = true;           # Only Rust
+  python = {
+    enable = true;
+    includePackages = false;    # Just python3Full
+  };
+};
+```
+
+### Shell Customization
+```nix
+# Minimal shell setup
+my.shell = {
+  fish.enable = true;
+  starship = {
+    enable = true;
+    enableCloudIntegration = true;  # For DevOps work
+  };
+  cliIntegrations.enable = false;   # Disable for simpler setup
+};
+
+# WSL-specific optimizations
+my.shell.fish = {
+  enable = true;
+  enableWSLIntegration = true;      # Clipboard, explorer access
+  enableKanagawaTheme = true;       # Consistent theming
+};
+```
+
+## Troubleshooting
+
+### Package Collisions
+**Error**: `collision between /nix/store/.../package-version1 and /nix/store/.../package-version2`
+
+**Solution**: Check for duplicate packages in different modules
+```bash
+# Find which modules include the conflicting package
+grep -r "packagename" nixos-modules/
+```
+
+**Common causes**:
+- Same package in both stable and unstable lists
+- Package included in multiple collection modules
+- Language-specific packages conflicting with general dev tools
+
+### Module Import Errors
+**Error**: `path '/nix/store/.../module.nix' does not exist`
+
+**Solutions**:
+1. **Check import paths**: Ensure relative paths are correct
+2. **Verify module exists**: Use `ls nixos-modules/path/to/module.nix`
+3. **Git status**: Ensure files are committed to repository
+
+### Build Failures
+**Error**: Various Nix evaluation errors
+
+**Debug steps**:
+```bash
+# Check syntax of specific module
+nix-instantiate --parse ./nixos-modules/user/app/mymodule.nix
+
+# Test flake evaluation
+nix flake check --show-trace
+
+# Dry build without applying
+sudo nixos-rebuild dry-build --flake ~/configuration
+```
+
+### Performance Optimization
+- **Large profile imports**: Split large profiles into smaller, focused modules
+- **Unused packages**: Disable unnecessary package collections
+- **Build times**: Use `my.packages.core.includeUnstable = false` for faster builds
+
+### WSL-Specific Issues
+- **Clipboard not working**: Ensure `win32yank` is installed on Windows
+- **Explorer not opening**: Check Windows path in Fish configuration
+- **Theme not applied**: Verify `enableKanagawaTheme = true` in Fish module
+
+## Module Development
 - **See nixos-modules/README.md** for detailed guide on creating custom modules
 - Follow LibrePhoenix pattern: `imports`, `options`, `config` sections
+- Use proper option types and defaults
+- Test modules individually before integrating
+
+## Maintenance
+
+### Keeping Documentation Updated
+Always update CLAUDE.md when:
+- Adding new modules or package collections
+- Changing module option names or defaults
+- Adding new profiles or usage patterns
+- Fixing common issues or adding troubleshooting steps
+
+### Best Practices
+- **Modular design**: Keep modules focused and reusable
+- **Clear naming**: Use descriptive option names
+- **Good defaults**: Provide sensible defaults for all options
+- **Documentation**: Document all custom options and usage patterns
+- **Testing**: Test changes with `nix flake check` before committing
 - Use `my.moduleName.*` for custom options with proper types and defaults
 - Leverage conditional configuration with `if-then-else` patterns
 

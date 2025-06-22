@@ -1,8 +1,6 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   home.packages = with pkgs; [
-      # Rust setup
-      rustup
+    # Rust setup
+    rustup
   ];
 }

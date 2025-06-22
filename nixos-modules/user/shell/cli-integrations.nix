@@ -1,6 +1,9 @@
-{ config, lib, pkgs, ... }:
-
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   imports = [
     # No additional imports needed
   ];
@@ -32,26 +35,26 @@
         enable = true;
         enableFishIntegration = config.my.shell.cliIntegrations.enableFishIntegration;
       };
-      
+
       # Smart directory navigation
       zoxide = {
         enable = true;
         enableFishIntegration = config.my.shell.cliIntegrations.enableFishIntegration;
         options = ["--cmd cd"];
       };
-      
+
       # Tree-style file manager
       broot = {
         enable = true;
         enableFishIntegration = config.my.shell.cliIntegrations.enableFishIntegration;
       };
-      
+
       # Environment management
       direnv = {
         enable = true;
         nix-direnv.enable = true;
       };
-      
+
       # Modern ls replacement
       lsd = lib.mkIf config.my.shell.cliIntegrations.enableLsd {
         enable = true;

@@ -1,6 +1,9 @@
-{ config, lib, pkgs, ... }:
-
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   imports = [
     # No additional imports needed
   ];
@@ -20,13 +23,15 @@
   };
 
   config = lib.mkIf config.my.packages.rust.enable {
-    home.packages = with pkgs; [
-      # Core Rust toolchain
-      rustup
-    ] ++ lib.optionals config.my.packages.rust.includeCargoTools [
-      # Rust/Cargo utilities
-      cargo-cache
-      cargo-expand
-    ];
+    home.packages = with pkgs;
+      [
+        # Core Rust toolchain
+        rustup
+      ]
+      ++ lib.optionals config.my.packages.rust.includeCargoTools [
+        # Rust/Cargo utilities
+        cargo-cache
+        cargo-expand
+      ];
   };
 }

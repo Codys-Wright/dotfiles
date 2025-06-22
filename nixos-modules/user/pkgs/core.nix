@@ -1,6 +1,9 @@
-{ config, lib, pkgs, ... }:
-
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   imports = [
     # No additional imports needed
   ];
@@ -20,24 +23,27 @@
   };
 
   config = lib.mkIf config.my.packages.core.enable {
-    home.packages = with pkgs; 
-      # Packages available in both stable and unstable (use unstable if enabled)
-      (if config.my.packages.core.includeUnstable 
-       then (with pkgs.unstable; [
-         bat
-         bottom
-         fd
-         ripgrep
-         tree
-       ])
-       else [
-         bat
-         bottom
-         fd
-         ripgrep
-         tree
-       ]) ++
-      
+    home.packages = with pkgs;
+    # Packages available in both stable and unstable (use unstable if enabled)
+      (
+        if config.my.packages.core.includeUnstable
+        then
+          (with pkgs.unstable; [
+            bat
+            bottom
+            fd
+            ripgrep
+            tree
+          ])
+        else [
+          bat
+          bottom
+          fd
+          ripgrep
+          tree
+        ]
+      )
+      ++
       # Packages that we always use from stable
       [
         coreutils

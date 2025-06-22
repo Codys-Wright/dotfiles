@@ -1,6 +1,9 @@
-{ config, lib, pkgs, ... }:
-
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
   imports = [
     # No additional imports needed
   ];
@@ -54,13 +57,13 @@
   };
 
   config = {
-    home.packages = with pkgs; 
-      # Android development
+    home.packages = with pkgs;
+    # Android development
       (lib.optionals config.my.languages.android.enable [
         android-tools
         android-udev-rules
-      ]) ++
-      
+      ])
+      ++
       # C/C++ development
       (lib.optionals config.my.languages.cc.enable [
         gcc
@@ -69,27 +72,28 @@
         autoconf
         automake
         libtool
-      ]) ++
-      
+      ])
+      ++
       # Godot game development
       (lib.optionals config.my.languages.godot.enable [
         godot_4
-      ]) ++
-      
+      ])
+      ++
       # Haskell development
       (lib.optionals config.my.languages.haskell.enable [
         haskellPackages.haskell-language-server
         haskellPackages.stack
-      ]) ++
-      
+      ])
+      ++
       # Python development
       (lib.optionals config.my.languages.python.enable ([
-        python3Full
-      ] ++ lib.optionals config.my.languages.python.includePackages [
-        imath
-        pystring
-      ])) ++
-      
+          python3Full
+        ]
+        ++ lib.optionals config.my.languages.python.includePackages [
+          imath
+          pystring
+        ]))
+      ++
       # Rust development
       (lib.optionals config.my.languages.rust.enable [
         rustup

@@ -1,6 +1,11 @@
-{ config, lib, pkgs, userSettings, secrets, ... }:
-
 {
+  config,
+  lib,
+  pkgs,
+  userSettings,
+  secrets,
+  ...
+}: {
   imports = [
     # No additional imports needed for this module
   ];
@@ -67,11 +72,12 @@
     programs.git = {
       enable = config.my.git.enable;
       package = pkgs.unstable.git;
-      
+
       userEmail = config.my.git.userEmail;
       userName = config.my.git.userName;
-      
-      delta = if config.my.git.enableDelta
+
+      delta =
+        if config.my.git.enableDelta
         then {
           enable = true;
           options = {
@@ -80,33 +86,35 @@
             navigate = true;
           };
         }
-        else { enable = false; };
-      
-      extraConfig = {
-        push = {
-          default = "current";
-          autoSetupRemote = true;
-        };
-        merge = {
-          conflictstyle = "diff3";
-        };
-        diff = {
-          colorMoved = "default";
-        };
-      } // (
-        if config.my.git.enableOAuth
-        then {
-          url = {
-            "https://oauth2:${secrets.github_token}@github.com" = {
-              insteadOf = "https://github.com";
-            };
-            "https://oauth2:${secrets.gitlab_token}@gitlab.com" = {
-              insteadOf = "https://gitlab.com";
-            };
+        else {enable = false;};
+
+      extraConfig =
+        {
+          push = {
+            default = "current";
+            autoSetupRemote = true;
+          };
+          merge = {
+            conflictstyle = "diff3";
+          };
+          diff = {
+            colorMoved = "default";
           };
         }
-        else {}
-      );
+        // (
+          if config.my.git.enableOAuth
+          then {
+            url = {
+              "https://oauth2:${secrets.github_token}@github.com" = {
+                insteadOf = "https://github.com";
+              };
+              "https://oauth2:${secrets.gitlab_token}@gitlab.com" = {
+                insteadOf = "https://gitlab.com";
+              };
+            };
+          }
+          else {}
+        );
     };
   };
 }

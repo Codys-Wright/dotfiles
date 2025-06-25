@@ -16,6 +16,8 @@
       nodePackages.vscode-langservers-extracted
       nodePackages.yaml-language-server
       tree-sitter
+      ripgrep # Required for Obsidian search functionality
+      stylua # Lua formatter
     ];
   };
 

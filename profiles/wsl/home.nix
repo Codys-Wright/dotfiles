@@ -42,7 +42,7 @@
     nixTools.enable = true; # Nix formatting and linting
     aiTools.enable = true; # AI development tools
   };
-
+  
   # Enable language support for WSL development
   my.languages = {
     rust.enable = true; # Rust development

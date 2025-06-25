@@ -32,6 +32,9 @@
 
     # Bin modules
     ../../nixos-modules/user/bin/phoenix/phoenix.nix
+
+    # Style modules
+    ../../nixos-modules/user/style/stylix.nix
   ];
 
   # WSL Profile Configuration

@@ -65,6 +65,7 @@
         channels = {
           inherit nixpkgs nixpkgs-unstable;
         };
+        stylix = inputs.stylix;
       };
 
       mkNixosConfiguration = {
@@ -112,5 +113,7 @@
     nix-index-database.inputs.nixpkgs.follows = "nixpkgs";
 
     jeezyvim.url = "github:LGUG2Z/JeezyVim";
+
+    stylix.url = "github:danth/stylix";
   };
 }

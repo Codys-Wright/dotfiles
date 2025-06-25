@@ -8,6 +8,7 @@
 }: {
   imports = [
     ./wsl.nix
+    ../../nixos-modules/system/style/stylix.nix
   ];
 
   # Use systemSettings and userSettings passed from flake

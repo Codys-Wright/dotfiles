@@ -104,26 +104,26 @@ return {
   },
 
   keys = {
-    { "<leader>oo", "<cmd>ObsidianQuickSwitch<cr>", desc = "Quick Switch Notes" },
-    { "<leader>on", "<cmd>ObsidianNew<cr>", desc = "New Note" },
-    { "<leader>os", "<cmd>ObsidianSearch<cr>", desc = "Search Notes" },
-    { "<leader>ol", "<cmd>ObsidianLink<cr>", desc = "Link to Note", mode = "v" },
-    { "<leader>od", "<cmd>ObsidianToday<cr>", desc = "Today's Note" },
-    { "<leader>oy", "<cmd>ObsidianYesterday<cr>", desc = "Yesterday's Note" },
-    { "<leader>ob", "<cmd>ObsidianBacklinks<cr>", desc = "Show Backlinks" },
-    { "<leader>og", "<cmd>ObsidianTags<cr>", desc = "Show Tags" },
-    { "<leader>ow", "<cmd>ObsidianWorkspace<cr>", desc = "Switch Workspace" },
-    { "<leader>of", "<cmd>ObsidianFollowLink<cr>", desc = "Follow Link" },
-    { "<leader>or", "<cmd>ObsidianRename<cr>", desc = "Rename Note" },
-    { "<leader>oc", "<cmd>ObsidianTOC<cr>", desc = "Table of Contents" },
-    { "<leader>op", "<cmd>ObsidianPasteImg<cr>", desc = "Paste Image" },
-    { "<leader>ot", "<cmd>ObsidianTemplate<cr>", desc = "Insert Template" },
+    { "<leader>oo", "<cmd>ObsidianQuickSwitch<cr>" },
+    { "<leader>on", "<cmd>ObsidianNew<cr>" },
+    { "<leader>os", "<cmd>ObsidianSearch<cr>" },
+    { "<leader>ol", "<cmd>ObsidianLink<cr>", mode = "v" },
+    { "<leader>od", "<cmd>ObsidianToday<cr>" },
+    { "<leader>oy", "<cmd>ObsidianYesterday<cr>" },
+    { "<leader>ob", "<cmd>ObsidianBacklinks<cr>" },
+    { "<leader>og", "<cmd>ObsidianTags<cr>" },
+    { "<leader>ow", "<cmd>ObsidianWorkspace<cr>" },
+    { "<leader>of", "<cmd>ObsidianFollowLink<cr>" },
+    { "<leader>or", "<cmd>ObsidianRename<cr>" },
+    { "<leader>oc", "<cmd>ObsidianTOC<cr>" },
+    { "<leader>op", "<cmd>ObsidianPasteImg<cr>" },
+    { "<leader>ot", "<cmd>ObsidianTemplate<cr>" },
     { "gf", function()
         if require("obsidian").util.cursor_on_markdown_link() then
           return "<cmd>ObsidianFollowLink<CR>"
         else
           return "gf"
         end
-      end, noremap = false, expr = true, desc = "Follow Link or File" },
+      end, noremap = false, expr = true },
   },
 }

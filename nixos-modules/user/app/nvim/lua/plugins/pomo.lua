@@ -49,14 +49,14 @@ return {
     },
   },
   keys = {
-    { "<leader>ts", function() require("pomo").start_timer(25*60, "Work") end, desc = "Start 25min Work Timer" },
-    { "<leader>tb", function() require("pomo").start_timer(5*60, "Short Break") end, desc = "Start 5min Break Timer" },
-    { "<leader>tl", function() require("pomo").start_timer(15*60, "Long Break") end, desc = "Start 15min Long Break" },
-    { "<leader>tp", function() require("pomo").pause_timer() end, desc = "Pause Timer" },
-    { "<leader>tr", function() require("pomo").resume_timer() end, desc = "Resume Timer" },
-    { "<leader>te", function() require("pomo").stop_timer() end, desc = "Stop Timer" },
-    { "<leader>tt", function() require("pomo").get_first_to_finish() end, desc = "Show Timer Status" },
-    { "<leader>tc", "<cmd>TimerSession pomodoro<cr>", desc = "Start Pomodoro Session" },
+    { "<leader>ts", function() require("pomo").start_timer(25*60, "Work") end },
+    { "<leader>tb", function() require("pomo").start_timer(5*60, "Short Break") end },
+    { "<leader>tl", function() require("pomo").start_timer(15*60, "Long Break") end },
+    { "<leader>tp", function() require("pomo").pause_timer() end },
+    { "<leader>tr", function() require("pomo").resume_timer() end },
+    { "<leader>te", function() require("pomo").stop_timer() end },
+    { "<leader>tt", function() require("pomo").get_first_to_finish() end },
+    { "<leader>tc", "<cmd>TimerSession pomodoro<cr>" },
     { "<leader>th", function()
         vim.ui.input({ prompt = "Timer duration (e.g. 25m, 1h30m): " }, function(duration)
           if duration then
@@ -67,6 +67,6 @@ return {
             end)
           end
         end)
-      end, desc = "Custom Timer" },
+      end },
   },
 }

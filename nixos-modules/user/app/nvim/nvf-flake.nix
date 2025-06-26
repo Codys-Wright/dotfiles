@@ -20,6 +20,10 @@
       config.vim = {
         theme.enable = true;
         # and more options as you see fit...
+
+        statusline.lualine.enable = true;
+        telescope.enable = true;
+        autocomplete.nvim-cmp-enable = true;
       };
     };
 

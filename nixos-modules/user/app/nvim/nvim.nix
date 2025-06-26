@@ -1020,6 +1020,99 @@
               action = "<cmd>tabprevious<cr>";
               desc = "Previous Tab";
             }
+
+            # UI Plugin keymaps
+            # Bufferline keymaps
+            {
+              key = "<leader>bp";
+              mode = ["n"];
+              action = "<cmd>BufferLineTogglePin<cr>";
+              desc = "Toggle Pin";
+            }
+            {
+              key = "<leader>bP";
+              mode = ["n"];
+              action = "<cmd>BufferLineGroupClose ungrouped<cr>";
+              desc = "Delete Non-Pinned Buffers";
+            }
+            {
+              key = "<leader>br";
+              mode = ["n"];
+              action = "<cmd>BufferLineCloseRight<cr>";
+              desc = "Delete Buffers to the Right";
+            }
+            {
+              key = "<leader>bl";
+              mode = ["n"];
+              action = "<cmd>BufferLineCloseLeft<cr>";
+              desc = "Delete Buffers to the Left";
+            }
+            {
+              key = "[B";
+              mode = ["n"];
+              action = "<cmd>BufferLineMovePrev<cr>";
+              desc = "Move buffer prev";
+            }
+            {
+              key = "]B";
+              mode = ["n"];
+              action = "<cmd>BufferLineMoveNext<cr>";
+              desc = "Move buffer next";
+            }
+
+            # Noice keymaps
+            {
+              key = "<S-Enter>";
+              mode = ["c"];
+              action = "<cmd>lua require('noice').redirect(vim.fn.getcmdline())<cr>";
+              desc = "Redirect Cmdline";
+            }
+            {
+              key = "<leader>snl";
+              mode = ["n"];
+              action = "<cmd>lua require('noice').cmd('last')<cr>";
+              desc = "Noice Last Message";
+            }
+            {
+              key = "<leader>snh";
+              mode = ["n"];
+              action = "<cmd>lua require('noice').cmd('history')<cr>";
+              desc = "Noice History";
+            }
+            {
+              key = "<leader>sna";
+              mode = ["n"];
+              action = "<cmd>lua require('noice').cmd('all')<cr>";
+              desc = "Noice All";
+            }
+            {
+              key = "<leader>snd";
+              mode = ["n"];
+              action = "<cmd>lua require('noice').cmd('dismiss')<cr>";
+              desc = "Dismiss All";
+            }
+            {
+              key = "<leader>snt";
+              mode = ["n"];
+              action = "<cmd>lua require('noice').cmd('pick')<cr>";
+              desc = "Noice Picker";
+            }
+            {
+              key = "<c-f>";
+              mode = ["i" "n" "s"];
+              action = "<cmd>lua if not require('noice.lsp').scroll(4) then return '<c-f>' end<cr>";
+              expr = true;
+              silent = true;
+              desc = "Scroll Forward";
+            }
+            {
+              key = "<c-b>";
+              mode = ["i" "n" "s"];
+              action = "<cmd>lua if not require('noice.lsp').scroll(-4) then return '<c-b>' end<cr>";
+              expr = true;
+              silent = true;
+              desc = "Scroll Backward";
+            }
           ];
 
           # Snacks.nvim utility collection
@@ -1058,6 +1151,68 @@
             sql.enable = true;
             lua.enable = true;
             python.enable = true;
+          };
+
+          # UI Components
+          ui.noice = {
+            enable = true;
+            setupOpts = {
+              lsp = {
+                override = {
+                  "vim.lsp.util.convert_input_to_markdown_lines" = true;
+                  "vim.lsp.util.stylize_markdown" = true;
+                  "cmp.entry.get_documentation" = true;
+                };
+              };
+              routes = [
+                {
+                  filter = {
+                    event = "msg_show";
+                    any = [
+                      {find = "%d+L, %d+B";}
+                      {find = "; after #%d+";}
+                      {find = "; before #%d+";}
+                    ];
+                  };
+                  view = "mini";
+                }
+              ];
+              presets = {
+                bottom_search = true;
+                command_palette = true;
+                long_message_to_split = true;
+              };
+            };
+          };
+
+          # Bufferline/Tabline
+          tabline.nvimBufferline = {
+            enable = true;
+            mappings = {
+              closeCurrent = "<leader>bd";
+              cycleNext = "<S-l>";
+              cyclePrevious = "<S-h>";
+              moveNext = "]B";
+              movePrevious = "[B";
+              pick = "<leader>bc";
+            };
+            setupOpts = {
+              options = {
+                diagnostics = "nvim_lsp";
+                always_show_bufferline = false;
+                offsets = [
+                  {
+                    filetype = "neo-tree";
+                    text = "Neo-tree";
+                    highlight = "Directory";
+                    text_align = "left";
+                  }
+                  {
+                    filetype = "snacks_layout_box";
+                  }
+                ];
+              };
+            };
           };
         };
       }

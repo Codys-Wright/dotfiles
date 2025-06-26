@@ -9,3 +9,4 @@ secrets.json
 **/.config/sops/age/keys.txt
 **/age/keys.txt
 
+secrets.json

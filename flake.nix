@@ -115,7 +115,7 @@
     jeezyvim.url = "github:LGUG2Z/JeezyVim";
 
     # stylix.url = "github:danth/stylix";
-    
+
     nvf.url = "github:notashelf/nvf";
   };
 }

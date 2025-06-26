@@ -35,7 +35,6 @@
 
     #Theming Options
     # ../../nixos-modules/user/style/stylix.nix # Styling and themes for my apps - disabled for now
-
   ];
 
   # WSL Profile Configuration

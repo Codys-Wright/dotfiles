@@ -14,7 +14,7 @@
   }: let
     system = "x86_64-linux";
     pkgs = nixpkgs.legacyPackages.${system};
-    
+
     neovimConfig = nvf.lib.neovimConfiguration {
       inherit pkgs;
       modules = [./nvf-module.nix];

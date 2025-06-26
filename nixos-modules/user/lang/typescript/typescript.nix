@@ -6,7 +6,7 @@
 }: {
   config = lib.mkIf config.my.languages.typescript.enable {
     home.packages = with pkgs;
-      # Node.js runtime
+    # Node.js runtime
       (lib.optionals config.my.languages.typescript.nodejs.enable [
         nodejs_20
       ])
@@ -20,8 +20,7 @@
       (lib.optionals config.my.languages.typescript.pnpm.enable [
         nodePackages.pnpm
       ])
-      ++
-      (lib.optionals config.my.languages.typescript.yarn.enable [
+      ++ (lib.optionals config.my.languages.typescript.yarn.enable [
         nodePackages.yarn
       ])
       ++
@@ -34,8 +33,7 @@
       (lib.optionals config.my.languages.typescript.eslint.enable [
         nodePackages.eslint
       ])
-      ++
-      (lib.optionals config.my.languages.typescript.prettier.enable [
+      ++ (lib.optionals config.my.languages.typescript.prettier.enable [
         nodePackages.prettier
       ])
       ++

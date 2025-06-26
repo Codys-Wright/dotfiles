@@ -525,6 +525,501 @@
               silent = true;
               desc = "Window Hydra Mode (which-key)";
             }
+
+            # LazyVim base keymaps
+            # Better up/down
+            {
+              key = "j";
+              mode = ["n" "x"];
+              action = "v:count == 0 ? 'gj' : 'j'";
+              expr = true;
+              silent = true;
+              desc = "Down";
+            }
+            {
+              key = "<Down>";
+              mode = ["n" "x"];
+              action = "v:count == 0 ? 'gj' : 'j'";
+              expr = true;
+              silent = true;
+              desc = "Down";
+            }
+            {
+              key = "k";
+              mode = ["n" "x"];
+              action = "v:count == 0 ? 'gk' : 'k'";
+              expr = true;
+              silent = true;
+              desc = "Up";
+            }
+            {
+              key = "<Up>";
+              mode = ["n" "x"];
+              action = "v:count == 0 ? 'gk' : 'k'";
+              expr = true;
+              silent = true;
+              desc = "Up";
+            }
+
+            # Move to window using ctrl hjkl
+            {
+              key = "<C-h>";
+              mode = ["n"];
+              action = "<C-w>h";
+              desc = "Go to Left Window";
+            }
+            {
+              key = "<C-j>";
+              mode = ["n"];
+              action = "<C-w>j";
+              desc = "Go to Lower Window";
+            }
+            {
+              key = "<C-k>";
+              mode = ["n"];
+              action = "<C-w>k";
+              desc = "Go to Upper Window";
+            }
+            {
+              key = "<C-l>";
+              mode = ["n"];
+              action = "<C-w>l";
+              desc = "Go to Right Window";
+            }
+
+            # Resize window using ctrl arrow keys
+            {
+              key = "<C-Up>";
+              mode = ["n"];
+              action = "<cmd>resize +2<cr>";
+              desc = "Increase Window Height";
+            }
+            {
+              key = "<C-Down>";
+              mode = ["n"];
+              action = "<cmd>resize -2<cr>";
+              desc = "Decrease Window Height";
+            }
+            {
+              key = "<C-Left>";
+              mode = ["n"];
+              action = "<cmd>vertical resize -2<cr>";
+              desc = "Decrease Window Width";
+            }
+            {
+              key = "<C-Right>";
+              mode = ["n"];
+              action = "<cmd>vertical resize +2<cr>";
+              desc = "Increase Window Width";
+            }
+
+            # Move Lines
+            {
+              key = "<A-j>";
+              mode = ["n"];
+              action = "<cmd>execute 'move .+' . v:count1<cr>==";
+              desc = "Move Down";
+            }
+            {
+              key = "<A-k>";
+              mode = ["n"];
+              action = "<cmd>execute 'move .-' . (v:count1 + 1)<cr>==";
+              desc = "Move Up";
+            }
+            {
+              key = "<A-j>";
+              mode = ["i"];
+              action = "<esc><cmd>m .+1<cr>==gi";
+              desc = "Move Down";
+            }
+            {
+              key = "<A-k>";
+              mode = ["i"];
+              action = "<esc><cmd>m .-2<cr>==gi";
+              desc = "Move Up";
+            }
+            {
+              key = "<A-j>";
+              mode = ["v"];
+              action = ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv";
+              desc = "Move Down";
+            }
+            {
+              key = "<A-k>";
+              mode = ["v"];
+              action = ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv";
+              desc = "Move Up";
+            }
+
+            # Buffers
+            {
+              key = "<S-h>";
+              mode = ["n"];
+              action = "<cmd>bprevious<cr>";
+              desc = "Prev Buffer";
+            }
+            {
+              key = "<S-l>";
+              mode = ["n"];
+              action = "<cmd>bnext<cr>";
+              desc = "Next Buffer";
+            }
+            {
+              key = "[b";
+              mode = ["n"];
+              action = "<cmd>bprevious<cr>";
+              desc = "Prev Buffer";
+            }
+            {
+              key = "]b";
+              mode = ["n"];
+              action = "<cmd>bnext<cr>";
+              desc = "Next Buffer";
+            }
+            {
+              key = "<leader>bb";
+              mode = ["n"];
+              action = "<cmd>e #<cr>";
+              desc = "Switch to Other Buffer";
+            }
+            {
+              key = "<leader>`";
+              mode = ["n"];
+              action = "<cmd>e #<cr>";
+              desc = "Switch to Other Buffer";
+            }
+            {
+              key = "<leader>bo";
+              mode = ["n"];
+              action = "<cmd>lua Snacks.bufdelete.other()<cr>";
+              desc = "Delete Other Buffers";
+            }
+            {
+              key = "<leader>bD";
+              mode = ["n"];
+              action = "<cmd>bd<cr>";
+              desc = "Delete Buffer and Window";
+            }
+
+            # Clear search with escape
+            {
+              key = "<esc>";
+              mode = ["i" "n" "s"];
+              action = "<cmd>noh<cr><esc>";
+              desc = "Escape and Clear hlsearch";
+            }
+
+            # Clear search, diff update and redraw
+            {
+              key = "<leader>ur";
+              mode = ["n"];
+              action = "<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>";
+              desc = "Redraw / Clear hlsearch / Diff Update";
+            }
+
+            # Better search behavior
+            {
+              key = "n";
+              mode = ["n"];
+              action = "'Nn'[v:searchforward].'zv'";
+              expr = true;
+              desc = "Next Search Result";
+            }
+            {
+              key = "n";
+              mode = ["x"];
+              action = "'Nn'[v:searchforward]";
+              expr = true;
+              desc = "Next Search Result";
+            }
+            {
+              key = "n";
+              mode = ["o"];
+              action = "'Nn'[v:searchforward]";
+              expr = true;
+              desc = "Next Search Result";
+            }
+            {
+              key = "N";
+              mode = ["n"];
+              action = "'nN'[v:searchforward].'zv'";
+              expr = true;
+              desc = "Prev Search Result";
+            }
+            {
+              key = "N";
+              mode = ["x"];
+              action = "'nN'[v:searchforward]";
+              expr = true;
+              desc = "Prev Search Result";
+            }
+            {
+              key = "N";
+              mode = ["o"];
+              action = "'nN'[v:searchforward]";
+              expr = true;
+              desc = "Prev Search Result";
+            }
+
+            # Add undo break-points
+            {
+              key = ",";
+              mode = ["i"];
+              action = ",<c-g>u";
+              silent = true;
+            }
+            {
+              key = ".";
+              mode = ["i"];
+              action = ".<c-g>u";
+              silent = true;
+            }
+            {
+              key = ";";
+              mode = ["i"];
+              action = ";<c-g>u";
+              silent = true;
+            }
+
+            # Save file
+            {
+              key = "<C-s>";
+              mode = ["i" "x" "n" "s"];
+              action = "<cmd>w<cr><esc>";
+              desc = "Save File";
+            }
+
+            # Keywordprg
+            {
+              key = "<leader>K";
+              mode = ["n"];
+              action = "<cmd>norm! K<cr>";
+              desc = "Keywordprg";
+            }
+
+            # Better indenting
+            {
+              key = "<";
+              mode = ["v"];
+              action = "<gv";
+              silent = true;
+            }
+            {
+              key = ">";
+              mode = ["v"];
+              action = ">gv";
+              silent = true;
+            }
+
+            # Commenting
+            {
+              key = "gco";
+              mode = ["n"];
+              action = "o<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>";
+              desc = "Add Comment Below";
+            }
+            {
+              key = "gcO";
+              mode = ["n"];
+              action = "O<esc>Vcx<esc><cmd>normal gcc<cr>fxa<bs>";
+              desc = "Add Comment Above";
+            }
+
+            # Lazy
+            {
+              key = "<leader>l";
+              mode = ["n"];
+              action = "<cmd>Lazy<cr>";
+              desc = "Lazy";
+            }
+
+            # New file
+            {
+              key = "<leader>fn";
+              mode = ["n"];
+              action = "<cmd>enew<cr>";
+              desc = "New File";
+            }
+
+            # Location list
+            {
+              key = "<leader>xl";
+              mode = ["n"];
+              action = "<cmd>lua vim.fn.getloclist(0, { winid = 0 }).winid ~= 0 and vim.cmd.lclose() or vim.cmd.lopen()<cr>";
+              desc = "Location List";
+            }
+
+            # Quickfix list
+            {
+              key = "<leader>xq";
+              mode = ["n"];
+              action = "<cmd>lua vim.fn.getqflist({ winid = 0 }).winid ~= 0 and vim.cmd.cclose() or vim.cmd.copen()<cr>";
+              desc = "Quickfix List";
+            }
+            {
+              key = "[q";
+              mode = ["n"];
+              action = "<cmd>cprev<cr>";
+              desc = "Previous Quickfix";
+            }
+            {
+              key = "]q";
+              mode = ["n"];
+              action = "<cmd>cnext<cr>";
+              desc = "Next Quickfix";
+            }
+
+            # Diagnostics
+            {
+              key = "<leader>cd";
+              mode = ["n"];
+              action = "<cmd>lua vim.diagnostic.open_float()<cr>";
+              desc = "Line Diagnostics";
+            }
+            {
+              key = "]d";
+              mode = ["n"];
+              action = "<cmd>lua vim.diagnostic.goto_next()<cr>";
+              desc = "Next Diagnostic";
+            }
+            {
+              key = "[d";
+              mode = ["n"];
+              action = "<cmd>lua vim.diagnostic.goto_prev()<cr>";
+              desc = "Prev Diagnostic";
+            }
+            {
+              key = "]e";
+              mode = ["n"];
+              action = "<cmd>lua vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.ERROR })<cr>";
+              desc = "Next Error";
+            }
+            {
+              key = "[e";
+              mode = ["n"];
+              action = "<cmd>lua vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.ERROR })<cr>";
+              desc = "Prev Error";
+            }
+            {
+              key = "]w";
+              mode = ["n"];
+              action = "<cmd>lua vim.diagnostic.goto_next({ severity = vim.diagnostic.severity.WARN })<cr>";
+              desc = "Next Warning";
+            }
+            {
+              key = "[w";
+              mode = ["n"];
+              action = "<cmd>lua vim.diagnostic.goto_prev({ severity = vim.diagnostic.severity.WARN })<cr>";
+              desc = "Prev Warning";
+            }
+
+            # Git Browse
+            {
+              key = "<leader>gY";
+              mode = ["n" "x"];
+              action = "<cmd>lua Snacks.gitbrowse({ open = function(url) vim.fn.setreg('+', url) end, notify = false })<cr>";
+              desc = "Git Browse (copy)";
+            }
+
+            # Quit
+            {
+              key = "<leader>qq";
+              mode = ["n"];
+              action = "<cmd>qa<cr>";
+              desc = "Quit All";
+            }
+
+            # Highlights under cursor
+            {
+              key = "<leader>ui";
+              mode = ["n"];
+              action = "<cmd>lua vim.show_pos()<cr>";
+              desc = "Inspect Pos";
+            }
+            {
+              key = "<leader>uI";
+              mode = ["n"];
+              action = "<cmd>lua vim.treesitter.inspect_tree(); vim.api.nvim_input('I')<cr>";
+              desc = "Inspect Tree";
+            }
+
+            # Terminal mappings in terminal mode
+            {
+              key = "<C-/>";
+              mode = ["t"];
+              action = "<cmd>close<cr>";
+              desc = "Hide Terminal";
+            }
+            {
+              key = "<c-_>";
+              mode = ["t"];
+              action = "<cmd>close<cr>";
+              desc = "Hide Terminal";
+            }
+
+            # Windows
+            {
+              key = "<leader>-";
+              mode = ["n"];
+              action = "<C-W>s";
+              desc = "Split Window Below";
+            }
+            {
+              key = "<leader>|";
+              mode = ["n"];
+              action = "<C-W>v";
+              desc = "Split Window Right";
+            }
+            {
+              key = "<leader>wd";
+              mode = ["n"];
+              action = "<C-W>c";
+              desc = "Delete Window";
+            }
+
+            # Tabs
+            {
+              key = "<leader><tab>l";
+              mode = ["n"];
+              action = "<cmd>tablast<cr>";
+              desc = "Last Tab";
+            }
+            {
+              key = "<leader><tab>o";
+              mode = ["n"];
+              action = "<cmd>tabonly<cr>";
+              desc = "Close Other Tabs";
+            }
+            {
+              key = "<leader><tab>f";
+              mode = ["n"];
+              action = "<cmd>tabfirst<cr>";
+              desc = "First Tab";
+            }
+            {
+              key = "<leader><tab><tab>";
+              mode = ["n"];
+              action = "<cmd>tabnew<cr>";
+              desc = "New Tab";
+            }
+            {
+              key = "<leader><tab>]";
+              mode = ["n"];
+              action = "<cmd>tabnext<cr>";
+              desc = "Next Tab";
+            }
+            {
+              key = "<leader><tab>d";
+              mode = ["n"];
+              action = "<cmd>tabclose<cr>";
+              desc = "Close Tab";
+            }
+            {
+              key = "<leader><tab>[";
+              mode = ["n"];
+              action = "<cmd>tabprevious<cr>";
+              desc = "Previous Tab";
+            }
           ];
 
           # Snacks.nvim utility collection

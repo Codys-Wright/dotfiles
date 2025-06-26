@@ -34,7 +34,7 @@
     ../../nixos-modules/user/bin/phoenix/phoenix.nix
 
     #Theming Options
-    ../../user/style/stylix.nix # Styling and themes for my apps
+    ../../nixos-modules/user/style/stylix.nix # Styling and themes for my apps
 
   ];
 

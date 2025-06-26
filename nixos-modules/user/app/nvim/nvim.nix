@@ -31,7 +31,36 @@
           };
 
           # Which-key keybind helper
-          binds.whichKey.enable = true;
+          binds.whichKey = {
+            enable = true;
+            setupOpts = {
+              preset = "helix";
+            };
+            register = {
+              # Group definitions
+              "<leader><tab>" = "tabs";
+              "<leader>c" = "code";
+              "<leader>d" = "debug";
+              "<leader>dp" = "profiler";
+              "<leader>f" = "file/find";
+              "<leader>g" = "git";
+              "<leader>gh" = "hunks";
+              "<leader>q" = "quit/session";
+              "<leader>s" = "search";
+              "<leader>u" = "ui";
+              "<leader>x" = "diagnostics/quickfix";
+              "<leader>b" = "buffer";
+              "<leader>w" = "windows";
+              "[" = "prev";
+              "]" = "next";
+              "g" = "goto";
+              "gs" = "surround";
+              "z" = "fold";
+
+              # Better descriptions
+              "gx" = "Open with system app";
+            };
+          };
 
           # Custom keymaps for snacks
           keymaps = [
@@ -479,6 +508,22 @@
               action = "<cmd>lua Snacks.words.jump(-vim.v.count1)<CR>";
               silent = true;
               desc = "Prev Reference";
+            }
+
+            # Which-key specific keymaps
+            {
+              key = "<leader>?";
+              mode = ["n"];
+              action = "<cmd>lua require('which-key').show({ global = false })<CR>";
+              silent = true;
+              desc = "Buffer Keymaps (which-key)";
+            }
+            {
+              key = "<c-w><space>";
+              mode = ["n"];
+              action = "<cmd>lua require('which-key').show({ keys = '<c-w>', loop = true })<CR>";
+              silent = true;
+              desc = "Window Hydra Mode (which-key)";
             }
           ];
 

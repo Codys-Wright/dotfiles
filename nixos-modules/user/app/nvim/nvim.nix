@@ -4,7 +4,7 @@
   ...
 }: let
   customNeovim = nvf.lib.neovimConfiguration {
-    inherit pkgs;
+    pkgs = pkgs.unstable;
     modules = [
       {
         vim = {

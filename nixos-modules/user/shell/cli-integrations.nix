@@ -58,7 +58,7 @@
       # Modern ls replacement
       lsd = lib.mkIf config.my.shell.cliIntegrations.enableLsd {
         enable = true;
-        enableAliases = true;
+        enableFishIntegration = config.my.shell.cliIntegrations.enableFishIntegration;
       };
     };
 

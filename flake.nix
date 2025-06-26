@@ -22,7 +22,7 @@
         term = "ghostty"; # terminal selection
         editor = "nvim"; # editor selection
         browser = "firefox"; # browser selection
-        theme = "kanagawa"; # theme selection
+        theme = "io"; # theme selection
         font = "Intel One Mono"; # font selection
         # fontPkg resolved in modules that need it
         dotfilesDir = "/home/${username}/dotfiles"; # dotfiles directory
@@ -65,8 +65,7 @@
         channels = {
           inherit nixpkgs nixpkgs-unstable;
         };
-        stylix = inputs.stylix;
-        nvf-config = inputs.nvf-config;
+        nvf = inputs.nvf;
       };
 
       mkNixosConfiguration = {
@@ -115,8 +114,8 @@
 
     jeezyvim.url = "github:LGUG2Z/JeezyVim";
 
-    stylix.url = "github:danth/stylix";
+    # stylix.url = "github:danth/stylix";
     
-    nvf-config.url = "path:./nixos-modules/user/app/nvim/nvf-config";
+    nvf.url = "github:notashelf/nvf";
   };
 }

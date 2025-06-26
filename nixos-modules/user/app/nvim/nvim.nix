@@ -1,14 +1,19 @@
 {
   config,
   pkgs,
-  nvf-config,
+  nvf,
   ...
-}: {
-  # Use nvf (Neovim Nix Framework) configuration
+}: let
+  # Create nvf neovim configuration locally using the module path
+  neovimConfig = nvf.lib.neovimConfiguration {
+    inherit pkgs;
+    modules = [
+      ./nvf-config/nvf-module.nix
+    ];
+  };
+in {
+  # Use locally built nvf configuration
   home.packages = [
-    nvf-config.packages.${pkgs.system}.default
-  ] ++ (with pkgs; [
-    # Additional tools that nvf might need
-    ripgrep # Useful for telescope and general searching
-  ]);
+    neovimConfig.neovim
+  ];
 }

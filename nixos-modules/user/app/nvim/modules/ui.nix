@@ -92,7 +92,7 @@
       "g" = "goto";
       "gs" = "surround";
       "z" = "fold";
-      
+
       # Better descriptions
       "gx" = "Open with system app";
     };

@@ -5,3 +5,7 @@ result
 secrets.json
 .DS.Store
 
+# sops-nix age keys (private keys should never be committed)
+**/.config/sops/age/keys.txt
+**/age/keys.txt
+

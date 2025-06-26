@@ -2,13 +2,14 @@
   config,
   pkgs,
   nvf,
+  self,
   ...
 }: let
   # Create nvf neovim configuration locally using the module path
   neovimConfig = nvf.lib.neovimConfiguration {
     inherit pkgs;
     modules = [
-      ./nvf-config/nvf-module.nix
+      "${self}/nixos-modules/user/app/nvim/nvf-module.nix"
     ];
   };
 in {

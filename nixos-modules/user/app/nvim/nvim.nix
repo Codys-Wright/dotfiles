@@ -1,20 +1,19 @@
 {
-  config,
   pkgs,
   nvf,
-  self,
   ...
 }: let
-  # Create nvf neovim configuration locally using the module path
-  neovimConfig = nvf.lib.neovimConfiguration {
+  configModule = {
+    config.vim = {
+      theme.enable = true;
+      # and more options as you see fit...
+    };
+  };
+
+  customNeovim = nvf.lib.neovimConfiguration {
     inherit pkgs;
-    modules = [
-      "${self}/nixos-modules/user/app/nvim/nvf-module.nix"
-    ];
+    modules = [configModule];
   };
 in {
-  # Use locally built nvf configuration
-  home.packages = [
-    neovimConfig.neovim
-  ];
+  home.packages = [customNeovim.neovim];
 }

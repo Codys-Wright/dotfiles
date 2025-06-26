@@ -38,7 +38,7 @@
             enable = true;
             setupOpts = {
               bigfile = {enabled = true;};
-              dashboard = {enabled = true;};
+              dashboard = {enabled = false;}; # Disable dashboard to avoid lazy.nvim dependency
               explorer = {enabled = true;};
               indent = {enabled = true;};
               input = {enabled = true;};

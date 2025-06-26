@@ -5,8 +5,7 @@
 }: let
   configModule = {
     config.vim = {
-      theme.enable = true;
-      # and more options as you see fit...
+      # Minimal configuration - no theme for now
     };
   };
 

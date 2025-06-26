@@ -66,9 +66,6 @@
               "<leader>th" = "Custom Timer";
             };
           };
-
-          # Snacks.nvim utility collection
-          utility.snacks-nvim.enable = true;
         };
       }
     ];

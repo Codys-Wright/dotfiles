@@ -1,32 +1,14 @@
 {
   config,
   pkgs,
+  nvf-config,
   ...
 }: {
-  programs.neovim = {
-    enable = true;
-    package = pkgs.unstable.neovim-unwrapped;
-
-    withNodeJs = true;
-    withPython3 = true;
-    withRuby = true;
-
-    extraPackages = with pkgs; [
-      nil # Nix language server
-      nodePackages.vscode-langservers-extracted
-      nodePackages.yaml-language-server
-      tree-sitter
-      ripgrep # Required for Obsidian search functionality
-      stylua # Lua formatter
-    ];
-  };
-
-  # Configure nvim config files
-  xdg.configFile."nvim/init.lua" = {
-    source = ./init.lua;
-  };
-  xdg.configFile."nvim/lua" = {
-    source = ./lua;
-    recursive = true;
-  };
+  # Use nvf (Neovim Nix Framework) configuration
+  home.packages = [
+    nvf-config.packages.${pkgs.system}.default
+  ] ++ (with pkgs; [
+    # Additional tools that nvf might need
+    ripgrep # Useful for telescope and general searching
+  ]);
 }

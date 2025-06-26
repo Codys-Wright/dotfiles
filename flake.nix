@@ -66,6 +66,7 @@
           inherit nixpkgs nixpkgs-unstable;
         };
         stylix = inputs.stylix;
+        nvf-config = inputs.nvf-config;
       };
 
       mkNixosConfiguration = {
@@ -115,5 +116,7 @@
     jeezyvim.url = "github:LGUG2Z/JeezyVim";
 
     stylix.url = "github:danth/stylix";
+    
+    nvf-config.url = "path:./nixos-modules/user/app/nvim/nvf-config";
   };
 }

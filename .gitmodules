@@ -1,3 +1,6 @@
 [submodule "tmux/plugins/tpm"]
 	path = tmux/plugins/tpm
 	url = https://github.com/tmux-plugins/tpm
+[submodule "nixos-modules/user/app/nvim/nvf-config"]
+	path = nixos-modules/user/app/nvim/nvf-config
+	url = https://github.com/Codys-Wright/nvim.git

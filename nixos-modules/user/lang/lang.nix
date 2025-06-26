@@ -5,7 +5,13 @@
   ...
 }: {
   imports = [
-    # No additional imports needed
+    ./android/android.nix
+    ./cc/cc.nix
+    ./godot/godot.nix
+    ./haskell/haskell.nix
+    ./python/python.nix
+    ./rust/rust.nix
+    ./typescript/typescript.nix
   ];
 
   options = {
@@ -55,50 +61,63 @@
         default = false;
         description = "Enable Rust development tools";
       };
+
+      typescript = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = true;
+          description = "Enable TypeScript development tools";
+        };
+
+        nodejs.enable = lib.mkOption {
+          type = lib.types.bool;
+          default = true;
+          description = "Enable Node.js runtime";
+        };
+
+        bun.enable = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = "Enable Bun runtime and package manager";
+        };
+
+        pnpm.enable = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = "Enable pnpm package manager";
+        };
+
+        yarn.enable = lib.mkOption {
+          type = lib.types.bool;
+          default = false;
+          description = "Enable Yarn package manager";
+        };
+
+        typescript.enable = lib.mkOption {
+          type = lib.types.bool;
+          default = true;
+          description = "Enable TypeScript compiler";
+        };
+
+        eslint.enable = lib.mkOption {
+          type = lib.types.bool;
+          default = true;
+          description = "Enable ESLint linting";
+        };
+
+        prettier.enable = lib.mkOption {
+          type = lib.types.bool;
+          default = true;
+          description = "Enable Prettier formatting";
+        };
+
+        devTools.enable = lib.mkOption {
+          type = lib.types.bool;
+          default = true;
+          description = "Enable development tools (nodemon, ts-node, language servers)";
+        };
+      };
     };
   };
 
-  config = {
-    home.packages = with pkgs;
-    # Android development
-      (lib.optionals config.my.languages.android.enable [
-        android-tools
-        android-udev-rules
-      ])
-      ++
-      # C/C++ development
-      (lib.optionals config.my.languages.cc.enable [
-        gcc
-        gnumake
-        cmake
-        autoconf
-        automake
-        libtool
-      ])
-      ++
-      # Godot game development
-      (lib.optionals config.my.languages.godot.enable [
-        godot_4
-      ])
-      ++
-      # Haskell development
-      (lib.optionals config.my.languages.haskell.enable [
-        haskellPackages.haskell-language-server
-        haskellPackages.stack
-      ])
-      ++
-      # Python development
-      (lib.optionals config.my.languages.python.enable ([
-          python3Full
-        ]
-        ++ lib.optionals config.my.languages.python.includePackages [
-          imath
-          pystring
-        ]))
-      ++
-      # Rust development
-      (lib.optionals config.my.languages.rust.enable [
-        rustup
-      ]);
-  };
 }

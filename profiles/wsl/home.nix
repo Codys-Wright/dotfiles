@@ -33,8 +33,6 @@
     # Bin modules
     ../../nixos-modules/user/bin/phoenix/phoenix.nix
 
-    # Style modules
-    ../../nixos-modules/user/style/stylix.nix
   ];
 
   # WSL Profile Configuration
@@ -51,6 +49,7 @@
     rust.enable = true; # Rust development
     cc.enable = true; # C/C++ development
     python.enable = true; # Python development
+    typescript.enable = true;
     # android.enable = false;              # Not needed for WSL
     # godot.enable = false;                # Not needed for WSL
     # haskell.enable = false;              # Not needed for WSL

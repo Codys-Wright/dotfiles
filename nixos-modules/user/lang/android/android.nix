@@ -1,7 +1,13 @@
-{pkgs, ...}: {
-  home.packages = with pkgs; [
-    # Android
-    android-tools
-    android-udev-rules
-  ];
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
+  config = lib.mkIf config.my.languages.android.enable {
+    home.packages = with pkgs; [
+      android-tools
+      android-udev-rules
+    ];
+  };
 }

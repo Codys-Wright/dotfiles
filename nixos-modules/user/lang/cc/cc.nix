@@ -1,11 +1,17 @@
-{pkgs, ...}: {
-  home.packages = with pkgs; [
-    # CC
-    gcc
-    gnumake
-    cmake
-    autoconf
-    automake
-    libtool
-  ];
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: {
+  config = lib.mkIf config.my.languages.cc.enable {
+    home.packages = with pkgs; [
+      gcc
+      gnumake
+      cmake
+      autoconf
+      automake
+      libtool
+    ];
+  };
 }

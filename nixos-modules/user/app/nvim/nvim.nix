@@ -35,6 +35,25 @@
 
           # Snacks.nvim utility collection
           utility.snacks-nvim.enable = true;
+
+          assistant = {
+            avante-nvim.enable = true;
+          };
+
+          lsp.enable = true;
+          treesitter.enable = true;
+
+          languages = {
+            nix.enable = true;
+            ts.enable = true;
+            rust.enable = true;
+            markdown.enable = true;
+            html.enable = true;
+            clang.enable = true;
+            sql.enable = true;
+            lua.enable = true;
+            python.enable = true;
+          };
         };
       }
     ];

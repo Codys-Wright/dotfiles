@@ -10,8 +10,8 @@
         vim = {
           theme = {
             enable = true;
-            name = "gruvbox";
-            style = "dark";
+            name = "tokyonight";
+            style = "storm";
           };
           statusline.lualine.enable = true;
           telescope.enable = true;

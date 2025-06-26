@@ -33,6 +33,9 @@
     # Bin modules
     ../../nixos-modules/user/bin/phoenix/phoenix.nix
 
+    #Theming Options
+    ../../user/style/stylix.nix # Styling and themes for my apps
+
   ];
 
   # WSL Profile Configuration

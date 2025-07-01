@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 let
 
   # My shell aliases
@@ -17,7 +17,7 @@ in
 {
   programs.zsh = {
     enable = true;
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
     enableCompletion = true;
     shellAliases = myAliases;
@@ -35,6 +35,18 @@ in
     enable = true;
     enableCompletion = true;
     shellAliases = myAliases;
+  };
+
+  programs.fish = {
+    enable = true;
+    shellAliases = myAliases;
+    interactiveShellInit = ''
+      # Set environment variables from home-manager
+      set -gx EDITOR "${config.home.sessionVariables.EDITOR or "nano"}"
+      set -gx SPAWNEDITOR "${config.home.sessionVariables.SPAWNEDITOR or "nano"}"
+      set -gx TERM "${config.home.sessionVariables.TERM or "xterm"}"
+      set -gx BROWSER "${config.home.sessionVariables.BROWSER or "firefox"}"
+    '';
   };
 
   home.packages = with pkgs; [

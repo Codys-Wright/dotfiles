@@ -15,11 +15,11 @@ let
     
     # Sync system
     echo "📦 Updating system configuration..."
-    nh os switch ${userSettings.dotfilesDir}#nixosConfigurations.system
+    nh os switch /home/${userSettings.username}/.dotfiles#nixosConfigurations.system
     
     # Sync user
     echo "🏠 Updating user configuration..."
-    nh home switch ${userSettings.dotfilesDir}#homeConfigurations.user.activationPackage
+    nh home switch /home/${userSettings.username}/.dotfiles#homeConfigurations.user.activationPackage -b backup
     
     echo "✅ Sync complete!"
   '';
@@ -27,14 +27,14 @@ let
   syncSystemScript = createScript "phoenix-sync-system" ''
     #!/bin/bash
     echo "📦 Updating system configuration..."
-    nh os switch ${userSettings.dotfilesDir}#nixosConfigurations.system
+    nh os switch /home/${userSettings.username}/.dotfiles#nixosConfigurations.system
     echo "✅ System sync complete!"
   '';
 
   syncUserScript = createScript "phoenix-sync-user" ''
     #!/bin/bash
     echo "🏠 Updating user configuration..."
-    nh home switch ${userSettings.dotfilesDir}#homeConfigurations.user.activationPackage
+    nh home switch /home/${userSettings.username}/.dotfiles#homeConfigurations.user.activationPackage -b backup
     echo "✅ User sync complete!"
   '';
 
@@ -122,7 +122,7 @@ let
         echo "  phoenix gc full     # Remove all old generations"
         ;;
     esac
-    '';
+  '';
   };
 
 in

@@ -8,7 +8,7 @@ let
 in
 {
 
-  imports = [ inputs.stylix.homeManagerModules.stylix ];
+  imports = [ inputs.stylix.homeModules.stylix ];
 
   home.file.".currenttheme".text = userSettings.theme;
   stylix.autoEnable = false;

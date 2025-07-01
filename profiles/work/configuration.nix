@@ -1,0 +1,116 @@
+{ pkgs, lib, systemSettings, userSettings, ... }:
+
+{
+  imports = [
+    ../../system/hardware-configuration.nix
+  ];
+
+  # Bootloader
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
+  # Use latest kernel
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+
+  # Networking
+  networking.hostName = systemSettings.hostname;
+  networking.networkmanager.enable = true;
+
+  # Timezone and locale
+  time.timeZone = systemSettings.timezone;
+  i18n.defaultLocale = systemSettings.locale;
+  i18n.extraLocaleSettings = {
+    LC_ADDRESS = systemSettings.locale;
+    LC_IDENTIFICATION = systemSettings.locale;
+    LC_MEASUREMENT = systemSettings.locale;
+    LC_MONETARY = systemSettings.locale;
+    LC_NAME = systemSettings.locale;
+    LC_NUMERIC = systemSettings.locale;
+    LC_PAPER = systemSettings.locale;
+    LC_TELEPHONE = systemSettings.locale;
+    LC_TIME = systemSettings.locale;
+  };
+
+  # Enable the X11 windowing system
+  services.xserver.enable = true;
+
+  # Enable the KDE Plasma Desktop Environment
+  services.displayManager.sddm.enable = true;
+  services.desktopManager.plasma6.enable = true;
+
+  # Configure keymap in X11
+  services.xserver.xkb = {
+    layout = "us";
+    variant = "";
+  };
+
+  # Enable CUPS to print documents
+  services.printing.enable = true;
+
+  # Enable sound with pipewire
+  security.rtkit.enable = true;
+  services.pipewire = {
+    enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+  };
+
+  # Enable fish shell
+  programs.fish.enable = true;
+
+  # User account
+  users.users.${userSettings.username} = {
+    shell = pkgs.fish;
+    isNormalUser = true;
+    description = userSettings.name;
+    extraGroups = [ "networkmanager" "wheel" ];
+    packages = with pkgs; [
+      kdePackages.kate
+    ];
+  };
+
+  # Enable automatic login for the user
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = userSettings.username;
+
+  # Install firefox
+  programs.firefox.enable = true;
+
+  # Enable neovim
+  programs.neovim = {
+    enable = true;
+    defaultEditor = true;
+  };
+
+  # Allow unfree packages
+  nixpkgs.config.allowUnfree = true;
+
+  # System packages
+  environment.systemPackages = with pkgs; [
+    vim
+    neovim
+    git
+    coreutils
+    curl
+    du-dust
+    yazi
+    procs
+    mprocs
+    wget
+    zip
+    htop
+    neofetch
+    findutils
+    fx
+    discord
+    sd
+    code-cursor
+  ];
+
+  # This value determines the NixOS release from which the default
+  # settings for stateful data, like file locations and database versions
+  # on your system were taken. It's perfectly fine and recommended to leave
+  # this value at the release version of the first install of this system.
+  system.stateVersion = "25.05";
+}

@@ -3,6 +3,9 @@
 {
   imports = [
     ../../system/hardware-configuration.nix
+    ../../system/app/virtualization.nix
+    ../../system/app/docker.nix
+    ../../system/style/stylix.nix
   ];
 
   # Bootloader

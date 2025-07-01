@@ -6,14 +6,19 @@
   home.username = userSettings.username;
   home.homeDirectory = "/home/" + userSettings.username;
 
+  programs.home-manager.enable = true;
+
+  imports = [
+    ../../user/shell/sh.nix
+    ../../user/shell/cli-collection.nix
+    ../../user/style/stylix.nix
+  ];
+
   # This value determines the Home Manager release that your
   # configuration is compatible with. This helps avoid breakage
   # when a new Home Manager release introduces backwards
   # incompatible changes.
   home.stateVersion = "25.05";
-
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
 
   # Basic home packages (user-specific packages)
   home.packages = with pkgs; [

@@ -8,7 +8,6 @@
     ../../system/app/steam.nix
     ../../system/app/flatpak.nix
     ../../system/wm/pipewire.nix
-    ( import ../../system/wm/fonts.nix { inherit pkgs-stable; } )
     ../../system/style/stylix.nix
   ];
 
@@ -84,19 +83,12 @@
   # Install firefox
   programs.firefox.enable = true;
 
-  # Enable neovim
-  programs.neovim = {
-    enable = true;
-    defaultEditor = true;
-  };
-
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
   # System packages
   environment.systemPackages = with pkgs; [
     vim
-    neovim
     git
     coreutils
     curl

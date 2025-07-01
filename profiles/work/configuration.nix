@@ -10,6 +10,7 @@
     ../../system/wm/pipewire.nix
     ../../system/style/stylix.nix
     ../../system/bin/phoenix.nix
+    (./. + "../../system/wm"+("/"+userSettings.wm)+".nix") # My window manager
   ];
 
   # Bootloader
@@ -37,22 +38,6 @@
     LC_TELEPHONE = systemSettings.locale;
     LC_TIME = systemSettings.locale;
   };
-
-  # Enable the X11 windowing system
-  services.xserver.enable = true;
-
-  # Enable the KDE Plasma Desktop Environment
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
-
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  # Enable CUPS to print documents
-  services.printing.enable = true;
 
   # Enable sound with pipewire
   security.rtkit.enable = true;
@@ -82,15 +67,11 @@
     shell = pkgs.fish;
     isNormalUser = true;
     description = userSettings.name;
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "input" "video" "render" ];
     packages = with pkgs; [
       kdePackages.kate
     ];
   };
-
-  # Enable automatic login for the user
-  services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = userSettings.username;
 
   # Install firefox
   programs.firefox.enable = true;

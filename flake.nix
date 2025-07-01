@@ -28,21 +28,43 @@
         editor = "neovim";
       };
 
-      # configure pkgs with overlays (stable + unstable)
-      pkgs = import inputs.nixpkgs {
+      # create patched nixpkgs
+      nixpkgs-patched =
+        (import inputs.nixpkgs { system = systemSettings.system; }).applyPatches {
+          name = "nixpkgs-patched";
+          src = inputs.nixpkgs;
+          patches = [ ];
+        };
+
+      # configure pkgs
+      # use nixpkgs if running a server (homelab or worklab profile)
+      # otherwise use patched nixos-unstable nixpkgs
+      pkgs = (if ((systemSettings.profile == "homelab") || (systemSettings.profile == "worklab"))
+              then
+                pkgs-stable
+              else
+                (import nixpkgs-patched {
+                  system = systemSettings.system;
+                  config = {
+                    allowUnfree = true;
+                    allowUnfreePredicate = (_: true);
+                  };
+                }));
+
+      pkgs-stable = import inputs.nixpkgs {
         system = systemSettings.system;
         config = {
           allowUnfree = true;
           allowUnfreePredicate = (_: true);
         };
-        overlays = [
-          (_final: prev: {
-            unstable = import inputs.nixpkgs-unstable {
-              inherit (prev) system;
-              inherit (prev) config;
-            };
-          })
-        ];
+      };
+
+      pkgs-unstable = import nixpkgs-patched {
+        system = systemSettings.system;
+        config = {
+          allowUnfree = true;
+          allowUnfreePredicate = (_: true);
+        };
       };
 
       # configure lib
@@ -83,6 +105,7 @@
             inherit systemSettings;
             inherit userSettings;
             inherit inputs;
+            inherit pkgs-stable;
           };
         };
       };
@@ -95,5 +118,6 @@
     nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    stylix.url = "github:danth/stylix";
   };
 }

@@ -11,6 +11,13 @@
   imports = [
     ../../user/shell/sh.nix
     ../../user/shell/cli-collection.nix
+    ../../user/app/nvim/nvim.nix
+    ../../user/app/git/git.nix
+    ../../user/app/browser/firefox.nix
+    ../../user/app/ranger/ranger.nix
+    ../../user/lang/cc/cc.nix
+    ../../user/lang/python/python.nix
+    ../../user/lang/rust/rust.nix
     ../../user/style/stylix.nix
   ];
 

@@ -4,7 +4,11 @@
   imports = [
     ../../system/hardware-configuration.nix
     ../../system/app/virtualization.nix
-    ../../system/app/docker.nix
+    ( import ../../system/app/docker.nix {storageDriver = null; inherit pkgs userSettings lib;} )
+    ../../system/app/steam.nix
+    ../../system/app/flatpak.nix
+    ../../system/wm/pipewire.nix
+    ( import ../../system/wm/fonts.nix { inherit pkgs-stable; } )
     ../../system/style/stylix.nix
   ];
 

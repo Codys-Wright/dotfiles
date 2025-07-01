@@ -122,7 +122,8 @@ let
         echo "  phoenix gc full     # Remove all old generations"
         ;;
     esac
-  '';
+    '';
+  };
 
 in
 {

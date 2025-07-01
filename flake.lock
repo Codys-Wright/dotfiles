@@ -395,6 +395,26 @@
         "type": "github"
       }
     },
+    "nh": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1751031069,
+        "narHash": "sha256-5TnciluG7MGHoH5abAuC8UwRVrdEu7gKcpkz/bKb9N4=",
+        "owner": "nix-community",
+        "repo": "nh",
+        "rev": "992aa30f55d35395b129376f16809319a9b23b16",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nix-community",
+        "repo": "nh",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1751211869,
@@ -669,6 +689,7 @@
         "kdenlive-pin-nixpkgs": "kdenlive-pin-nixpkgs",
         "magit-file-icons": "magit-file-icons",
         "mini-frame": "mini-frame",
+        "nh": "nh",
         "nixpkgs": "nixpkgs",
         "nixpkgs-stable": "nixpkgs-stable",
         "nixpkgs-unstable": "nixpkgs-unstable",

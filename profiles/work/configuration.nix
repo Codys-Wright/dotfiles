@@ -71,7 +71,10 @@
     enable = true;
     clean.enable = true;
     clean.extraArgs = "--keep-since 4d --keep 3";
-    flake = "~/.dotfiles";
+    # Construct absolute path by: /home/username + (dotfilesDir with ~/ removed)
+    # userSettings.dotfilesDir = "~/.dotfiles" -> substring removes "~/" -> "/.dotfiles"
+    # Result: /home/cody/.dotfiles
+    flake = "/home/${userSettings.username}" + (builtins.substring 2 (builtins.stringLength userSettings.dotfilesDir) userSettings.dotfilesDir);
   };
 
   # User account

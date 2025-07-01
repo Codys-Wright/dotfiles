@@ -10,7 +10,7 @@
     ../../system/wm/pipewire.nix
     ../../system/style/stylix.nix
     ../../system/bin/phoenix.nix
-    (./. + "../../system/wm"+("/"+userSettings.wm)+".nix") # My window manager
+      (./. + "../../../system/wm"+("/"+userSettings.wm)+".nix") # My window manager
   ];
 
   # Bootloader

@@ -9,7 +9,7 @@
     ../../system/app/flatpak.nix
     ../../system/wm/pipewire.nix
     ../../system/style/stylix.nix
-    ../../system/bin/phoenix/phoenix.nix
+    ../../system/bin/phoenix.nix
   ];
 
   # Bootloader
@@ -66,6 +66,14 @@
   # Enable fish shell
   programs.fish.enable = true;
 
+  # Enable nh (Nix helper)
+  programs.nh = {
+    enable = true;
+    clean.enable = true;
+    clean.extraArgs = "--keep-since 4d --keep 3";
+    flake = "~/.dotfiles";
+  };
+
   # User account
   users.users.${userSettings.username} = {
     shell = pkgs.fish;
@@ -107,6 +115,7 @@
     sd
     obsidian
     code-cursor
+    inputs.nh.packages.${system}.default
   ];
 
   # This value determines the NixOS release from which the default

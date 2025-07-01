@@ -214,5 +214,9 @@
       url = "github:StevenBlack/hosts";
       flake = false;
     };
+    nh = {
+      url = "github:nix-community/nh";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 }

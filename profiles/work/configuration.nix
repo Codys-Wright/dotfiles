@@ -9,6 +9,7 @@
     ../../system/app/flatpak.nix
     ../../system/wm/pipewire.nix
     ../../system/style/stylix.nix
+    ../../system/bin/phoenix/phoenix.nix
   ];
 
   # Bootloader

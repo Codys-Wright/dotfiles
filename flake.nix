@@ -7,12 +7,12 @@
       systemSettings = {
         system = "x86_64-linux";
         hostname = "nixos";
-        profile = "work"; # start with work profile
+        profile = "work";
         timezone = "America/New_York";
         locale = "en_US.UTF-8";
         bootMode = "uefi";
         bootMountPath = "/boot";
-        gpuType = "amd"; # based on your hardware config
+        gpuType = "nvidia";
       };
 
       # ----- USER SETTINGS ----- #
@@ -21,8 +21,8 @@
         name = "cody";
         email = "acodywright@gmail.com";
         dotfilesDir = "~/.dotfiles";
-        wm = "plasma"; # your current setup
-        wmType = "x11"; # plasma with x11
+        wm = "plasma";
+        wmType = "x11";
         browser = "firefox";
         term = "fish";
         editor = "neovim";
@@ -60,6 +60,15 @@
         };
       };
 
+      pkgs-unstable = import nixpkgs-patched {
+        system = systemSettings.system;
+        config = {
+          allowUnfree = true;
+          allowUnfreePredicate = (_: true);
+        };
+        overlays = [ inputs.rust-overlay.overlays.default ];
+      };
+
       pkgs-emacs = import inputs.emacs-pin-nixpkgs {
         system = systemSettings.system;
       };
@@ -72,17 +81,12 @@
         system = systemSettings.system;
       };
 
-      pkgs-unstable = import nixpkgs-patched {
-        system = systemSettings.system;
-        config = {
-          allowUnfree = true;
-          allowUnfreePredicate = (_: true);
-        };
-        overlays = [ inputs.rust-overlay.overlays.default ];
-      };
-
       # configure lib
-      lib = inputs.nixpkgs.lib;
+      lib = (if ((systemSettings.profile == "homelab") || (systemSettings.profile == "worklab"))
+             then
+               inputs.nixpkgs-stable.lib
+             else
+               inputs.nixpkgs.lib);
 
       # use home-manager-stable if running a server (homelab or worklab profile)
       # otherwise use home-manager-unstable
@@ -135,8 +139,6 @@
           };
         };
       };
-
-      # No packages or apps needed for now
     };
 
   inputs = {
@@ -154,43 +156,12 @@
     home-manager-stable.url = "github:nix-community/home-manager/release-24.05";
     home-manager-stable.inputs.nixpkgs.follows = "nixpkgs-stable";
 
-    nix-on-droid = {
-      url = "github:nix-community/nix-on-droid/master";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.home-manager.follows = "home-manager-unstable";
-    };
-
-    hyprland = {
-      url = "github:hyprwm/Hyprland/v0.44.1?submodules=true";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    hyprland-plugins = {
-      type = "git";
-      url = "https://code.hyprland.org/hyprwm/hyprland-plugins.git";
-      rev = "4d7f0b5d8b952f31f7d2e29af22ab0a55ca5c219"; #v0.44.1
-      inputs.hyprland.follows = "hyprland";
-    };
-    hyprlock = {
-      type = "git";
-      url = "https://code.hyprland.org/hyprwm/hyprlock.git";
-      rev = "73b0fc26c0e2f6f82f9d9f5b02e660a958902763";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-    hyprgrass.url = "github:horriblename/hyprgrass/427690aec574fec75f5b7b800ac4a0b4c8e4b1d5";
-    hyprgrass.inputs.hyprland.follows = "hyprland";
-
-    nix-doom-emacs.url = "github:nix-community/nix-doom-emacs";
-    nix-doom-emacs.inputs.nixpkgs.follows = "emacs-pin-nixpkgs";
-
-    nix-straight.url = "github:librephoenix/nix-straight.el/pgtk-patch";
-    nix-straight.flake = false;
-    nix-doom-emacs.inputs.nix-straight.follows = "nix-straight";
-
+    stylix.url = "github:danth/stylix";
+    rust-overlay.url = "github:oxalica/rust-overlay";
     nvchad = {
       url = "github:NvChad/starter";
       flake = false;
     };
-
     eaf = {
       url = "github:emacs-eaf/emacs-application-framework";
       flake = false;
@@ -239,11 +210,6 @@
       url = "github:muffinmad/emacs-mini-frame";
       flake = false;
     };
-
-    stylix.url = "github:danth/stylix";
-
-    rust-overlay.url = "github:oxalica/rust-overlay";
-
     blocklist-hosts = {
       url = "github:StevenBlack/hosts";
       flake = false;

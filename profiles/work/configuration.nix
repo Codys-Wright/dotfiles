@@ -105,6 +105,7 @@
     fx
     discord
     sd
+    obsidian
     code-cursor
   ];
 

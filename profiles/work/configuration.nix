@@ -3,6 +3,7 @@
 {
   imports = [
     ../../system/hardware-configuration.nix
+    ../../system/boot/grub.nix  # GRUB 2 bootloader
     ../../system/app/virtualization.nix
     ( import ../../system/app/docker.nix {storageDriver = null; inherit pkgs userSettings lib;} )
     ../../system/app/steam.nix
@@ -12,10 +13,6 @@
     ../../system/bin/phoenix.nix
       (./. + "../../../system/wm"+("/"+userSettings.wm)+".nix") # My window manager
   ];
-
-  # Bootloader
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
 
   # Use latest kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -105,6 +102,9 @@
     obsidian
     code-cursor
     inputs.nh.packages.${systemSettings.system}.default
+    hyprland
+    hyprlock
+    hypridle
   ];
 
   # This value determines the NixOS release from which the default

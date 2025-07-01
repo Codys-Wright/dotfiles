@@ -5,7 +5,7 @@
   services.xserver.enable = true;
 
   # Enable the KDE Plasma Desktop Environment
-  services.xserver.displayManager.sddm = {
+  services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
     enableHidpi = true;
@@ -24,8 +24,8 @@
   services.printing.enable = true;
 
   # Enable automatic login for the user (optional)
-  services.xserver.displayManager.autoLogin.enable = true;
-  services.xserver.displayManager.autoLogin.user = userSettings.username;
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = userSettings.username;
 
   # Add KDE-specific packages to user packages (optional)
   users.users.${userSettings.username}.packages = with pkgs; [

@@ -1,6 +1,4 @@
-{ inputs, pkgs, lib, ... }: let
-  pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-in
+{ pkgs, lib, ... }:
 {
   # Import wayland config
   imports = [ ./wayland.nix
@@ -15,27 +13,35 @@ in
 
   services.gnome.gnome-keyring.enable = true;
 
+  # Force Hyprland to use logind instead of seatd to avoid libseat errors
+  environment.sessionVariables = {
+    LIBSEAT_BACKEND = "logind";
+    WLR_NO_HARDWARE_CURSORS = "1";
+    NIXOS_OZONE_WL = "1";
+  };
+
+  hardware = {
+    opengl.enable = true;
+    nvidia.modesetting.enable = true;
+  };
+
   programs = {
     hyprland = {
       enable = true;
-      package = inputs.hyprland.packages.${pkgs.system}.hyprland;
       xwayland = {
         enable = true;
       };
-      portalPackage = pkgs-hyprland.xdg-desktop-portal-hyprland;
+      portalPackage = pkgs.xdg-desktop-portal-hyprland;
     };
   };
 
   services.xserver.excludePackages = [ pkgs.xterm ];
 
-  services.xserver = {
-    displayManager.sddm = {
-      enable = true;
-      wayland.enable = true;
-      enableHidpi = true;
-      theme = "chili";
-      package = pkgs.kdePackages.sddm;
-    };
-
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+    enableHidpi = true;
+    theme = "chili";
+    package = pkgs.kdePackages.sddm;
   };
 }

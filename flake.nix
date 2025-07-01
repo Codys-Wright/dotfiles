@@ -12,6 +12,7 @@
         locale = "en_US.UTF-8";
         bootMode = "uefi";
         bootMountPath = "/boot";
+        grubDevice = "/dev/sda";  # Device for GRUB installation (BIOS only)
         gpuType = "nvidia";
       };
 
@@ -71,7 +72,9 @@
                     allowUnfree = true;
                     allowUnfreePredicate = (_: true);
                   };
-                  overlays = [ inputs.rust-overlay.overlays.default ];
+                  overlays = [ 
+                    inputs.rust-overlay.overlays.default
+                  ];
                 }));
 
       pkgs-stable = import inputs.nixpkgs-stable {
@@ -80,6 +83,7 @@
           allowUnfree = true;
           allowUnfreePredicate = (_: true);
         };
+        overlays = [ ];
       };
 
       pkgs-unstable = import nixpkgs-patched {
@@ -88,7 +92,9 @@
           allowUnfree = true;
           allowUnfreePredicate = (_: true);
         };
-        overlays = [ inputs.rust-overlay.overlays.default ];
+        overlays = [ 
+          inputs.rust-overlay.overlays.default
+        ];
       };
 
       pkgs-emacs = import inputs.emacs-pin-nixpkgs {
@@ -231,23 +237,14 @@
       url = "github:nix-community/nh";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland = {
-      url = "github:hyprwm/Hyprland/v0.44.1?submodules=true";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    hyprland.url = "github:hyprwm/Hyprland";
+    hyprland.inputs.nixpkgs.follows = "nixpkgs";
     hyprland-plugins = {
-      type = "git";
-      url = "https://code.hyprland.org/hyprwm/hyprland-plugins.git";
-      rev = "4d7f0b5d8b952f31f7d2e29af22ab0a55ca5c219"; #v0.44.1
+      url = "github:hyprwm/hyprland-plugins";
       inputs.hyprland.follows = "hyprland";
-    };
-    hyprlock = {
-      type = "git";
-      url = "https://code.hyprland.org/hyprwm/hyprlock.git";
-      rev = "73b0fc26c0e2f6f82f9d9f5b02e660a958902763";
-      inputs.nixpkgs.follows = "nixpkgs";
     };
     hyprgrass.url = "github:horriblename/hyprgrass/427690aec574fec75f5b7b800ac4a0b4c8e4b1d5";
     hyprgrass.inputs.hyprland.follows = "hyprland";
   };
+
 }

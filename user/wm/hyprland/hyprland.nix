@@ -1,6 +1,4 @@
-{ inputs, config, lib, pkgs, userSettings, systemSettings, pkgs-nwg-dock-hyprland, ... }: let
-  pkgs-hyprland = inputs.hyprland.inputs.nixpkgs.legacyPackages.${pkgs.stdenv.hostPlatform.system};
-in
+{ config, lib, pkgs, userSettings, systemSettings, pkgs-nwg-dock-hyprland, ... }:
 {
   imports = [
     ../../app/terminal/alacritty.nix
@@ -24,7 +22,6 @@ in
 
   wayland.windowManager.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
     plugins = [ ];
     settings = { };
     extraConfig = ''
@@ -416,35 +413,14 @@ in
       noDisplay = true;
       icon = "/home/"+userSettings.username+"/.local/share/pixmaps/hyprland-logo-stylix.svg";
     })
-    (hyprnome.override (oldAttrs: {
-        rustPlatform = oldAttrs.rustPlatform // {
-          buildRustPackage = args: oldAttrs.rustPlatform.buildRustPackage (args // {
-            pname = "hyprnome";
-            version = "unstable-2024-05-06";
-            src = fetchFromGitHub {
-              owner = "donovanglover";
-              repo = "hyprnome";
-              rev = "f185e6dbd7cfcb3ecc11471fab7d2be374bd5b28";
-              hash = "sha256-tmko/bnGdYOMTIGljJ6T8d76NPLkHAfae6P6G2Aa2Qo=";
-            };
-            cargoDeps = oldAttrs.cargoDeps.overrideAttrs (oldAttrs: rec {
-              name = "${pname}-vendor.tar.gz";
-              inherit src;
-              outputHash = "sha256-cQwAGNKTfJTnXDI3IMJQ2583NEIZE7GScW7TsgnKrKs=";
-            });
-            cargoHash = "sha256-cQwAGNKTfJTnXDI3IMJQ2583NEIZE7GScW7TsgnKrKs=";
-          });
-        };
-     })
-    )
-    gnome.zenity
+    zenity
     wlr-randr
     wtype
     ydotool
     wl-clipboard
     hyprland-protocols
     hyprpicker
-    inputs.hyprlock.packages.${pkgs.system}.default
+    hyprlock
     hypridle
     hyprpaper
     fnott
@@ -511,7 +487,7 @@ in
     '')
     ])
   ++
-  (with pkgs-hyprland; [ ])
+  (with pkgs; [ ])
   ++ (with pkgs-nwg-dock-hyprland; [
     (nwg-dock-hyprland.overrideAttrs (oldAttrs: {
       patches = ./patches/noactiveclients.patch;
@@ -692,14 +668,7 @@ in
   services.swayosd.topMargin = 0.5;
   programs.waybar = {
     enable = true;
-    package = pkgs.waybar.overrideAttrs (oldAttrs: {
-      postPatch = ''
-        # use hyprctl to switch workspaces
-        sed -i 's/zext_workspace_handle_v1_activate(workspace_handle_);/const std::string command = "hyprctl dispatch focusworkspaceoncurrentmonitor " + std::to_string(id());\n\tsystem(command.c_str());/g' src/modules/wlr/workspace_manager.cpp
-        sed -i 's/gIPC->getSocket1Reply("dispatch workspace " + std::to_string(id()));/gIPC->getSocket1Reply("dispatch focusworkspaceoncurrentmonitor " + std::to_string(id()));/g' src/modules/hyprland/workspaces.cpp
-      '';
-      patches = [./patches/waybarpaupdate.patch ./patches/waybarbatupdate.patch];
-    });
+    package = pkgs.waybar;
     settings = {
       mainBar = {
         layer = "top";

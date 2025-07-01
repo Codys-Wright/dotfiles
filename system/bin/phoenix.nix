@@ -1,4 +1,4 @@
-{ pkgs, userSettings, ... }:
+{ pkgs, userSettings, inputs, ... }:
 # TODO make this work on nix-on-droid!
 let
   # Helper function to create scripts with proper runtime dependencies
@@ -15,11 +15,11 @@ let
     
     # Sync system
     echo "📦 Updating system configuration..."
-    nh os switch ${userSettings.dotfilesDir}
+    nh os switch ${userSettings.dotfilesDir}#nixosConfigurations.system
     
     # Sync user
     echo "🏠 Updating user configuration..."
-    nh home switch ${userSettings.dotfilesDir}
+    nh home switch ${userSettings.dotfilesDir}#homeConfigurations.user.activationPackage
     
     echo "✅ Sync complete!"
   '';
@@ -27,14 +27,14 @@ let
   syncSystemScript = createScript "phoenix-sync-system" ''
     #!/bin/bash
     echo "📦 Updating system configuration..."
-    nh os switch ${userSettings.dotfilesDir}
+    nh os switch ${userSettings.dotfilesDir}#nixosConfigurations.system
     echo "✅ System sync complete!"
   '';
 
   syncUserScript = createScript "phoenix-sync-user" ''
     #!/bin/bash
     echo "🏠 Updating user configuration..."
-    nh home switch ${userSettings.dotfilesDir}
+    nh home switch ${userSettings.dotfilesDir}#homeConfigurations.user.activationPackage
     echo "✅ User sync complete!"
   '';
 
@@ -51,8 +51,8 @@ let
     echo "⬆️ Upgrading system..."
     cd ${userSettings.dotfilesDir}
     nix flake update
-    nh os switch ${userSettings.dotfilesDir}
-    nh home switch ${userSettings.dotfilesDir}
+    nh os switch ${userSettings.dotfilesDir}#nixosConfigurations.system
+    nh home switch ${userSettings.dotfilesDir}#homeConfigurations.user.activationPackage
     echo "✅ System upgraded!"
   '';
 
@@ -65,7 +65,7 @@ let
       nh clean --keep 0
     elif [ "$1" ]; then
       echo "🗑️ Garbage collection older than $1..."
-      nh clean --keep-since $1
+      nh clean --keep-since "$1"
     else
       echo "🗑️ Garbage collection older than 30 days..."
       nh clean --keep-since 30d

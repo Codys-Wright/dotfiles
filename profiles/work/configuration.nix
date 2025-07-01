@@ -1,4 +1,4 @@
-{ pkgs, lib, systemSettings, userSettings, ... }:
+{ pkgs, lib, systemSettings, userSettings, inputs, ... }:
 
 {
   imports = [
@@ -98,6 +98,11 @@
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
+  # Enable experimental features for flakes and nix-command
+  nix.extraOptions = ''
+    experimental-features = nix-command flakes
+  '';
+
   # System packages
   environment.systemPackages = with pkgs; [
     vim
@@ -118,7 +123,7 @@
     sd
     obsidian
     code-cursor
-    inputs.nh.packages.${system}.default
+    inputs.nh.packages.${systemSettings.system}.default
   ];
 
   # This value determines the NixOS release from which the default

@@ -21,6 +21,7 @@
         name = "cody";
         email = "acodywright@gmail.com";
         dotfilesDir = "~/.dotfiles";
+        theme = "io";
         wm = "plasma";
         wmType = "x11";
         browser = "firefox";
@@ -88,13 +89,8 @@
              else
                inputs.nixpkgs.lib);
 
-      # use home-manager-stable if running a server (homelab or worklab profile)
-      # otherwise use home-manager-unstable
-      home-manager = (if ((systemSettings.profile == "homelab") || (systemSettings.profile == "worklab"))
-             then
-               inputs.home-manager-stable
-             else
-               inputs.home-manager-unstable);
+      # use home-manager that matches nixpkgs
+      home-manager = inputs.home-manager;
 
       # Systems that can run tests:
       supportedSystems = [ "aarch64-linux" "i686-linux" "x86_64-linux" ];
@@ -151,10 +147,6 @@
 
     home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager-unstable.url = "github:nix-community/home-manager/master";
-    home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager-stable.url = "github:nix-community/home-manager/release-24.05";
-    home-manager-stable.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     stylix.url = "github:danth/stylix";
     rust-overlay.url = "github:oxalica/rust-overlay";

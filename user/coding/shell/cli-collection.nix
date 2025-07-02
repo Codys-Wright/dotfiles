@@ -17,6 +17,7 @@
     w3m
     pandoc
     hwinfo
+    unstable.opencode
     pciutils
     numbat
     (pkgs.callPackage ../pkgs/pokemon-colorscripts.nix { })

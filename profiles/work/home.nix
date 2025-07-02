@@ -10,6 +10,8 @@
 
   imports = [
     ../../user/nix/nix.nix
+    ../../user/coding/shell/cli-collection.nix
+    ../../user/coding/app/nvim/nvim.nix
     ../../user/nix/wm/${userSettings.wm}/${userSettings.wm}.nix # My window manager selected from flake
   ];
 

@@ -25,18 +25,19 @@
     plugins = [ ];
     settings = { };
     extraConfig = ''
-      ${import ./config/environment.nix { inherit config pkgs userSettings; }}
-      ${import ./config/animations.nix { inherit config; }}
-      ${import ./config/general.nix { inherit config; }}
-      ${import ./config/monitors.nix { inherit config; }}
-      ${import ./config/input.nix { inherit config; }}
-      ${import ./config/decoration.nix { inherit config; }}
-      ${import ./config/misc.nix { inherit config userSettings; }}
-      ${import ./config/keybindings.nix { inherit config userSettings; }}
-      ${import ./config/scratchpads.nix { inherit config userSettings; }}
-      ${import ./config/windowrules.nix { inherit config; }}
-      ${import ./config/layerrules.nix { inherit config; }}
-      ${import ./config/xwayland.nix { inherit config; }}
+      # ${import ./config/environment.nix { inherit config pkgs userSettings; }}
+      # ${import ./config/animations.nix { inherit config; }}
+      # ${import ./config/general.nix { inherit config; }}
+      # ${import ./config/monitors.nix { inherit config; }}
+      # ${import ./config/input.nix { inherit config; }}
+      # ${import ./config/decoration.nix { inherit config; }}
+      # ${import ./config/misc.nix { inherit config userSettings; }}
+      # ${import ./config/keybindings.nix { inherit config userSettings; }}
+      # ${import ./config/scratchpads.nix { inherit config userSettings; }}
+      # ${import ./config/windowrules.nix { inherit config; }}
+      # ${import ./config/layerrules.nix { inherit config; }}
+      # ${import ./config/xwayland.nix { inherit config; }}
+      ${import ./modules/waybar.nix { inherit config pkgs userSettings; }}.waybarExtraConfig
     '';
     xwayland = { enable = true; };
     systemd.enable = true;

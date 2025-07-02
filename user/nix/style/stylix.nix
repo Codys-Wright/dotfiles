@@ -1,10 +1,11 @@
 { config, lib, pkgs, inputs, userSettings, ... }:
 
 let
-  themePath = "../../../themes"+("/"+userSettings.theme+"/"+userSettings.theme)+".yaml";
-  themePolarity = lib.removeSuffix "\n" (builtins.readFile (./. + "../../../themes"+("/"+userSettings.theme)+"/polarity.txt"));
-  backgroundUrl = builtins.readFile (./. + "../../../themes"+("/"+userSettings.theme)+"/backgroundurl.txt");
-  backgroundSha256 = builtins.readFile (./. + "../../../themes/"+("/"+userSettings.theme)+"/backgroundsha256.txt");
+  themeDir = "${inputs.themes}/${userSettings.theme}";
+  themePath = "${themeDir}/${userSettings.theme}.yaml";
+  themePolarity = lib.removeSuffix "\n" (builtins.readFile "${themeDir}/polarity.txt");
+  backgroundUrl = builtins.readFile "${themeDir}/backgroundurl.txt";
+  backgroundSha256 = builtins.readFile "${themeDir}/backgroundsha256.txt";
 in
 {
 
@@ -17,7 +18,7 @@ in
     url = backgroundUrl;
     sha256 = backgroundSha256;
   };
-  stylix.base16Scheme = ./. + themePath;
+  stylix.base16Scheme = themePath;
 
   stylix.fonts = {
     monospace = {

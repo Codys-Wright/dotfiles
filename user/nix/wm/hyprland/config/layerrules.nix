@@ -1,9 +1,6 @@
 { ... }:
 
 ''
-layerrule = blur,waybar
-layerrule = xray,waybar
-blurls = waybar
 layerrule = blur,launcher # fuzzel
 blurls = launcher # fuzzel
 layerrule = blur,gtk-layer-shell

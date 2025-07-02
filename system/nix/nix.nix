@@ -9,7 +9,7 @@
     # ./wm/dbus.nix
     # ./wm/fonts.nix
     # ./wm/gnome-keyring.nix
-    # ./wm/hyprland.nix
+    ./wm/hyprland.nix
     # ./wm/pipewire.nix
     # ./wm/plasma.nix
     # ./wm/wayland.nix

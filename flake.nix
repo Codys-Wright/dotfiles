@@ -204,7 +204,7 @@
     kdenlive-pin-nixpkgs.url = "nixpkgs/cfec6d9203a461d9d698d8a60ef003cac6d0da94";
     nwg-dock-hyprland-pin-nixpkgs.url = "nixpkgs/2098d845d76f8a21ae4fe12ed7c7df49098d3f15";
 
-    home-manager-unstable.url = "github:nix-community/home-manager/master";
+    home-manager-unstable.url = "github:nix-community/home-manager/release-25.05";
     home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager-stable.url = "github:nix-community/home-manager/release-24.05";

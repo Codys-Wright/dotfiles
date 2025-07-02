@@ -291,10 +291,11 @@
       url = "github:muffinmad/emacs-mini-frame";
       flake = false;
     };
-nh = {
+    nh = {
       url = "github:nix-community/nh";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
     stylix.url = "github:danth/stylix";
 
     rust-overlay.url = "github:oxalica/rust-overlay";

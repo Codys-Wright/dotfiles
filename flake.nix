@@ -6,7 +6,7 @@
       # ---- SYSTEM SETTINGS ---- #
       systemSettings = {
         system = "x86_64-linux"; # system arch
-        hostname = "snowfire"; # hostname
+        hostname = "nixos"; # hostname
         profile = "personal"; # select a profile defined from my profiles directory
         timezone = "America/Chicago"; # select timezone
         locale = "en_US.UTF-8"; # select locale

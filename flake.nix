@@ -104,6 +104,7 @@
 		nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
 		hyprland.url = "github:hyprwm/Hyprland";
 		nur.url = "github:nix-community/NUR";
+		nh.url = "github:nix-community/nh";
 
 	};
 

@@ -188,10 +188,11 @@
   let
     pkgs = nixpkgsFor.${system};
     installPkg = pkgs.writeShellApplication {
-      name = "install";
-      runtimeInputs = with pkgs; [ git ];
-      text = ''${./install.sh} "$@"'';
-    };
+  name = "install";
+  runtimeInputs = with pkgs; [ git ];
+  text = builtins.readFile ./install.sh;
+};
+
   in {
     default = installPkg;
     install = installPkg;

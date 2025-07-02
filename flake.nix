@@ -105,6 +105,8 @@
 		hyprland.url = "github:hyprwm/Hyprland";
 		nur.url = "github:nix-community/NUR";
 		nh.url = "github:nix-community/nh";
+		home-manager.url = "github:nix-community/home-manager/release-25.05";
+		home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
 	};
 

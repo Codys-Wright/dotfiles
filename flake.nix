@@ -62,6 +62,7 @@
 				})
 			];
 		});
+		pkgs = nixpkgsWithOverlays systemSettings.system;
 
 	in {
 		homeConfigurations = {

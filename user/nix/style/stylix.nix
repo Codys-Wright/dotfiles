@@ -87,18 +87,18 @@ in
   home.file.".fehbg-stylix".executable = true;
   home.file = {
     ".config/qt5ct/colors/oomox-current.conf".source = config.lib.stylix.colors {
-      template = builtins.readFile ./oomox-current.conf.mustache;
+      template = builtins.readFile (./. + "/oomox-current.conf.mustache");
       extension = ".conf";
     };
     ".config/Trolltech.conf".source = config.lib.stylix.colors {
-      template = builtins.readFile ./Trolltech.conf.mustache;
+      template = builtins.readFile (./. + "/Trolltech.conf.mustache");
       extension = ".conf";
     };
     ".config/kdeglobals".source = config.lib.stylix.colors {
-      template = builtins.readFile ./Trolltech.conf.mustache;
+      template = builtins.readFile (./. + "/Trolltech.conf.mustache");
       extension = "";
     };
-    ".config/qt5ct/qt5ct.conf".text = pkgs.lib.mkBefore (builtins.readFile ./qt5ct.conf);
+    ".config/qt5ct/qt5ct.conf".text = pkgs.lib.mkBefore (builtins.readFile (./. + "/qt5ct.conf"));
   };
   home.file.".config/hypr/hyprpaper.conf".text = ''
     preload = ''+config.stylix.image+''

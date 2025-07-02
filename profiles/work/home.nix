@@ -9,7 +9,7 @@
   programs.home-manager.enable = true;
 
   imports = [
-    ../../../user/nix/nix.nix
+    ../../user/nix/nix.nix
     # (./. + "../../../user/wm"+("/"+userSettings.wm+"/"+userSettings.wm)+".nix") # My window manager selected from flake
   ];
 

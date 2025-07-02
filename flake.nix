@@ -1,33 +1,33 @@
 {
-  description = "Cody's NixOS Configuration";
+  description = "Flake of LibrePhoenix";
 
   outputs = inputs@{ self, ... }:
     let
       # ---- SYSTEM SETTINGS ---- #
       systemSettings = {
-        system = "x86_64-linux";
-        hostname = "nixos";
-        profile = "work";
-        timezone = "America/New_York";
-        locale = "en_US.UTF-8";
-        bootMode = "uefi";
-        bootMountPath = "/boot";
-        grubDevice = "/dev/sda";  # Device for GRUB installation (BIOS only)
-        gpuType = "nvidia";
+        system = "x86_64-linux"; # system arch
+        hostname = "snowfire"; # hostname
+        profile = "personal"; # select a profile defined from my profiles directory
+        timezone = "America/Chicago"; # select timezone
+        locale = "en_US.UTF-8"; # select locale
+        bootMode = "uefi"; # uefi or bios
+        bootMountPath = "/boot"; # mount path for efi boot partition; only used for uefi boot mode
+        grubDevice = ""; # device identifier for grub; only used for legacy (bios) boot mode
+        gpuType = "nvidia"; # amd, intel or nvidia; only makes some slight mods for amd at the moment
       };
 
       # ----- USER SETTINGS ----- #
       userSettings = rec {
         username = "cody"; # username
-        name = "cody"; # name/identifier
+        name = "Cody"; # name/identifier
         email = "acodywright@gmail.com"; # email (used for certain configurations)
         dotfilesDir = "~/.dotfiles"; # absolute path of the local repo
         theme = "io"; # selcted theme from my themes directory (./themes/)
         wm = "hyprland"; # Selected window manager or desktop environment; must select one in both ./user/wm/ and ./system/wm/
         # window manager type (hyprland or x11) translator
         wmType = if ((wm == "hyprland") || (wm == "plasma")) then "wayland" else "x11";
-        browser = "firefox"; # Default browser; must select one from ./user/app/browser/
-        spawnBrowser = if ((browser == "qutebrowser") && (wm == "hyprland")) then "qutebrowser-hyprprofile" else (if (browser == "qutebrowser") then "qutebrowser --qt-flag enable-gpu-rasterization --q[...]
+        browser = "qutebrowser"; # Default browser; must select one from ./user/app/browser/
+        spawnBrowser = if ((browser == "qutebrowser") && (wm == "hyprland")) then "qutebrowser-hyprprofile" else (if (browser == "qutebrowser") then "qutebrowser --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=4" else browser); # Browser spawn command must be specail for qb, since it doesn't gpu accelerate by default (why?)
         defaultRoamDir = "Personal.p"; # Default org roam directory relative to ~/Org
         term = "alacritty"; # Default terminal command;
         font = "Intel One Mono"; # Selected font
@@ -53,10 +53,12 @@
 
       # create patched nixpkgs
       nixpkgs-patched =
-        (import inputs.nixpkgs { system = systemSettings.system; rocmSupport = (if systemSettings.gpuType == "amd" then true else false); }).applyPatches {
+        (import inputs.nixpkgs { system = systemSettings.system; rocmSupport = (if systemSettings.gpu == "amd" then true else false); }).applyPatches {
           name = "nixpkgs-patched";
           src = inputs.nixpkgs;
-          patches = [ ];
+          patches = [ #./patches/emacs-no-version-check.patch
+                      #./patches/nixpkgs-348697.patch
+                    ];
         };
 
       # configure pkgs
@@ -72,9 +74,7 @@
                     allowUnfree = true;
                     allowUnfreePredicate = (_: true);
                   };
-                  overlays = [ 
-                    inputs.rust-overlay.overlays.default
-                  ];
+                  overlays = [ inputs.rust-overlay.overlays.default ];
                 }));
 
       pkgs-stable = import inputs.nixpkgs-stable {
@@ -83,18 +83,15 @@
           allowUnfree = true;
           allowUnfreePredicate = (_: true);
         };
-        overlays = [ ];
       };
 
-      pkgs-unstable = import nixpkgs-patched {
+      pkgs-unstable = import inputs.nixpkgs-patched {
         system = systemSettings.system;
         config = {
           allowUnfree = true;
           allowUnfreePredicate = (_: true);
         };
-        overlays = [ 
-          inputs.rust-overlay.overlays.default
-        ];
+        overlays = [ inputs.rust-overlay.overlays.default ];
       };
 
       pkgs-emacs = import inputs.emacs-pin-nixpkgs {
@@ -110,14 +107,21 @@
       };
 
       # configure lib
+      # use nixpkgs if running a server (homelab or worklab profile)
+      # otherwise use patched nixos-unstable nixpkgs
       lib = (if ((systemSettings.profile == "homelab") || (systemSettings.profile == "worklab"))
              then
                inputs.nixpkgs-stable.lib
              else
                inputs.nixpkgs.lib);
 
-      # use home-manager that matches nixpkgs
-      home-manager = inputs.home-manager;
+      # use home-manager-stable if running a server (homelab or worklab profile)
+      # otherwise use home-manager-unstable
+      home-manager = (if ((systemSettings.profile == "homelab") || (systemSettings.profile == "worklab"))
+             then
+               inputs.home-manager-stable
+             else
+               inputs.home-manager-unstable);
 
       # Systems that can run tests:
       supportedSystems = [ "aarch64-linux" "i686-linux" "x86_64-linux" ];
@@ -134,9 +138,10 @@
         user = home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [
-            (./. + "/profiles" + ("/" + systemSettings.profile) + "/home.nix")
+            (./. + "/profiles" + ("/" + systemSettings.profile) + "/home.nix") # load home.nix from selected PROFILE
           ];
           extraSpecialArgs = {
+            # pass config variables from above
             inherit pkgs-stable;
             inherit pkgs-emacs;
             inherit pkgs-kdenlive;
@@ -147,14 +152,16 @@
           };
         };
       };
-
       nixosConfigurations = {
         system = lib.nixosSystem {
           system = systemSettings.system;
           modules = [
             (./. + "/profiles" + ("/" + systemSettings.profile) + "/configuration.nix")
-          ];
+            inputs.lix-module.nixosModules.default
+            ./system/bin/phoenix.nix
+          ]; # load configuration.nix from selected PROFILE
           specialArgs = {
+            # pass config variables from above
             inherit pkgs-stable;
             inherit systemSettings;
             inherit userSettings;
@@ -162,56 +169,97 @@
           };
         };
       };
+      nixOnDroidConfigurations = {
+        inherit pkgs;
+        default = inputs.nix-on-droid.lib.nixOnDroidConfiguration {
+          modules = [ ./profiles/nix-on-droid/configuration.nix ];
+        };
+        extraSpecialArgs = {
+          # pass config variables from above
+          inherit pkgs-stable;
+          inherit pkgs-emacs;
+          inherit systemSettings;
+          inherit userSettings;
+          inherit inputs;
+        };
+      };
 
-      # --- Robust nix run integration ---
       packages = forAllSystems (system:
-        let
-          pkgs = nixpkgsFor.${system};
-          installPkg = pkgs.writeShellApplication {
+        let pkgs = nixpkgsFor.${system};
+        in {
+          default = self.packages.${system}.install;
+
+          install = pkgs.writeShellApplication {
             name = "install";
-            runtimeInputs = with pkgs; [ git ];
+            runtimeInputs = with pkgs; [ git ]; # I could make this fancier by adding other deps
             text = ''${./install.sh} "$@"'';
           };
-        in {
-          default = installPkg;
-          install = installPkg;
-        }
-      );
+        });
 
-      apps = forAllSystems (system:
-        let
-          pkg = self.packages.${system}.default;
-        in {
-          default = {
-            type = "app";
-            program = "${pkg}/bin/install";
-          };
-          install = {
-            type = "app";
-            program = "${pkg}/bin/install";
-          };
-        }
-      );
-      # --- End nix run integration ---
+      apps = forAllSystems (system: {
+        default = self.apps.${system}.install;
+
+        install = {
+          type = "app";
+          program = "${self.packages.${system}.install}/bin/install";
+        };
+      });
     };
 
   inputs = {
-    nixpkgs.url = "nixpkgs/nixos-25.05";
-    nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
+    lix-module = {
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/2.90.0.tar.gz";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixpkgs.url = "nixpkgs/nixos-unstable";
     nixpkgs-stable.url = "nixpkgs/nixos-24.05";
     emacs-pin-nixpkgs.url = "nixpkgs/f72123158996b8d4449de481897d855bc47c7bf6";
     kdenlive-pin-nixpkgs.url = "nixpkgs/cfec6d9203a461d9d698d8a60ef003cac6d0da94";
     nwg-dock-hyprland-pin-nixpkgs.url = "nixpkgs/2098d845d76f8a21ae4fe12ed7c7df49098d3f15";
 
-    home-manager.url = "github:nix-community/home-manager/release-25.05";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager-unstable.url = "github:nix-community/home-manager/master";
+    home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs";
 
-    stylix.url = "github:danth/stylix";
-    rust-overlay.url = "github:oxalica/rust-overlay";
+    home-manager-stable.url = "github:nix-community/home-manager/release-24.05";
+    home-manager-stable.inputs.nixpkgs.follows = "nixpkgs-stable";
+
+    nix-on-droid = {
+      url = "github:nix-community/nix-on-droid/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager-unstable";
+    };
+
+    hyprland = {
+      url = "github:hyprwm/Hyprland/v0.44.1?submodules=true";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprland-plugins = {
+      type = "git";
+      url = "https://code.hyprland.org/hyprwm/hyprland-plugins.git";
+      rev = "4d7f0b5d8b952f31f7d2e29af22ab0a55ca5c219"; #v0.44.1
+      inputs.hyprland.follows = "hyprland";
+    };
+    hyprlock = {
+      type = "git";
+      url = "https://code.hyprland.org/hyprwm/hyprlock.git";
+      rev = "73b0fc26c0e2f6f82f9d9f5b02e660a958902763";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    hyprgrass.url = "github:horriblename/hyprgrass/427690aec574fec75f5b7b800ac4a0b4c8e4b1d5";
+    hyprgrass.inputs.hyprland.follows = "hyprland";
+
+    nix-doom-emacs.url = "github:nix-community/nix-doom-emacs";
+    nix-doom-emacs.inputs.nixpkgs.follows = "emacs-pin-nixpkgs";
+
+    nix-straight.url = "github:librephoenix/nix-straight.el/pgtk-patch";
+    nix-straight.flake = false;
+    nix-doom-emacs.inputs.nix-straight.follows = "nix-straight";
+
     nvchad = {
       url = "github:NvChad/starter";
       flake = false;
     };
+
     eaf = {
       url = "github:emacs-eaf/emacs-application-framework";
       flake = false;
@@ -260,21 +308,18 @@
       url = "github:muffinmad/emacs-mini-frame";
       flake = false;
     };
-    blocklist-hosts = {
-      url = "github:StevenBlack/hosts";
-      flake = false;
-    };
     nh = {
       url = "github:nix-community/nh";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    hyprland.url = "github:hyprwm/Hyprland";
-    hyprland.inputs.nixpkgs.follows = "nixpkgs";
-    hyprland-plugins = {
-      url = "github:hyprwm/hyprland-plugins";
-      inputs.hyprland.follows = "hyprland";
+
+    stylix.url = "github:danth/stylix";
+
+    rust-overlay.url = "github:oxalica/rust-overlay";
+
+    blocklist-hosts = {
+      url = "github:StevenBlack/hosts";
+      flake = false;
     };
-    hyprgrass.url = "github:horriblename/hyprgrass/427690aec574fec75f5b7b800ac4a0b4c8e4b1d5";
-    hyprgrass.inputs.hyprland.follows = "hyprland";
   };
 }

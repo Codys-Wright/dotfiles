@@ -1,7 +1,7 @@
-{ config, lib, pkgs, inputs, userSettings, ... }:
+{ config, lib, pkgs, inputs, userSettings, themesPath, ... }:
 
 let
-  themeDir = "${inputs.themes}/${userSettings.theme}";
+  themeDir = "${themesPath}/${userSettings.theme}";
   themePath = "${themeDir}/${userSettings.theme}.yaml";
   themePolarity = lib.removeSuffix "\n" (builtins.readFile "${themeDir}/polarity.txt");
   backgroundUrl = builtins.readFile "${themeDir}/backgroundurl.txt";

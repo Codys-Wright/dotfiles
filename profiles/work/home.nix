@@ -10,7 +10,7 @@
 
   imports = [
     ../../user/nix/nix.nix
-    # (./. + "../../../user/wm"+("/"+userSettings.wm+"/"+userSettings.wm)+".nix") # My window manager selected from flake
+    ../../user/nix/wm/${userSettings.wm}/${userSettings.wm}.nix # My window manager selected from flake
   ];
 
   home.stateVersion = "25.05"; # Please read the comment before changing.
@@ -19,6 +19,7 @@
     # Core utilities
     git
     zsh
+    cowsay
   ];
 
   home.sessionVariables = {

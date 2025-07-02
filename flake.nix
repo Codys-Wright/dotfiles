@@ -185,34 +185,26 @@
       };
 
       packages = forAllSystems (system:
-  let
-    pkgs = nixpkgsFor.${system};
-    installPkg = pkgs.writeShellApplication {
-  name = "install";
-  runtimeInputs = with pkgs; [ git ];
-  text = builtins.readFile ./install.sh;
-};
+        let pkgs = nixpkgsFor.${system};
+        in {
+          default = self.packages.${system}.install;
 
-  in {
-    default = installPkg;
-    install = installPkg;
-  }
-);
+          install = pkgs.writeShellApplication {
+            name = "install";
+            runtimeInputs = with pkgs; [ git ]; # I could make this fancier by adding other deps
+            text = ''${./install.sh} "$@"'';
+          };
+        });
 
-apps = forAllSystems (system:
-  let
-    pkg = self.packages.${system}.default;
-  in {
-    default = {
-      type = "app";
-      program = "${pkg}/bin/install";
+      apps = forAllSystems (system: {
+        default = self.apps.${system}.install;
+
+        install = {
+          type = "app";
+          program = "${self.packages.${system}.install}/bin/install";
+        };
+      });
     };
-    install = {
-      type = "app";
-      program = "${pkg}/bin/install";
-    };
-  }
-);
 
   inputs = {
     lix-module = {
@@ -316,11 +308,10 @@ apps = forAllSystems (system:
       url = "github:muffinmad/emacs-mini-frame";
       flake = false;
     };
-    nh = {
+nh = {
       url = "github:nix-community/nh";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
     stylix.url = "github:danth/stylix";
 
     rust-overlay.url = "github:oxalica/rust-overlay";

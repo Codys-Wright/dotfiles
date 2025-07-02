@@ -20,7 +20,35 @@
     size = 36;
   };
 
-  wayland.windowManager.hyprland = {
+  wayland.windowManager.hyprland = let
+    # Comment out these lines to disable the corresponding modules
+    enableEnvironment = true;
+    enableAnimations = true;
+    enableGeneral = true;
+    enableMonitors = true;
+    enableInput = true;
+    enableDecoration = true;
+    enableMisc = true;
+    enableKeybindings = true;
+    enableScratchpads = true;
+    enableWindowrules = true;
+    enableLayerrules = true;
+    enableXwayland = true;
+    
+    # Import modules conditionally
+    environmentConfig = if enableEnvironment then (import ./config/environment.nix { inherit config pkgs userSettings; }) else "";
+    animationsConfig = if enableAnimations then (import ./config/animations.nix { inherit config; }) else "";
+    generalConfig = if enableGeneral then (import ./config/general.nix { inherit config; }) else "";
+    monitorsConfig = if enableMonitors then (import ./config/monitors.nix { inherit config; }) else "";
+    inputConfig = if enableInput then (import ./config/input.nix { inherit config; }) else "";
+    decorationConfig = if enableDecoration then (import ./config/decoration.nix { inherit config; }) else "";
+    miscConfig = if enableMisc then (import ./config/misc.nix { inherit config userSettings; }) else "";
+    keybindingsConfig = if enableKeybindings then (import ./config/keybindings.nix { inherit config userSettings; }) else "";
+    scratchpadsConfig = if enableScratchpads then (import ./config/scratchpads.nix { inherit config userSettings; }) else "";
+    windowrulesConfig = if enableWindowrules then (import ./config/windowrules.nix { inherit config; }) else "";
+    layerrulesConfig = if enableLayerrules then (import ./config/layerrules.nix { inherit config; }) else "";
+    xwaylandConfig = if enableXwayland then (import ./config/xwayland.nix { inherit config; }) else "";
+  in {
     enable = true;
     plugins = [ ];
     settings = { };

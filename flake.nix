@@ -77,7 +77,6 @@
 			inherit systemSettings;
 			inherit userSettings;
 			inherit inputs;
-			themesPath = builtins.path { path = ./themes; name = "themes"; };
 			};
 			};
 		};
@@ -93,7 +92,6 @@
 					inherit inputs;
 					inherit systemSettings;
 					inherit userSettings;
-					themesPath = builtins.path { path = ./themes; name = "themes"; };
 				};
 
 
@@ -112,6 +110,7 @@
 		home-manager.url = "github:nix-community/home-manager/release-25.05";
 		home-manager.inputs.nixpkgs.follows = "nixpkgs";
 		stylix.url = "github:danth/stylix";
+		themes = { type = "path"; path = ./themes; };
 
 	};
 

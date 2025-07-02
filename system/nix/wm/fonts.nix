@@ -2,9 +2,10 @@
 
 {
   # Fonts are nice to have
-  fonts.packages = with pkgs-stable; [
+  fonts.packages = with pkgs; [
     # Fonts
-    nerdfonts
+    nerdfonts.jetbrains-mono
+    nerdfonts.hack
     powerline
   ];
 

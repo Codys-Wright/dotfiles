@@ -22,18 +22,18 @@
 
   wayland.windowManager.hyprland = let
     # Comment out these lines to disable the corresponding modules
-    enableEnvironment = false;
-    enableAnimations = false;
-    enableGeneral = false;
-    enableMonitors = false;
-    enableInput = false;
-    enableDecoration = false;
-    enableMisc = false;
-    enableKeybindings = false;
-    enableScratchpads = false;
-    enableWindowrules = false;
-    enableLayerrules = false;
-    enableXwayland = false;
+    enableEnvironment = true;
+    enableAnimations = true;
+    enableGeneral = true;
+    enableMonitors = true;
+    enableInput = true;
+    enableDecoration = true;
+    enableMisc = true;
+    enableKeybindings = true;
+    enableScratchpads = true;
+    enableWindowrules = true;
+    enableLayerrules = true;
+    enableXwayland = true;
     
     # Import modules conditionally
     environmentConfig = if enableEnvironment then (import ./config/environment.nix { inherit config pkgs userSettings; }) else "";

@@ -5,7 +5,7 @@
     ./bin/phoenix.nix
     # ./boot/grub.nix
     # ./boot/systemd-boot.nix
-    ./style/stylix.nix
+    #./style/stylix.nix
     # ./wm/dbus.nix
     # ./wm/fonts.nix
     # ./wm/gnome-keyring.nix

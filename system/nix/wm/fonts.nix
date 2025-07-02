@@ -4,7 +4,8 @@
   # Fonts are nice to have
   fonts.packages = with pkgs; [
     # Fonts
-    (nerdfonts.override { fonts = [ "JetBrainsMono" "Hack" ]; })
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.hack
     powerline-fonts
   ];
 

@@ -86,7 +86,7 @@
 				pkgs = nixpkgsWithOverlays system;
 				modules = [
 			./profiles/${systemSettings.profile}/configuration.nix
-
+			stylix.nixosModules.stylix
 				];
 				specialArgs = {
 					inherit inputs;
@@ -109,6 +109,7 @@
 		nh.url = "github:nix-community/nh";
 		home-manager.url = "github:nix-community/home-manager/release-25.05";
 		home-manager.inputs.nixpkgs.follows = "nixpkgs";
+		stylix.url = "github:danth/stylix";
 
 	};
 

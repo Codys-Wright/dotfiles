@@ -4,14 +4,8 @@
   imports = [ ./wayland.nix
               ./pipewire.nix
               ./dbus.nix
+              ./fonts.nix
             ];
-
-  # Security
-  security = {
-    pam.services.login.enableGnomeKeyring = true;
-  };
-
-  services.gnome.gnome-keyring.enable = true;
 
   # Force Hyprland to use logind instead of seatd to avoid libseat errors
   environment.sessionVariables = {

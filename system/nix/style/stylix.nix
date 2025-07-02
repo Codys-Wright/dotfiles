@@ -1,7 +1,7 @@
-{ lib, pkgs, inputs, userSettings, ... }:
+{ lib, pkgs, inputs, userSettings, themesDir, ... }:
 
 let
-  themeDir = "${inputs.themes}/${userSettings.theme}";
+  themeDir = "${themesDir}/${userSettings.theme}";
   themePath = "${themeDir}/${userSettings.theme}.yaml";
   themePolarity = lib.removeSuffix "\n" (builtins.readFile "${themeDir}/polarity.txt");
   myLightDMTheme = if themePolarity == "light" then "Adwaita" else "Adwaita-dark";

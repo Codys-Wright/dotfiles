@@ -1,7 +1,7 @@
 { config, lib, pkgs, inputs, userSettings, ... }:
 
 let
-  themeDir = "../themes/${userSettings.theme}";
+  themeDir = "${inputs.self}/themes/${userSettings.theme}";
   themePath = "${themeDir}/${userSettings.theme}.yaml";
   themePolarity = lib.removeSuffix "\n" (builtins.readFile "${themeDir}/polarity.txt");
   backgroundUrl = builtins.readFile "${themeDir}/backgroundurl.txt";
@@ -113,7 +113,7 @@ in
     enable = true;
     style.package = pkgs.libsForQt5.breeze-qt5;
     style.name = "breeze-dark";
-    platformTheme = "kde";
+    platformTheme.name = "kde";
   };
   fonts.fontconfig.defaultFonts = {
     monospace = [ userSettings.font ];

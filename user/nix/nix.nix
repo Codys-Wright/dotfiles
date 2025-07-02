@@ -3,8 +3,8 @@
 {
   imports = [
     ./style/stylix.nix
-    ./wm/hyprland/hyprland.nix
-    # ./wm/input/nihongo.nix
+    (./. + "./wm/"+userSettings.wm+"/"+userSettings.wm+".nix")
+     ./wm/input/nihongo.nix
   ];
 
   # Additional core user configurations can go here

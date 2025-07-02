@@ -5,14 +5,14 @@
     ./bin/phoenix.nix
     # ./boot/grub.nix
     # ./boot/systemd-boot.nix
-    #./style/stylix.nix
+    ./style/stylix.nix
     # ./wm/dbus.nix
-    # ./wm/fonts.nix
+    ./wm/fonts.nix
     # ./wm/gnome-keyring.nix
-    ./wm/hyprland.nix
-    # ./wm/pipewire.nix
+    (./. + "./wm/"+userSettings.wm+".nix")
+    ./wm/pipewire.nix
     # ./wm/plasma.nix
-    # ./wm/wayland.nix
+     ./wm/wayland.nix
     # ./wm/x11.nix
   ];
 

@@ -90,8 +90,7 @@
   #   enableSSHSupport = true;
   # };
 
-  programs.hyprland.enable = true;
-  programs.hyprland.package = inputs.hyprland.packages."${pkgs.system}".hyprland;
+  
 
 
   # List services that you want to enable:

@@ -93,6 +93,7 @@
 					inherit inputs;
 					inherit systemSettings;
 					inherit userSettings;
+					themesDir = "${self}/themes";
 				};
 
 

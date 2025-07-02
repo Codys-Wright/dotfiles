@@ -35,7 +35,8 @@
 		font = "Intel One Mono"; # Selected font
 		fontPkg = pkgs.intel-one-mono; # font package
 		editor = "nvim";
-
+		browser = "firefox"; # Default browser
+		spawnEditor = "exec " + term + " -e " + editor; # Editor spawning command
 	};
 
 

@@ -1,20 +1,31 @@
 { config, ... }:
 
-''
-decoration {
-   rounding = 8
-   dim_special = 0.0
-   blur {
-     enabled = true
-     size = 5
-     passes = 2
-     ignore_opacity = true
-     contrast = 1.17
-     brightness = '' + (if (config.stylix.polarity == "dark") then "0.8" else "1.25") + ''
+{
+  decoration = {
+    rounding = 15;
+    active_opacity = 0.9;
+    inactive_opacity = 0.8;
+    fullscreen_opacity = 0.9;
 
-     xray = true
-     special = true
-     popups = true
-   }
-}
-'' 
+    blur = {
+      enabled = true;
+      xray = true;
+      special = false;
+      new_optimizations = true;
+      size = 14;
+      passes = 4;
+      brightness = 1;
+      noise = 0.01;
+      contrast = 1;
+      popups = true;
+      popups_ignorealpha = 0.6;
+      ignore_opacity = false;
+    };
+
+    drop_shadow = true;
+    shadow_ignore_window = true;
+    shadow_range = 20;
+    shadow_offset = "0 2";
+    shadow_render_power = 4;
+  };
+} 

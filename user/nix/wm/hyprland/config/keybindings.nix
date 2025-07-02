@@ -1,29 +1,23 @@
-{ config, userSettings, ... }:
+{ config, userSettings, pkgs, ... }:
 
 [
-  # Window management
-  "bind = SUPER, Q, killactive,"
-  "bind = SUPER, M, exit,"
-  "bind = SUPER, E, exec, ${userSettings.term}"
-  "bind = SUPER, V, togglefloating,"
-  "bind = SUPER, F, fullscreen,"
-  "bind = SUPER, S, pseudo," # For pseudotiling
+  # General
+  "bind = SUPER, return, exec, ${userSettings.term}"
+  "bind = SUPERSHIFT, q, killactive"
+  "bind = SUPERSHIFT, e, exit"
+  "bind = SUPERSHIFT, l, exec, hyprlock"
 
-  # Application launching
-  "bind = SUPER, R, exec, fuzzel" # Application launcher
-  "bind = SUPER, W, exec, ${userSettings.spawnBrowser}" # Browser
-  "bind = SUPER, C, exec, ${userSettings.spawnEditor}" # Editor
+  # Screen focus
+  "bind = SUPER, v, togglefloating"
+  "bind = SUPER, u, focusurgentorlast"
+  "bind = SUPER, tab, focuscurrentorlast"
+  "bind = SUPER, f, fullscreen"
 
-  # Focus and move
-  "bind = SUPER, left, movefocus, l"
-  "bind = SUPER, right, movefocus, r"
-  "bind = SUPER, up, movefocus, u"
-  "bind = SUPER, down, movefocus, d"
-
-  "bind = SUPERSHIFT, left, movewindow, l"
-  "bind = SUPERSHIFT, right, movewindow, r"
-  "bind = SUPERSHIFT, up, movewindow, u"
-  "bind = SUPERSHIFT, down, movewindow, d"
+  # Screen resize
+  "bind = SUPERCTRL, h, resizeactive, -20 0"
+  "bind = SUPERCTRL, l, resizeactive, 20 0"
+  "bind = SUPERCTRL, k, resizeactive, 0 -20"
+  "bind = SUPERCTRL, j, resizeactive, 0 20"
 
   # Workspaces
   "bind = SUPER, 1, workspace, 1"
@@ -37,6 +31,7 @@
   "bind = SUPER, 9, workspace, 9"
   "bind = SUPER, 0, workspace, 10"
 
+  # Move to workspaces
   "bind = SUPERSHIFT, 1, movetoworkspace, 1"
   "bind = SUPERSHIFT, 2, movetoworkspace, 2"
   "bind = SUPERSHIFT, 3, movetoworkspace, 3"
@@ -48,24 +43,43 @@
   "bind = SUPERSHIFT, 9, movetoworkspace, 9"
   "bind = SUPERSHIFT, 0, movetoworkspace, 10"
 
-  # Scroll through existing workspaces with SUPER + scroll
-  "bind = SUPER, mouse_down, workspace, e+1"
-  "bind = SUPER, mouse_up, workspace, e-1"
+  # Navigation
+  "bind = SUPER, h, movefocus, l"
+  "bind = SUPER, l, movefocus, r"
+  "bind = SUPER, k, movefocus, u"
+  "bind = SUPER, j, movefocus, d"
+
+  # Applications
+  "bind = SUPERALT, f, exec, ${userSettings.browser}"
+  "bind = SUPERALT, e, exec, ${userSettings.term} --hold -e yazi"
+  "bind = SUPERALT, o, exec, obsidian"
+  "bind = SUPER, r, exec, pkill fuzzel || fuzzel"
+  "bind = SUPERALT, n, exec, swaync-client -t -sw"
+
+  # Clipboard
+  "bind = SUPERALT, v, exec, pkill fuzzel || cliphist list | fuzzel --no-fuzzy --dmenu | cliphist decode | wl-copy"
+
+  # Screencapture
+  "bind = SUPER, s, exec, grim | wl-copy"
+  "bind = SUPERSHIFTALT, s, exec, grim -g \"$(slurp)\" - | swappy -f -"
+
+  # System
+  "bind = SUPERALT, w, exec, pkill wlogout || wlogout"
 
   # Move/resize windows with mouse
   "bindm = SUPER, mouse:272, movewindow"
   "bindm = SUPER, mouse:273, resizewindow"
 
-  # Screenshots
-  "bind = SUPER, Print, exec, grimblast copy area"
-  "bind = SHIFT, Print, exec, grimblast copy screen"
+  # Scroll through existing workspaces with SUPER + scroll
+  "bind = SUPER, mouse_down, workspace, e+1"
+  "bind = SUPER, mouse_up, workspace, e-1"
 
   # Volume control
-  "bind = , XF86AudioRaiseVolume, exec, swayosd-client --output-volume raise"
-  "bind = , XF86AudioLowerVolume, exec, swayosd-client --output-volume lower"
-  "bind = , XF86AudioMute, exec, swayosd-client --output-volume mute-toggle"
+  "bind = , XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
+  "bind = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+  "bind = , XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
 
   # Brightness control
-  "bind = , XF86MonBrightnessUp, exec, swayosd-client --brightness raise"
-  "bind = , XF86MonBrightnessDown, exec, swayosd-client --brightness lower"
+  "bind = , XF86MonBrightnessUp, exec, brightnessctl set 10%+"
+  "bind = , XF86MonBrightnessDown, exec, brightnessctl set 10%-"
 ]

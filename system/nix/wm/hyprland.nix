@@ -1,4 +1,4 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
 {
   # Import wayland config
   imports = [ ./wayland.nix
@@ -17,6 +17,7 @@
   hardware = {
     graphics.enable = true;
     nvidia.modesetting.enable = true;
+    nvidia.package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
 
   programs = {

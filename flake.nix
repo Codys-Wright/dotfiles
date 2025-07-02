@@ -27,7 +27,7 @@
         # window manager type (hyprland or x11) translator
         wmType = if ((wm == "hyprland") || (wm == "plasma")) then "wayland" else "x11";
         browser = "firefox"; # Default browser; must select one from ./user/app/browser/
-        spawnBrowser = if ((browser == "qutebrowser") && (wm == "hyprland")) then "qutebrowser-hyprprofile" else (if (browser == "qutebrowser") then "qutebrowser --qt-flag enable-gpu-rasterization --qt-flag enable-native-gpu-memory-buffers --qt-flag num-raster-threads=4" else browser); # Browser spawn command must be specail for qb, since it doesn't gpu accelerate by default (why?)
+        spawnBrowser = if ((browser == "qutebrowser") && (wm == "hyprland")) then "qutebrowser-hyprprofile" else (if (browser == "qutebrowser") then "qutebrowser --qt-flag enable-gpu-rasterization --q[...]
         defaultRoamDir = "Personal.p"; # Default org roam directory relative to ~/Org
         term = "alacritty"; # Default terminal command;
         font = "Intel One Mono"; # Selected font
@@ -162,29 +162,37 @@
           };
         };
       };
-    };
 
-
-     packages = forAllSystems (system:
-        let pkgs = nixpkgsFor.${system};
-        in {
-          default = self.packages.${system}.install;
-
-          install = pkgs.writeShellApplication {
+      # --- Robust nix run integration ---
+      packages = forAllSystems (system:
+        let
+          pkgs = nixpkgsFor.${system};
+          installPkg = pkgs.writeShellApplication {
             name = "install";
-            runtimeInputs = with pkgs; [ git ]; # I could make this fancier by adding other deps
+            runtimeInputs = with pkgs; [ git ];
             text = ''${./install.sh} "$@"'';
           };
-        });
+        in {
+          default = installPkg;
+          install = installPkg;
+        }
+      );
 
-      apps = forAllSystems (system: {
-        default = self.apps.${system}.install;
-
-        install = {
-          type = "app";
-          program = "${self.packages.${system}.install}/bin/install";
-        };
-      });
+      apps = forAllSystems (system:
+        let
+          pkg = self.packages.${system}.default;
+        in {
+          default = {
+            type = "app";
+            program = "${pkg}/bin/install";
+          };
+          install = {
+            type = "app";
+            program = "${pkg}/bin/install";
+          };
+        }
+      );
+      # --- End nix run integration ---
     };
 
   inputs = {
@@ -269,5 +277,4 @@
     hyprgrass.url = "github:horriblename/hyprgrass/427690aec574fec75f5b7b800ac4a0b4c8e4b1d5";
     hyprgrass.inputs.hyprland.follows = "hyprland";
   };
-
 }

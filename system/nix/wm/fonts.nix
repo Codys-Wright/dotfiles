@@ -1,12 +1,11 @@
-{ pkgs-stable, ... }:
+{ pkgs, ... }:
 
 {
   # Fonts are nice to have
   fonts.packages = with pkgs; [
     # Fonts
-    nerdfonts.jetbrains-mono
-    nerdfonts.hack
-    powerline
+    (nerdfonts.override { fonts = [ "JetBrainsMono" "Hack" ]; })
+    powerline-fonts
   ];
 
 }

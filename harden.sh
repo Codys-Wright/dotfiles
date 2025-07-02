@@ -27,10 +27,9 @@ sudo chown 0:0 flake.lock;
 sudo chown 0:0 flake.nix
 sudo chown 0:0 profiles
 sudo chown 0:0 profiles/*/configuration.nix;
-sudo chown 0:0 profiles/homelab/base.nix;
+sudo chown 0:0 profiles/work/configuration.nix;
 sudo chown 0:0 harden.sh;
 sudo chown 0:0 soften.sh;
 sudo chown 0:0 install.sh;
-sudo chown 0:0 update.sh;
 sudo chown 1000:users **/README.org;
 popd &> /dev/null;

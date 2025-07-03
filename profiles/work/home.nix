@@ -10,8 +10,7 @@
 
   imports = [
     ../../user/nix/nix.nix
-    ../../user/coding/shell/cli-collection.nix
-    ../../user/coding/app/nvim/nvim.nix
+    ../../user/coding/coding.nix
     ../../user/nix/wm/${userSettings.wm}/${userSettings.wm}.nix # My window manager selected from flake
   ];
 
@@ -19,7 +18,6 @@
 
   home.packages = with pkgs; [
     # Core utilities
-    git
     zsh
     cowsay
   ];
@@ -30,6 +28,8 @@
     TERM = userSettings.term;
     BROWSER = userSettings.browser;
   };
+
+
 
   xdg.enable = true;
   xdg.userDirs = {

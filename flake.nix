@@ -61,6 +61,11 @@
 						inherit (prev) system;
 						inherit config;
 					};
+					# Pin Mesa to stable 24.2.7 to prevent libgallium crashes
+					mesa = (import nixpkgs-stable-mesa {
+						inherit (prev) system;
+						inherit config;
+					}).mesa;
 				})
 			];
 		});
@@ -108,6 +113,8 @@
 
 		nixpkgs.url = "nixpkgs/nixos-25.05";
 		nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
+		# Pin to nixpkgs commit with stable Mesa 24.2.7
+		nixpkgs-stable-mesa.url = "github:NixOS/nixpkgs/b43c39719a2b72b4e6e38b67f1ccef90e9cf03c2";
 		hyprland.url = "github:hyprwm/Hyprland";
 		nur.url = "github:nix-community/NUR";
 		nh.url = "github:nix-community/nh";

@@ -1,4 +1,4 @@
-{ lib, stdenv, fetchFromGitLab, pkgs, ... }:
+{ lib, stdenv, fetchFromGitLab, ... }:
 
 let name = "pokemon-colorscripts";
     version = "unstable";

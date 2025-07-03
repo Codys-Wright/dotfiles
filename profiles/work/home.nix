@@ -11,6 +11,7 @@
   imports = [
     ../../user/nix/nix.nix
     ../../user/coding/coding.nix
+    ../../user/music/music.nix
     ../../user/nix/wm/${userSettings.wm}/${userSettings.wm}.nix # My window manager selected from flake
   ];
 

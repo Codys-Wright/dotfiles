@@ -13,11 +13,8 @@
     # Enable rtcqs for audio system analysis
     rtcqs.enable = true;
     
-    # Enable real-time kernel
-    kernel.realtime = true;
-    
-    # Use latest real-time kernel
-    kernel.packages = pkgs.linuxPackages_latest_rt;
+    # Disable real-time kernel - use regular kernel with built-in real-time features
+    kernel.realtime = false;
     
     # Enable rtirq for real-time interrupt handling
     rtirq.enable = true;

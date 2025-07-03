@@ -33,10 +33,7 @@
       # Modesetting is required for Wayland
       modesetting.enable = true;
       
-      # Use latest production drivers (for RTX 4080 support)
-      package = config.boot.kernelPackages.nvidiaPackages.production;
-      
-      # Use open-source kernel modules (recommended for RTX 30/40 series)
+      # Use open-source drivers for real-time kernel compatibility
       open = true;
       
       # Enable power management (experimental, may cause sleep/suspend issues)

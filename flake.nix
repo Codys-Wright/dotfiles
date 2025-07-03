@@ -87,7 +87,6 @@
 				pkgs = nixpkgsWithOverlays system;
 				modules = [
 			./profiles/${systemSettings.profile}/configuration.nix
-			stylix.nixosModules.stylix
 			({ pkgs, ... }: {
 				environment.systemPackages = [ inputs.nh.packages.${systemSettings.system}.default ];
 			})

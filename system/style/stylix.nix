@@ -1,4 +1,4 @@
-{ lib, pkgs, inputs, userSettings, themesDir, ... }:
+{ lib, pkgs, inputs, userSettings, ... }:
 
 let
   themePath = "../../../themes/"+userSettings.theme+"/"+userSettings.theme+".yaml";
@@ -46,5 +46,4 @@ in
   environment.sessionVariables = {
     QT_QPA_PLATFORMTHEME = "qt5ct";
   };
-
-}
+} 

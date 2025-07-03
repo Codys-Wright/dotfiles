@@ -17,6 +17,7 @@
     brightnessctl
     hyprpaper
     polkit_gnome
+    librsvg
   ];
 
   services.cliphist.enable = true;
@@ -44,6 +45,9 @@
         border_size = 2;
         layout = "dwindle";
         allow_tearing = true;
+        col.active_border = "0xff" + config.lib.stylix.colors.base08 + " " + "0xff" + config.lib.stylix.colors.base09 + " " + "0xff" + config.lib.stylix.colors.base0A + " " + "0xff" + config.lib.stylix.colors.base0B + " " + "0xff" + config.lib.stylix.colors.base0C + " " + "0xff" + config.lib.stylix.colors.base0D + " " + "0xff" + config.lib.stylix.colors.base0E + " " + "0xff" + config.lib.stylix.colors.base0F + " " + "270deg";
+        col.inactive_border = "0xaa" + config.lib.stylix.colors.base02;
+        resize_on_border = true;
       };
 
       input = {
@@ -70,7 +74,7 @@
           new_optimizations = true;
           size = 14;
           passes = 4;
-          brightness = 1;
+          brightness = if (config.stylix.polarity == "dark") then 0.8 else 1.25;
           noise = 0.01;
           contrast = 1;
           popups = true;
@@ -114,6 +118,8 @@
 
       cursor = {
         enable_hyprcursor = true;
+        no_warps = false;
+        inactive_timeout = 30;
       };
 
       dwindle = {
@@ -137,8 +143,11 @@
         "_JAVA_AWT_WM_NONREPARENTING,1"
         "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
         "QT_QPA_PLATFORM,wayland"
+        "QT_QPA_PLATFORMTHEME,qt5ct"
+        "QT_AUTO_SCREEN_SCALE_FACTOR,1"
         "SDL_VIDEODRIVER,wayland"
         "GDK_BACKEND,wayland"
+        "GDK_PIXBUF_MODULE_FILE," + pkgs.librsvg + "/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache
         "LIBVA_DRIVER_NAME,nvidia"
         "XDG_SESSION_TYPE,wayland"
         "XDG_SESSION_DESKTOP,Hyprland"
@@ -149,14 +158,16 @@
         "WLR_RENDERER,vulkan"
         "MOZ_ENABLE_WAYLAND,1"
         "EGL_PLATFORM,wayland"
+        "CLUTTER_BACKEND,wayland"
       ];
 
       exec-once = [
         "hyprpaper"
+        "hyprctl setcursor " + config.gtk.cursorTheme.name + " " + builtins.toString config.gtk.cursorTheme.size
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
         "eval $(gnome-keyring-daemon --start --components=secrets,ssh,gpg,pkcs11)"
-        "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &"
+        "dbus-update-activation-environment --systemd DISPLAY XAUTHORITY WAYLAND_DISPLAY XDG_SESSION_DESKTOP=Hyprland XDG_CURRENT_DESKTOP=Hyprland XDG_SESSION_TYPE=wayland"
         "hash dbus-update-activation-environment 2>/dev/null"
         "export SSH_AUTH_SOCK"
         "polkit-kde-authentication-agent-1"

@@ -1,15 +1,14 @@
 { config, lib, pkgs, inputs, userSettings, ... }:
 
 let
-  themeDir = "${inputs.self.outPath}/themes/${userSettings.theme}";
-  themePath = "${themeDir}/${userSettings.theme}.yaml";
-  themePolarity = lib.removeSuffix "\n" (builtins.readFile "${themeDir}/polarity.txt");
-  backgroundUrl = builtins.readFile "${themeDir}/backgroundurl.txt";
-  backgroundSha256 = builtins.readFile "${themeDir}/backgroundsha256.txt";
+  themePath = "../../../themes"+("/"+userSettings.theme+"/"+userSettings.theme)+".yaml";
+  themePolarity = lib.removeSuffix "\n" (builtins.readFile (./. + "../../../themes"+("/"+userSettings.theme)+"/polarity.txt"));
+  backgroundUrl = builtins.readFile (./. + "../../../themes"+("/"+userSettings.theme)+"/backgroundurl.txt");
+  backgroundSha256 = builtins.readFile (./. + "../../../themes/"+("/"+userSettings.theme)+"/backgroundsha256.txt");
 in
 {
 
-  imports = [ inputs.stylix.homeModules.stylix ];
+  imports = [ inputs.stylix.homeManagerModules.stylix ];
 
   home.file.".currenttheme".text = userSettings.theme;
   stylix.autoEnable = false;
@@ -18,7 +17,7 @@ in
     url = backgroundUrl;
     sha256 = backgroundSha256;
   };
-  stylix.base16Scheme = themePath;
+  stylix.base16Scheme = ./. + themePath;
 
   stylix.fonts = {
     monospace = {
@@ -106,14 +105,21 @@ in
     wallpaper = ,''+config.stylix.image+''
 
   '';
+
+  gtk.cursorTheme = {
+    package = pkgs.quintom-cursor-theme;
+    name = if (config.stylix.polarity == "light") then "Quintom_Ink" else "Quintom_Snow";
+    size = 36;
+  };
   home.packages = with pkgs; [
-     libsForQt5.qt5ct pkgs.libsForQt5.breeze-qt5 pkgs.noto-fonts-monochrome-emoji
+     libsForQt5.qt5ct pkgs.libsForQt5.breeze-qt5 libsForQt5.breeze-icons pkgs.noto-fonts-monochrome-emoji
+     quintom-cursor-theme
   ];
   qt = {
     enable = true;
     style.package = pkgs.libsForQt5.breeze-qt5;
     style.name = "breeze-dark";
-    platformTheme.name = "kde";
+    platformTheme = "kde";
   };
   fonts.fontconfig.defaultFonts = {
     monospace = [ userSettings.font ];

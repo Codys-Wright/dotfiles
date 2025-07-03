@@ -10,7 +10,7 @@ in
 {
   imports = [ inputs.stylix.nixosModules.stylix ];
 
-  stylix.autoEnable = false;
+  stylix.autoEnable = true;
   stylix.polarity = themePolarity;
   stylix.image = pkgs.fetchurl {
    url = backgroundUrl;
@@ -36,12 +36,16 @@ in
     };
   };
 
+  # System-level targets for comprehensive theming
   stylix.targets.lightdm.enable = true;
+  stylix.targets.console.enable = true;
+  stylix.targets.gtk.enable = true;
+  stylix.targets.qt.enable = true;
+  
   services.xserver.displayManager.lightdm = {
       greeters.slick.enable = true;
       greeters.slick.theme.name = myLightDMTheme;
   };
-  stylix.targets.console.enable = true;
 
   environment.sessionVariables = {
     QT_QPA_PLATFORMTHEME = "qt5ct";

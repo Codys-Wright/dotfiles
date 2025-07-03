@@ -1,23 +1,23 @@
 { config, lib, pkgs, inputs, userSettings, ... }:
 
 let
-  themePath = "../../../themes"+("/"+userSettings.theme+"/"+userSettings.theme)+".yaml";
-  themePolarity = lib.removeSuffix "\n" (builtins.readFile (./. + "../../../themes"+("/"+userSettings.theme)+"/polarity.txt"));
-  backgroundUrl = builtins.readFile (./. + "../../../themes"+("/"+userSettings.theme)+"/backgroundurl.txt");
-  backgroundSha256 = builtins.readFile (./. + "../../../themes/"+("/"+userSettings.theme)+"/backgroundsha256.txt");
+  themePath = "${inputs.self.outPath}/themes/${userSettings.theme}/${userSettings.theme}.yaml";
+  themePolarity = lib.removeSuffix "\n" (builtins.readFile "${inputs.self.outPath}/themes/${userSettings.theme}/polarity.txt");
+  backgroundUrl = builtins.readFile "${inputs.self.outPath}/themes/${userSettings.theme}/backgroundurl.txt";
+  backgroundSha256 = builtins.readFile "${inputs.self.outPath}/themes/${userSettings.theme}/backgroundsha256.txt";
 in
 {
 
-  imports = [ inputs.stylix.homeManagerModules.stylix ];
+  imports = [ inputs.stylix.homeModules.stylix ];
 
   home.file.".currenttheme".text = userSettings.theme;
-  stylix.autoEnable = false;
+  stylix.autoEnable = true;
   stylix.polarity = themePolarity;
   stylix.image = pkgs.fetchurl {
     url = backgroundUrl;
     sha256 = backgroundSha256;
   };
-  stylix.base16Scheme = ./. + themePath;
+  stylix.base16Scheme = themePath;
 
   stylix.fonts = {
     monospace = {
@@ -78,6 +78,13 @@ in
   stylix.targets.gtk.enable = true;
   stylix.targets.rofi.enable = if (userSettings.wmType == "x11") then true else false;
   stylix.targets.feh.enable = if (userSettings.wmType == "x11") then true else false;
+  stylix.targets.waybar.enable = true;
+  stylix.targets.fuzzel.enable = true;
+  stylix.targets.fnott.enable = true;
+  stylix.targets.dunst.enable = true;
+  stylix.targets.hyprland.enable = true;
+  stylix.targets.hyprpaper.enable = true;
+
   programs.feh.enable = true;
   home.file.".fehbg-stylix".text = ''
     #!/bin/sh
@@ -112,7 +119,7 @@ in
     size = 36;
   };
   home.packages = with pkgs; [
-     libsForQt5.qt5ct pkgs.libsForQt5.breeze-qt5 libsForQt5.breeze-icons pkgs.noto-fonts-monochrome-emoji
+     libsForQt5.qt5ct pkgs.libsForQt5.breeze-qt5 pkgs.noto-fonts-monochrome-emoji
      quintom-cursor-theme
   ];
   qt = {

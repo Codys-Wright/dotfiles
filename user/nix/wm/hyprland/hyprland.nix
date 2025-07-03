@@ -45,8 +45,8 @@
         border_size = 2;
         layout = "dwindle";
         allow_tearing = true;
-        col.active_border = "0xff" + config.lib.stylix.colors.base08 + " " + "0xff" + config.lib.stylix.colors.base09 + " " + "0xff" + config.lib.stylix.colors.base0A + " " + "0xff" + config.lib.stylix.colors.base0B + " " + "0xff" + config.lib.stylix.colors.base0C + " " + "0xff" + config.lib.stylix.colors.base0D + " " + "0xff" + config.lib.stylix.colors.base0E + " " + "0xff" + config.lib.stylix.colors.base0F + " " + "270deg";
-        col.inactive_border = "0xaa" + config.lib.stylix.colors.base02;
+        "col.active_border" = "0xff" + config.lib.stylix.colors.base08 + " 0xff" + config.lib.stylix.colors.base09 + " 0xff" + config.lib.stylix.colors.base0A + " 0xff" + config.lib.stylix.colors.base0B + " 0xff" + config.lib.stylix.colors.base0C + " 0xff" + config.lib.stylix.colors.base0D + " 0xff" + config.lib.stylix.colors.base0E + " 0xff" + config.lib.stylix.colors.base0F + " 270deg";
+        "col.inactive_border" = "0xaa" + config.lib.stylix.colors.base02;
         resize_on_border = true;
       };
 
@@ -136,8 +136,8 @@
 
       bind = (import ./config/keybindings.nix { inherit config userSettings pkgs; }).bind;
       
-      bindm = (import ./config/keybindings.nix { inherit config userSettings pkgs; }).bindm;
-
+    bindm = (import ./config/keybindings.nix { inherit config userSettings pkgs; }).bindm;
+  
       env = [
         "NIXOS_OZONE_WL,1"
         "_JAVA_AWT_WM_NONREPARENTING,1"
@@ -147,7 +147,7 @@
         "QT_AUTO_SCREEN_SCALE_FACTOR,1"
         "SDL_VIDEODRIVER,wayland"
         "GDK_BACKEND,wayland"
-        "GDK_PIXBUF_MODULE_FILE," + pkgs.librsvg + "/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache
+        "GDK_PIXBUF_MODULE_FILE,${pkgs.librsvg}/lib/gdk-pixbuf-2.0/2.10.0/loaders.cache"
         "LIBVA_DRIVER_NAME,nvidia"
         "XDG_SESSION_TYPE,wayland"
         "XDG_SESSION_DESKTOP,Hyprland"
@@ -163,7 +163,7 @@
 
       exec-once = [
         "hyprpaper"
-        "hyprctl setcursor " + config.gtk.cursorTheme.name + " " + builtins.toString config.gtk.cursorTheme.size
+        "hyprctl setcursor ${config.gtk.cursorTheme.name} ${builtins.toString config.gtk.cursorTheme.size}"
         "wl-paste --type text --watch cliphist store"
         "wl-paste --type image --watch cliphist store"
         "eval $(gnome-keyring-daemon --start --components=secrets,ssh,gpg,pkcs11)"

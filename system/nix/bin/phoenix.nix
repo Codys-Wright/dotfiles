@@ -21,6 +21,43 @@ let
     echo "🏠 Updating user configuration..."
     nh home switch /home/${userSettings.username}/.dotfiles#homeConfigurations.user.activationPackage -b backup
     
+    # Run post-sync hooks to reload theme-dependent services
+    echo "🎨 Running post-sync hooks..."
+    
+    # Hyprland-specific reloads
+    if pgrep Hyprland &> /dev/null; then
+      echo "🔄 Reloading Hyprland..."
+      hyprctl reload &> /dev/null
+    fi
+    
+    # Restart waybar if running
+    if pgrep .waybar-wrapped &> /dev/null; then
+      echo "📊 Restarting waybar..."
+      killall .waybar-wrapped &> /dev/null
+      waybar &> /dev/null & disown
+    fi
+    
+    # Restart fnott if running
+    if pgrep fnott &> /dev/null; then
+      echo "🔔 Restarting fnott..."
+      killall fnott &> /dev/null
+      fnott &> /dev/null & disown
+    fi
+    
+    # Restart hyprpaper to apply new background
+    if pgrep hyprpaper &> /dev/null; then
+      echo "🖼️ Restarting hyprpaper..."
+      killall hyprpaper &> /dev/null
+      hyprpaper &> /dev/null & disown
+    fi
+    
+    # Restart dunst if running (for notifications)
+    if pgrep .dunst-wrapped &> /dev/null; then
+      echo "📢 Restarting dunst..."
+      killall .dunst-wrapped &> /dev/null
+      dunst &> /dev/null & disown
+    fi
+    
     echo "✅ Sync complete!"
   '';
 
@@ -74,6 +111,47 @@ let
     echo "✅ Garbage collection complete!"
   '';
 
+  posthookScript = createScript "phoenix-posthook" ''
+    #!/bin/bash
+    echo "🎨 Running post-sync hooks..."
+    
+    # Hyprland-specific reloads
+    if pgrep Hyprland &> /dev/null; then
+      echo "🔄 Reloading Hyprland..."
+      hyprctl reload &> /dev/null
+    fi
+    
+    # Restart waybar if running
+    if pgrep .waybar-wrapped &> /dev/null; then
+      echo "📊 Restarting waybar..."
+      killall .waybar-wrapped &> /dev/null
+      waybar &> /dev/null & disown
+    fi
+    
+    # Restart fnott if running
+    if pgrep fnott &> /dev/null; then
+      echo "🔔 Restarting fnott..."
+      killall fnott &> /dev/null
+      fnott &> /dev/null & disown
+    fi
+    
+    # Restart hyprpaper to apply new background
+    if pgrep hyprpaper &> /dev/null; then
+      echo "🖼️ Restarting hyprpaper..."
+      killall hyprpaper &> /dev/null
+      hyprpaper &> /dev/null & disown
+    fi
+    
+    # Restart dunst if running (for notifications)
+    if pgrep .dunst-wrapped &> /dev/null; then
+      echo "📢 Restarting dunst..."
+      killall .dunst-wrapped &> /dev/null
+      dunst &> /dev/null & disown
+    fi
+    
+    echo "✅ Post-sync hooks complete!"
+  '';
+
   # Main phoenix script that dispatches to the appropriate sub-script
   phoenixScript = pkgs.writeShellApplication {
     name = "phoenix";
@@ -103,6 +181,9 @@ let
       "gc")
         ${gcScript}/bin/phoenix-gc "$2"
         ;;
+      "posthook")
+        ${posthookScript}/bin/phoenix-posthook
+        ;;
       *)
         echo "🚀 Phoenix - NixOS Configuration Manager"
         echo ""
@@ -113,6 +194,7 @@ let
         echo "  update              Update flake inputs"
         echo "  upgrade             Update and apply all changes"
         echo "  gc [time|full]      Run garbage collection"
+        echo "  posthook            Run post-sync hooks to reload theme services"
         echo ""
         echo "Examples:"
         echo "  phoenix sync        # Sync both system and user"

@@ -4,7 +4,7 @@
   bind = [
     # General
     "SUPER, return, exec, ${userSettings.term}"
-    "SUPERSHIFT, q, killactive"
+    "$mod, q, killactive"
     "SUPERSHIFT, e, exit"
     "SUPERSHIFT, l, exec, hyprlock"
 

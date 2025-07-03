@@ -14,7 +14,6 @@
     # ./wm/plasma.nix
      ./wm/wayland.nix
     # ./wm/x11.nix
-    ./wm/xremap.nix
   ];
 
   # Additional core system configurations can go here

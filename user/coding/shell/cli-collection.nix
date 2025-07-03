@@ -5,6 +5,7 @@
     # Command Line
     disfetch lolcat cowsay
     fzf
+    btop
     zoxide
     starfetch
     cava

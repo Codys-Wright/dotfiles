@@ -53,13 +53,7 @@
     distrho
   ];
 
-  # Audio group for real-time privileges
-  users.groups.audio = {
-    name = "audio";
-    gid = 995;
-  };
-
-  # Add user to audio group
+  # Add user to audio group for real-time privileges
   users.users.${userSettings.username}.extraGroups = [ "audio" ];
 
   # Security settings for real-time audio

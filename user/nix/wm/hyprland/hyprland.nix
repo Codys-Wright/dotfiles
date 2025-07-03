@@ -1,131 +1,167 @@
-{ config, lib, pkgs, userSettings, systemSettings, pkgs-nwg-dock-hyprland, ... }:
+{ config, lib, pkgs, userSettings, systemSettings, ... }:
 {
   imports = [
-    ../../../coding/app/terminal/alacritty.nix
-    ../../../coding/app/terminal/kitty.nix
-    (import ../../../shared/dmenu-scripts/networkmanager-dmenu.nix {
-      dmenu_command = "fuzzel -d"; inherit config lib pkgs;
-    })
-    ../input/nihongo.nix
-  ] ++
-  (if (systemSettings.profile == "personal") then
-    [ (import ./hyprprofiles/hyprprofiles.nix {
-        dmenuCmd = "fuzzel -d"; inherit config lib pkgs; })]
-  else
-    []);
+    ./modules/waybar.nix
+    ./modules/fuzzel.nix
+    ./modules/hyprlock.nix
+    ./modules/wlogout.nix
+    ./modules/swaync.nix
+  ];
 
-  gtk.cursorTheme = {
-    package = pkgs.quintom-cursor-theme;
-    name = if (config.stylix.polarity == "light") then "Quintom_Ink" else "Quintom_Snow";
-    size = 36;
-  };
-
-  wayland.windowManager.hyprland = let
-    # Comment out these lines to disable the corresponding modules
-    enableEnvironment = true;
-    enableAnimations = true;
-    enableGeneral = true;
-    enableMonitors = true;
-    enableInput = true;
-    enableDecoration = true;
-    enableMisc = true;
-    enableKeybindings = true;
-    enableScratchpads = true;
-    enableWindowrules = true;
-    enableLayerrules = true;
-    enableXwayland = true;
-    
-    # Import modules conditionally
-    environmentConfig = if enableEnvironment then (import ./config/environment.nix { inherit config pkgs userSettings; }) else "";
-    animationsConfig = if enableAnimations then (import ./config/animations.nix { inherit config; }) else "";
-    generalConfig = if enableGeneral then (import ./config/general.nix { inherit config; }) else "";
-    monitorsConfig = if enableMonitors then (import ./config/monitors.nix { inherit config; }) else "";
-    inputConfig = if enableInput then (import ./config/input.nix { inherit config; }) else "";
-    decorationConfig = if enableDecoration then (import ./config/decoration.nix { inherit config; }) else "";
-    miscConfig = if enableMisc then (import ./config/misc.nix { inherit config userSettings; }) else "";
-    keybindingsConfig = if enableKeybindings then (import ./config/keybindings.nix { inherit config userSettings; }) else "";
-    scratchpadsConfig = if enableScratchpads then (import ./config/scratchpads.nix { inherit config userSettings; }) else "";
-    windowrulesConfig = if enableWindowrules then (import ./config/windowrules.nix { inherit config; }) else "";
-    layerrulesConfig = if enableLayerrules then (import ./config/layerrules.nix { inherit config; }) else "";
-    xwaylandConfig = if enableXwayland then (import ./config/xwayland.nix { inherit config; }) else "";
-  in {
-    enable = true;
-    plugins = [ ];
-    settings = { };
-    extraConfig = ''
-      # Environment variables
-      ${environmentConfig}
-      
-      # Animations
-      ${animationsConfig}
-      
-      # General settings
-      ${generalConfig}
-      
-      # Monitor configuration
-      ${monitorsConfig}
-      
-      # Input settings
-      ${inputConfig}
-      
-      # Decoration settings
-      ${decorationConfig}
-      
-      # Miscellaneous settings
-      ${miscConfig}
-      
-      # Keybindings
-      ${keybindingsConfig}
-      
-      # Scratchpads
-      ${scratchpadsConfig}
-      
-      # Window rules
-      ${windowrulesConfig}
-      
-      # Layer rules
-      ${layerrulesConfig}
-      
-      # XWayland settings
-      ${xwaylandConfig}
-      
-      # Cursor keybinding
-      bind = $mainMod, c, exec, hyprctl setcursor ${pkgs.quintom-cursor-theme}/share/icons/Quintom_Snow/cursors/left_ptr 36
-      
-      # Waybar configuration
-      ${(import ./modules/waybar.nix { inherit config pkgs userSettings; }).waybarExtraConfig}
-    '';
-    xwayland = { enable = true; };
-    systemd.enable = true;
-  };
-
-  home.packages = (with pkgs; [
-    alacritty
-    kitty
-    feh
-    killall
+  home.packages = with pkgs; [
+    wl-clipboard
+    slurp
+    grim
+    swappy
+    cliphist
+    brightnessctl
+    hyprpaper
     polkit_gnome
-    nwg-launchers
-    papirus-icon-theme
-    (pkgs.writeScriptBin "nwggrid-wrapper" ''
-      #!/bin/sh
-      if pgrep -x "nwggrid-server" > /dev/null
-      then
-        nwggrid -client
-      else
-        nwggrid-server &
-        sleep 1
-        nwggrid -client
-      fi
-    '')
-    (pkgs.writeScriptBin "nwg-dock-wrapper" ''
-      #!/bin/sh
-      if pgrep -x "nwg-dock" > /dev/null
-      then
-        nwg-dock -s hyprland
-      else
-        nwg-dock -s hyprland &
-      fi
-    '')
-  ]);
+  ];
+
+  services.cliphist.enable = true;
+
+  wayland.windowManager.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+    systemd.enable = true;
+
+    settings = {
+      "$terminal" = userSettings.term;
+      "$mod" = "SUPER";
+
+      monitor = [
+        ",preferred,auto,1"
+      ];
+
+      xwayland = {
+        force_zero_scaling = true;
+      };
+
+      general = {
+        gaps_in = 6;
+        gaps_out = 6;
+        border_size = 2;
+        layout = "dwindle";
+        allow_tearing = true;
+      };
+
+      input = {
+        kb_layout = "us";
+        follow_mouse = true;
+        touchpad = {
+          natural_scroll = true;
+        };
+        accel_profile = "flat";
+        sensitivity = 0;
+      };
+
+      decoration = {
+        rounding = 15;
+        active_opacity = 0.9;
+        inactive_opacity = 0.8;
+        fullscreen_opacity = 0.9;
+       
+
+        blur = {
+          enabled = true;
+          xray = true;
+          special = false;
+          new_optimizations = true;
+          size = 14;
+          passes = 4;
+          brightness = 1;
+          noise = 0.01;
+          contrast = 1;
+          popups = true;
+          popups_ignorealpha = 0.6;
+          ignore_opacity = false;
+        };
+      };
+
+      animations = {
+        enabled = true;
+        bezier = [
+          "linear, 0, 0, 1, 1"
+          "md3_standard, 0.2, 0, 0, 1"
+          "md3_decel, 0.05, 0.7, 0.1, 1"
+          "md3_accel, 0.3, 0, 0.8, 0.15"
+          "overshot, 0.05, 0.9, 0.1, 1.1"
+          "crazyshot, 0.1, 1.5, 0.76, 0.92"
+          "hyprnostretch, 0.05, 0.9, 0.1, 1.0"
+          "menu_decel, 0.1, 1, 0, 1"
+          "menu_accel, 0.38, 0.04, 1, 0.07"
+          "easeInOutCirc, 0.85, 0, 0.15, 1"
+          "easeOutCirc, 0, 0.55, 0.45, 1"
+          "easeOutExpo, 0.16, 1, 0.3, 1"
+          "softAcDecel, 0.26, 0.26, 0.15, 1"
+          "md2, 0.4, 0, 0.2, 1"
+        ];
+        animation = [
+          "windows, 1, 3, md3_decel, popin 60%"
+          "windowsIn, 1, 3, md3_decel, popin 60%"
+          "windowsOut, 1, 3, md3_accel, popin 60%"
+          "border, 1, 10, default"
+          "fade, 1, 3, md3_decel"
+          "layersIn, 1, 3, menu_decel, slide"
+          "layersOut, 1, 1.6, menu_accel"
+          "fadeLayersIn, 1, 2, menu_decel"
+          "fadeLayersOut, 1, 4.5, menu_accel"
+          "workspaces, 1, 7, menu_decel, slide"
+          "specialWorkspace, 1, 3, md3_decel, slidevert"
+        ];
+      };
+
+      cursor = {
+        enable_hyprcursor = true;
+      };
+
+      dwindle = {
+        pseudotile = true;
+        preserve_split = true;
+        smart_split = false;
+        smart_resizing = false;
+      };
+
+      misc = {
+        disable_hyprland_logo = true;
+        disable_splash_rendering = true;
+      };
+
+      bind = (import ./config/keybindings.nix { inherit config userSettings pkgs; }).bind;
+      
+      bindm = (import ./config/keybindings.nix { inherit config userSettings pkgs; }).bindm;
+
+      env = [
+        "NIXOS_OZONE_WL,1"
+        "_JAVA_AWT_WM_NONREPARENTING,1"
+        "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
+        "QT_QPA_PLATFORM,wayland"
+        "SDL_VIDEODRIVER,wayland"
+        "GDK_BACKEND,wayland"
+        "LIBVA_DRIVER_NAME,nvidia"
+        "XDG_SESSION_TYPE,wayland"
+        "XDG_SESSION_DESKTOP,Hyprland"
+        "XDG_CURRENT_DESKTOP,Hyprland"
+        "GBM_BACKEND,nvidia-drm"
+        "__GLX_VENDOR_LIBRARY_NAME,nvidia"
+        "WLR_NO_HARDWARE_CURSORS,1"
+        "WLR_RENDERER,vulkan"
+        "MOZ_ENABLE_WAYLAND,1"
+        "EGL_PLATFORM,wayland"
+      ];
+
+      exec-once = [
+        "hyprpaper"
+        "wl-paste --type text --watch cliphist store"
+        "wl-paste --type image --watch cliphist store"
+        "eval $(gnome-keyring-daemon --start --components=secrets,ssh,gpg,pkcs11)"
+        "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP &"
+        "hash dbus-update-activation-environment 2>/dev/null"
+        "export SSH_AUTH_SOCK"
+        "polkit-kde-authentication-agent-1"
+      ];
+    };
+  };
 }
+

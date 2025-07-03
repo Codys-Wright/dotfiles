@@ -4,6 +4,8 @@
   home.packages = with pkgs; [
     # Command Line
     disfetch lolcat cowsay
+    fzf
+    zoxide
     starfetch
     cava
     killall
@@ -17,6 +19,7 @@
     w3m
     pandoc
     hwinfo
+    unstable.opencode
     pciutils
     numbat
     (pkgs.callPackage ../pkgs/pokemon-colorscripts.nix { })

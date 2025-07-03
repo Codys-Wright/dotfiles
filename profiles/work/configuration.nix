@@ -70,6 +70,7 @@
   environment.systemPackages = with pkgs; [
 		  kitty
 		  kdePackages.dolphin
+		  unstable.claude-code
 		  cliphist
 		  code-cursor
 		  obsidian

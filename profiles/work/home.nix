@@ -10,15 +10,16 @@
 
   imports = [
     ../../user/nix/nix.nix
-    # (./. + "../../../user/wm"+("/"+userSettings.wm+"/"+userSettings.wm)+".nix") # My window manager selected from flake
+    ../../user/coding/coding.nix
+    ../../user/nix/wm/${userSettings.wm}/${userSettings.wm}.nix # My window manager selected from flake
   ];
 
   home.stateVersion = "25.05"; # Please read the comment before changing.
 
   home.packages = with pkgs; [
     # Core utilities
-    git
     zsh
+    cowsay
   ];
 
   home.sessionVariables = {
@@ -27,6 +28,8 @@
     TERM = userSettings.term;
     BROWSER = userSettings.browser;
   };
+
+
 
   xdg.enable = true;
   xdg.userDirs = {

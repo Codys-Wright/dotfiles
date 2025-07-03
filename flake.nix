@@ -88,6 +88,9 @@
 				modules = [
 			./profiles/${systemSettings.profile}/configuration.nix
 			stylix.nixosModules.stylix
+			({ pkgs, ... }: {
+				environment.systemPackages = [ inputs.nh.packages.${systemSettings.system}.default ];
+			})
 				];
 				specialArgs = {
 					inherit inputs;
@@ -104,12 +107,12 @@
 
 	inputs = {
 
-		nixpkgs.url = "nixpkgs/nixos-25.05";
+		nixpkgs.url = "nixpkgs/nixos-unstable";
 		nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
 		hyprland.url = "github:hyprwm/Hyprland";
 		nur.url = "github:nix-community/NUR";
 		nh.url = "github:nix-community/nh";
-		home-manager.url = "github:nix-community/home-manager/release-25.05";
+		home-manager.url = "github:nix-community/home-manager";
 		home-manager.inputs.nixpkgs.follows = "nixpkgs";
 		stylix.url = "github:danth/stylix";
 

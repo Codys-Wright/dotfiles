@@ -15,9 +15,7 @@
     ./lang/rust/rust.nix
     ./shell/cli-collection.nix
     ./shell/sh.nix
-    ./pkgs/pokemon-colorscripts.nix
     ./pkgs/ranger.nix
-    ./pkgs/rogauracore.nix
   ];
 
   # Additional user-level coding configurations can go here

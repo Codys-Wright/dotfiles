@@ -28,11 +28,7 @@
   };
 
   hardware = {
-    graphics = {
-      enable = true;
-      # Force use of stable Mesa to prevent libgallium crashes
-      package = pkgs.mesa;
-    };
+    graphics.enable = true;
     
     nvidia = {
       # Modesetting is required for Wayland

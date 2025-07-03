@@ -9,7 +9,7 @@
     [ # Include the results of the hardware scan.
       ../../system/hardware-configuration.nix
       ../../system/nix/nix.nix
-      ../../system/nix/music/music.nix
+      ../../system/music/music.nix
     ];
 
   # Bootloader.

@@ -1,10 +1,12 @@
-{ config, pkgs, ... }:
+{ config, lib, pkgs, inputs, userSettings, ... }:
 
 {
   imports = [
-    # ./example.nix  # Uncomment when you add music system modules
+    ./musnix.nix
+    ./audio-device/pipewire.nix
+    ./audio-device/wireplumber.nix
   ];
 
-  # Additional system-level music configurations can go here
-  # For example, audio drivers, MIDI services, etc.
-} 
+  # Additional system-wide music configurations can go here
+  # For example, audio device configurations, system-wide audio settings, etc.
+}

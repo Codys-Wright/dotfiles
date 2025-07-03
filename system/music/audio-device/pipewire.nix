@@ -14,9 +14,7 @@
   environment.systemPackages = with pkgs; [
     qjackctl
     pipewire
-    pipewire-alsa
-    pipewire-jack
-    pipewire-pulse
+    qpwgraph
   ];
 
   # Ensure PipeWire can start at boot
@@ -27,7 +25,7 @@
   };
 
   # Disable PulseAudio to prevent conflicts
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
 
   # Enable real-time scheduling capabilities
   security.rtkit.enable = true;

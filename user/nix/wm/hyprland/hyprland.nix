@@ -32,7 +32,12 @@
       "$mod" = "SUPER";
 
       monitor = [
-        ",preferred,auto,1"
+        # Left monitor (Acer XV271U M3)
+        "DP-4,2560x1440@180,0x0,1"
+        # Center monitor (AOC Q32G1WG4) - primary
+        "DP-3,2560x1440@144,2560x0,1"
+        # Right monitor (Acer XV271U M3)
+        "DP-5,2560x1440@180,5120x0,1"
       ];
 
       xwayland = {
@@ -133,6 +138,71 @@
         disable_hyprland_logo = true;
         disable_splash_rendering = true;
       };
+
+      # Comprehensive Reaper window rules based on Reddit recommendations
+      windowrulev2 = [
+        # Main Reaper window - fullscreen and stay focused
+        # Only apply fullscreen to the main window, not popups
+        "fullscreen,class:^(REAPER)$,title:^(REAPER)$"
+        "stayfocused,class:^(REAPER)$,title:^(REAPER)$"
+        "noanim,class:^(REAPER)$,title:^(REAPER)$"
+        "opacity 1.0 override,class:^(REAPER)$,title:^(REAPER)$"
+        
+        # Child windows - floating and properly sized
+        "float,class:REAPER,title:^(?!REAPER).*$"
+        "move cursor,class:REAPER,floating:1"
+        "size 800 600,class:REAPER,floating:1"
+        "bordercolor rgb(00FF00),class:REAPER,floating:1"
+        
+        # Performance optimizations for child windows
+        "noanim,class:REAPER,floating:1"
+        "opacity 0.95 override,class:REAPER,floating:1"
+        
+        # Menu and popup handling - float but don't steal focus
+        "float,class:REAPER,title:^(menu)$"
+        "float,class:REAPER,title:^(.*popup.*)$"
+        "float,class:REAPER,title:^(.*dialog.*)$"
+        "float,class:REAPER,title:^(.*window.*)$"
+        "nofocus,class:REAPER,title:^(menu)$"
+        "nofocus,class:REAPER,title:^(.*popup.*)$"
+        "nofocus,class:REAPER,title:^(.*dialog.*)$"
+        "nofocus,class:REAPER,title:^(.*window.*)$"
+        
+        # Handle empty titles (tooltips, etc.)
+        "float,class:REAPER,title:^$"
+        "nofocus,class:REAPER,title:^$"
+        
+        # Border styling for different window types
+        "bordercolor rgb(00AA00),class:REAPER,title:^(menu)$"
+        "bordercolor rgb(008800),class:REAPER,title:^(.*popup.*)$"
+        "bordercolor rgb(006600),class:REAPER,title:^(.*dialog.*)$"
+        
+        # Additional audio production applications
+        # JACK Control
+        "float,class:^(qjackctl)$"
+        "move cursor,class:^(qjackctl)$"
+        "size 400 300,class:^(qjackctl)$"
+        
+        # PulseAudio Volume Control
+        "float,class:^(pavucontrol)$"
+        "move cursor,class:^(pavucontrol)$"
+        "size 500 400,class:^(pavucontrol)$"
+        
+        # ALSA Mixer
+        "float,class:^(alsamixer)$"
+        "move cursor,class:^(alsamixer)$"
+        "size 600 400,class:^(alsamixer)$"
+        
+        # Carla (plugin host)
+        "float,class:^(carla)$"
+        "move cursor,class:^(carla)$"
+        "size 800 600,class:^(carla)$"
+        
+        # Ardour (alternative DAW)
+        "fullscreen,class:^(ardour)$"
+        "stayfocused,class:^(ardour)$"
+        "noanim,class:^(ardour)$"
+      ];
 
       bind = (import ./config/keybindings.nix { inherit config userSettings pkgs; }).bind;
       

@@ -20,7 +20,6 @@
     WLR_DRM_DEVICES = "/dev/dri/card0:/dev/dri/card1";
     # NVIDIA-first rendering to avoid Mesa conflicts
     __NV_PRIME_RENDER_OFFLOAD = "0";
-    __GLX_VENDOR_LIBRARY_NAME = "nvidia";
     # Disable explicit sync to prevent crashes
     AQ_MGPU_NO_EXPLICIT = "1";
     # Force NVIDIA rendering

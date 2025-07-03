@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, userSettings, ... }:
 
 {
   imports = [
@@ -9,7 +9,7 @@
     # ./wm/dbus.nix
     ./wm/fonts.nix
     # ./wm/gnome-keyring.nix
-    (./. + "./wm/"+userSettings.wm+".nix")
+    ./wm/hyprland.nix
     ./wm/pipewire.nix
     # ./wm/plasma.nix
      ./wm/wayland.nix

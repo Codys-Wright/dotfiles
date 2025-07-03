@@ -10,7 +10,6 @@
     ./wm/fonts.nix
     # ./wm/gnome-keyring.nix
     ./wm/hyprland.nix
-    ./wm/pipewire.nix
     # ./wm/plasma.nix
      ./wm/wayland.nix
     # ./wm/x11.nix

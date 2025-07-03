@@ -1,8 +1,7 @@
 { config, pkgs, ... }:
 
 {
-  imports = [ ./pipewire.nix
-              ./dbus.nix
+  imports = [ ./dbus.nix
               ./gnome-keyring.nix
               ./fonts.nix
             ];

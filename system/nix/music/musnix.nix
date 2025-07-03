@@ -44,13 +44,11 @@
     # Real-time audio tools
     ardour
     qtractor
-    rosegarden
     
     # Audio plugins
     calf
     lsp-plugins
     zam-plugins
-    distrho
   ];
 
   # Add user to audio group for real-time privileges

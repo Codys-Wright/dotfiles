@@ -1,0 +1,8 @@
+# This file ensures the music directory is created
+# Reaper will create subdirectories as needed:
+# - Recordings/
+# - Renders/
+# - Backups/
+# - Projects/
+# - Samples/
+# - Presets/ 

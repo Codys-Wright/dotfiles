@@ -136,8 +136,8 @@
 
       bind = (import ./config/keybindings.nix { inherit config userSettings pkgs; }).bind;
       
-    bindm = (import ./config/keybindings.nix { inherit config userSettings pkgs; }).bindm;
-  
+      bindm = (import ./config/keybindings.nix { inherit config userSettings pkgs; }).bindm;
+
       env = [
         "NIXOS_OZONE_WL,1"
         "_JAVA_AWT_WM_NONREPARENTING,1"

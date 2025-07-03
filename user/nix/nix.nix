@@ -3,6 +3,7 @@
 {
   imports = [
     ./style/stylix.nix
+    ./app/music/Reaper/reaper.nix
     # ./wm/hyprland/hyprland.nix
     # ./wm/input/nihongo.nix
   ];

@@ -202,6 +202,27 @@
         "fullscreen,class:^(ardour)$"
         "stayfocused,class:^(ardour)$"
         "noanim,class:^(ardour)$"
+        
+        # Bottles (Wine application manager)
+        "float,class:^(com.usebottles.bottles)$"
+        "move cursor,class:^(com.usebottles.bottles)$"
+        "size 1000 700,class:^(com.usebottles.bottles)$"
+        "opacity 1.0 override,class:^(com.usebottles.bottles)$"
+        "noanim,class:^(com.usebottles.bottles)$"
+        
+        # Wine applications (general)
+        "float,class:^(wine)$"
+        "move cursor,class:^(wine)$"
+        "size 800 600,class:^(wine)$"
+        "opacity 1.0 override,class:^(wine)$"
+        "noanim,class:^(wine)$"
+        
+        # Wine popup windows
+        "float,class:^(wine),title:^(.*)$"
+        "move cursor,class:^(wine),title:^(.*)$"
+        "size 600 400,class:^(wine),title:^(.*)$"
+        "opacity 1.0 override,class:^(wine),title:^(.*)$"
+        "noanim,class:^(wine),title:^(.*)$"
       ];
 
       bind = (import ./config/keybindings.nix { inherit config userSettings pkgs; }).bind;

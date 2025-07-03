@@ -5,6 +5,7 @@
     ./musnix.nix
     ./audio-device/pipewire.nix
     ./audio-device/wireplumber.nix
+    ./wine.nix
   ];
 
   # Additional system-wide music configurations can go here

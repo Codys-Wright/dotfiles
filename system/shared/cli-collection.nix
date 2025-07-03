@@ -1,6 +1,9 @@
 { config, lib, pkgs, ... }:
 
 {
+  # Enable bolt service for Thunderbolt management
+  services.hardware.bolt.enable = true;
+
   # CLI tools collection for system-wide use
   environment.systemPackages = with pkgs; [
     # Thunderbolt management
@@ -30,7 +33,7 @@
     ripgrep
     fd
     bat
-    exa
+    eza
     
     # Archive utilities
     unzip

@@ -84,6 +84,7 @@ in
   stylix.targets.dunst.enable = true;
   stylix.targets.hyprland.enable = true;
   stylix.targets.hyprpaper.enable = true;
+  stylix.targets.ghostty.enable = true;
 
   programs.feh.enable = true;
   home.file.".fehbg-stylix".text = ''

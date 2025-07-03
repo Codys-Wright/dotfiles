@@ -6,6 +6,7 @@
     ./app/git/git.nix
     ./app/terminal/alacritty.nix
     ./app/terminal/kitty.nix
+    ./app/terminal/ghostty.nix
     ./app/virtualization/virtualization.nix
     ./lang/android/android.nix
     ./lang/cc/cc.nix

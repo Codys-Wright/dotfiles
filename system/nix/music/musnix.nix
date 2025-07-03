@@ -13,6 +13,18 @@
     # Enable rtcqs for audio system analysis
     rtcqs.enable = true;
     
+    # Enable real-time kernel
+    kernel.realtime = true;
+    
+    # Use latest real-time kernel
+    kernel.packages = pkgs.linuxPackages_latest_rt;
+    
+    # Enable rtirq for real-time interrupt handling
+    rtirq.enable = true;
+    
+    # Enable das_watchdog for real-time process monitoring
+    das_watchdog.enable = true;
+    
     # Set soundcard PCI ID (you can find this with: lspci | grep -i audio)
     # soundcardPciId = "00:1b.0";  # Uncomment and set your soundcard ID
     

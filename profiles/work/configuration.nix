@@ -10,6 +10,7 @@
       ../../system/hardware-configuration.nix
       ../../system/nix/nix.nix
       ../../system/music/music.nix
+      ../../system/shared/cli-collection.nix
     ];
 
   # Bootloader.

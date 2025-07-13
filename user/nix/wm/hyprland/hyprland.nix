@@ -41,7 +41,7 @@
       ];
 
       xwayland = {
-        force_zero_scaling = false;
+          force_zero_scaling = false;
       };
 
       general = {
@@ -139,70 +139,8 @@
         disable_splash_rendering = true;
       };
 
-      # Fixed Reaper window rules - minimal interference with native behavior
-      windowrulev2 = [
-        # Main Reaper window - let it manage itself naturally
-        "workspace 1,class:^(REAPER)$"
-        "opacity 1.0 override,class:^(REAPER)$"
-        
-        # Only float specific dialog windows, not all child windows
-        "float,class:REAPER,title:^(Preferences)$"
-        "float,class:REAPER,title:^(Project Settings)$"
-        "float,class:REAPER,title:^(Render to file)$"
-        "float,class:REAPER,title:^(Export)$"
-        "float,class:REAPER,title:^(Save As)$"
-        "float,class:REAPER,title:^(Open)$"
-        
-        # Move dialogs to cursor but don't force size
-        "move cursor,class:REAPER,floating:1"
-        
-        # Performance optimization for main window only
-        "noanim,class:^(REAPER)$,title:^(REAPER)$"
-        
-        # Additional audio production applications
-        # JACK Control
-        "float,class:^(qjackctl)$"
-        "move cursor,class:^(qjackctl)$"
-        "size 400 300,class:^(qjackctl)$"
-        
-        # PulseAudio Volume Control
-        "float,class:^(pavucontrol)$"
-        "move cursor,class:^(pavucontrol)$"
-        "size 500 400,class:^(pavucontrol)$"
-        
-        # ALSA Mixer
-        "float,class:^(alsamixer)$"
-        "move cursor,class:^(alsamixer)$"
-        "size 600 400,class:^(alsamixer)$"
-        
-        # Carla (plugin host)
-        "float,class:^(carla)$"
-        "move cursor,class:^(carla)$"
-        "size 800 600,class:^(carla)$"
-        
-        # Ardour (alternative DAW)
-        "fullscreen,class:^(ardour)$"
-        "stayfocused,class:^(ardour)$"
-        "noanim,class:^(ardour)$"
-        
-        # Bottles (Wine application manager)
-        "float,class:^(com.usebottles.bottles)$"
-        "move cursor,class:^(com.usebottles.bottles)$"
-        "size 1000 700,class:^(com.usebottles.bottles)$"
-        "opacity 1.0 override,class:^(com.usebottles.bottles)$"
-        "noanim,class:^(com.usebottles.bottles)$"
-        
-        # Wine applications (general) - less aggressive rules
-        "float,class:^(wine)$"
-        "move cursor,class:^(wine)$"
-        "opacity 1.0 override,class:^(wine)$"
-        
-        # Wine dialogs - float but don't force size
-        "float,class:^(wine),title:^(.*Setup.*)$"
-        "float,class:^(wine),title:^(.*Install.*)$"
-        "float,class:^(wine),title:^(.*Config.*)$"
-        "move cursor,class:^(wine),floating:1"
-      ];
+      # Window rules imported from separate file
+      windowrulev2 = (import ./config/windowrules.nix { inherit config userSettings pkgs; }).windowrulev2;
 
       bind = (import ./config/keybindings.nix { inherit config userSettings pkgs; }).bind;
       

@@ -1,8 +1,8 @@
-{ pkgs, ... }:
+{ pkgs, inputs, ... }:
 
 {
   # Module installing zen-browser
-  home.packages = [ pkgs.zen-browser ];
+  home.packages = [ inputs.zen-browser.packages.${pkgs.system}.default ];
 
   xdg.mimeApps.defaultApplications = {
     "text/html" = "zen-browser.desktop";
@@ -13,6 +13,6 @@
   };
 
   home.sessionVariables = {
-    ZEN_BROWSER = "${pkgs.zen-browser}/bin/zen-browser";
+    ZEN_BROWSER = "${inputs.zen-browser.packages.${pkgs.system}.default}/bin/zen-browser";
   };
 } 

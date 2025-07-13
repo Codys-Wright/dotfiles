@@ -3,9 +3,9 @@
 ## TODO List
 
 ### LEFT MONITOR (DP-4 - Acer)
-- [ ] **1: Media** - Brave Browser "v"
-- [ ] **2: AI AGENT** - Vivaldi browser "a" 
-- [ ] **3: Web Preview Browser** - ungoogled-chromium "p"
+- [x] **1: Media** - Brave Browser "v" ✅
+- [x] **2: AI AGENT** - Vivaldi browser "a" ✅
+- [x] **3: Web Preview Browser** - ungoogled-chromium "p" ✅
 - [ ] **4: REAPER LEFT WINDOW** - Only called on double r press when active window is already reaper
 
 ### CENTER MONITOR (DP-3 - AOC - Primary)
@@ -17,9 +17,9 @@
 - [ ] **12: Extra**
 
 ### RIGHT MONITOR (DP-5 - Acer)
-- [ ] **7: Research Browser** - Zen "s"
-- [ ] **8: Chat** - workspace toggle (Discord, Messaging Clients, Zoom, iMessage)
-- [ ] **9: OBS**
+- [x] **7: Research Browser** - Zen "s" ✅
+- [x] **8: Chat** - workspace toggle (Discord, Messaging Clients, Zoom, iMessage) ✅
+- [ ] **9: OBS** ✅
 - [ ] **10: REAPER RIGHT WINDOW** - Only called on double r press when active window is already reaper
 
 ### TOP MONITOR

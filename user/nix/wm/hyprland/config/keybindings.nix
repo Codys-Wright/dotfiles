@@ -9,10 +9,10 @@
     "$mainMod SHIFT, l, exec, hyprlock"
 
     # Screen focus
-    "$mainMod, v, togglefloating"
     "$mainMod, u, focusurgentorlast"
     "$mainMod, tab, focuscurrentorlast"
     "$mainMod, z, fullscreen"
+    "$mainMod, f, togglefloating"
 
     # Screen resize
     "$mainMod CTRL, h, resizeactive, -20 0"
@@ -79,8 +79,14 @@
     "$mainMod ALT, e, exec, ${userSettings.term} --hold -e yazi"
     "$mainMod ALT, o, exec, obsidian"
     "$mainMod, r, exec, pkill fuzzel || fuzzel"
-    "$mainMod ALT, n, exec, swaync-client -t -sw"
-    "$mainMod, n, exec, pgrep -f obsidian || obsidian; hyprctl dispatch togglespecialworkspace obsidian"
+
+    
+    # Browser Workspaces
+    "$mainMod, v, exec, hyprctl clients | grep -q brave-browser && hyprctl dispatch focuswindow class:brave-browser || brave"
+    "$mainMod, a, exec, hyprctl clients | grep -q Vivaldi-stable && hyprctl dispatch focuswindow class:Vivaldi-stable || vivaldi"
+    "$mainMod, p, exec, hyprctl clients | grep -q chromium-browser && hyprctl dispatch focuswindow class:chromium-browser || chromium"
+    "$mainMod, s, exec, hyprctl clients | grep -q zen-beta && hyprctl dispatch focuswindow class:zen-beta || zen-browser"
+    "$mainMod, n, exec, hyprctl clients | grep -q obsidian && hyprctl dispatch togglespecialworkspace obsidian || obsidian"
 
     # Reaper DAW controls
     "$mainMod ALT, r, exec, reaper"
@@ -91,7 +97,7 @@
     "$mainMod ALT, v, exec, pkill fuzzel || cliphist list | fuzzel --no-fuzzy --dmenu | cliphist decode | wl-copy"
 
     # Screencapture
-    "$mainMod, s, exec, grim | wl-copy"
+    "$mainMod SHIFT, s, exec, grim | wl-copy"
     "$mainMod SHIFT ALT, s, exec, grim -g \"$(slurp)\" - | swappy -f -"
 
     # System

@@ -124,21 +124,30 @@
     # ===== WORKSPACE ASSIGNMENTS =====
     # Left Monitor (DP-4 - Acer) - Workspaces 1-4
     "workspace 1,class:^(REAPER)$"
-    "workspace 2,class:^(obsidian)$"
-    "workspace 3,class:^(firefox)$"
+    "workspace 1,class:^(brave-browser)$"
+    "workspace 2,class:^(vivaldi)$"
+    "workspace 3,class:^(chromium)$"
     "workspace 4,class:^(thunderbird)$"
     
-    # Center Monitor (DP-3 - AOC) - Primary - Workspaces 5, 6, 13, 14
-    "workspace 5,class:^(code)$"
-    "workspace 6,class:^(discord)$"
-    "workspace 13,class:^(jetbrains-idea)$"
-    "workspace 14,class:^(intellij-idea)$"
+    # Center Monitor (DP-3 - AOC) - Primary - Workspaces 5, 6, 11, 12, 13, 14
+    "workspace 5,class:^(kitty)$"
+    "workspace 5,class:^(alacritty)$"
+    "workspace 5,class:^(foot)$"
+    "workspace 6,class:^(REAPER)$"
+    "workspace 11,class:^(davinci-resolve)$"
+    "workspace 12,class:^(code)$"
+    "workspace 13,class:^(cursor)$"
+    "workspace 14,class:^(steam)$"
+    "workspace 14,class:^(lutris)$"
     
     # Right Monitor (DP-5 - Acer) - Workspaces 7-10
-    "workspace 7,class:^(steam)$"
-    "workspace 8,class:^(spotify)$"
-    "workspace 9,class:^(telegram)$"
-    "workspace 10,class:^(signal)$"
+    "workspace 7,class:^(zen-browser)$"
+    "workspace 8,class:^(discord)$"
+    "workspace 8,class:^(telegram)$"
+    "workspace 8,class:^(signal)$"
+    "workspace 8,class:^(zoom)$"
+    "workspace 9,class:^(obs)$"
+    "workspace 10,class:^(REAPER)$"
     
     # Special workspace for Obsidian
     "workspace special:obsidian,class:^(obsidian)$"

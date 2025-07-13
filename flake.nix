@@ -115,6 +115,7 @@
 		home-manager.inputs.nixpkgs.follows = "nixpkgs";
 		stylix.url = "github:danth/stylix";
 		musnix.url = "github:musnix/musnix";
+		zen-browser.url = "github:0xc000022070/zen-browser-flake";
 
 	};
 

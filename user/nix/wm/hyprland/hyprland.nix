@@ -29,7 +29,7 @@
 
     settings = {
       "$terminal" = userSettings.term;
-      "$mod" = "SUPER";
+      "$mainMod" = "SUPER";
 
       monitor = [
         # Left monitor (Acer XV271U M3)
@@ -141,6 +141,29 @@
 
       # Window rules imported from separate file
       windowrulev2 = (import ./config/windowrules.nix { inherit config userSettings pkgs; }).windowrulev2;
+
+      # Workspace rules - assign workspaces to specific monitors
+      workspace = [
+        # Left Monitor (DP-4 - Acer) - Workspaces 1-4
+        "1, monitor:DP-4"
+        "2, monitor:DP-4"
+        "3, monitor:DP-4"
+        "4, monitor:DP-4"
+        
+        # Center Monitor (DP-3 - AOC) - Primary - Workspaces 5, 6, 13, 14
+        "5, monitor:DP-3"
+        "6, monitor:DP-3"
+        "13, monitor:DP-3"
+        "14, monitor:DP-3"
+        
+        # Right Monitor (DP-5 - Acer) - Workspaces 7-10
+        "7, monitor:DP-5"
+        "8, monitor:DP-5"
+        "9, monitor:DP-5"
+        "10, monitor:DP-5"
+      ];
+
+
 
       bind = (import ./config/keybindings.nix { inherit config userSettings pkgs; }).bind;
       

@@ -3,102 +3,103 @@
 {
   bind = [
     # General
-    "SUPER, return, exec, ${userSettings.term}"
-    "$mod, q, killactive"
-    "SUPERSHIFT, e, exit"
-    "SUPERSHIFT, l, exec, hyprlock"
+    "$mainMod, return, exec, ${userSettings.term}"
+    "$mainMod, q, killactive"
+    "$mainMod SHIFT, e, exit"
+    "$mainMod SHIFT, l, exec, hyprlock"
 
     # Screen focus
-    "SUPER, v, togglefloating"
-    "SUPER, u, focusurgentorlast"
-    "SUPER, tab, focuscurrentorlast"
-    "SUPER, z, fullscreen"
+    "$mainMod, v, togglefloating"
+    "$mainMod, u, focusurgentorlast"
+    "$mainMod, tab, focuscurrentorlast"
+    "$mainMod, z, fullscreen"
 
     # Screen resize
-    "SUPERCTRL, h, resizeactive, -20 0"
-    "SUPERCTRL, l, resizeactive, 20 0"
-    "SUPERCTRL, k, resizeactive, 0 -20"
-    "SUPERCTRL, j, resizeactive, 0 20"
+    "$mainMod CTRL, h, resizeactive, -20 0"
+    "$mainMod CTRL, l, resizeactive, 20 0"
+    "$mainMod CTRL, k, resizeactive, 0 -20"
+    "$mainMod CTRL, j, resizeactive, 0 20"
 
     # ===== WORKSPACE KEYBINDINGS =====
     # Left Monitor (DP-4 - Acer) - Workspaces 1-4
-    "SUPER, 1, workspace, 1"
-    "SUPER, 2, workspace, 2"
-    "SUPER, 3, workspace, 3"
-    "SUPER, 4, workspace, 4"
+    "$mainMod, 1, workspace, 1"
+    "$mainMod, 2, workspace, 2"
+    "$mainMod, 3, workspace, 3"
+    "$mainMod, 4, workspace, 4"
     
-    # Center Monitor (DP-3 - AOC) - Primary - Workspaces 5, 12, 13, 6
-    "SUPER, 5, workspace, 5"
-    "SUPER, 6, workspace, 6"
-    "SUPER, 7, workspace, 12"
-    "SUPER, 8, workspace, 13"
+    # Center Monitor (DP-3 - AOC) - Primary - Workspaces 5, 6, 13, 14
+    "$mainMod, 5, workspace, 5"
+    "$mainMod, 6, workspace, 6"
+    "$mainMod, code:191, workspace, 13"
+    "$mainMod, code:192, workspace, 14"
     
     # Right Monitor (DP-5 - Acer) - Workspaces 7-10
-    "SUPER, 9, workspace, 7"
-    "SUPER, 0, workspace, 8"
-    "SUPER, minus, workspace, 9"
-    "SUPER, equal, workspace, 10"
+    "$mainMod, 7, workspace, 7"
+    "$mainMod, 8, workspace, 8"
+    "$mainMod, 9, workspace, 9"
+    "$mainMod, 0, workspace, 10"
 
     # ===== MOVE TO WORKSPACES =====
     # Left Monitor (DP-4 - Acer) - Workspaces 1-4
-    "SUPERSHIFT, 1, movetoworkspace, 1"
-    "SUPERSHIFT, 2, movetoworkspace, 2"
-    "SUPERSHIFT, 3, movetoworkspace, 3"
-    "SUPERSHIFT, 4, movetoworkspace, 4"
+    "$mainMod SHIFT, 1, movetoworkspace, 1"
+    "$mainMod SHIFT, 2, movetoworkspace, 2"
+    "$mainMod SHIFT, 3, movetoworkspace, 3"
+    "$mainMod SHIFT, 4, movetoworkspace, 4"
     
-    # Center Monitor (DP-3 - AOC) - Primary - Workspaces 5, 12, 13, 6
-    "SUPERSHIFT, 5, movetoworkspace, 5"
-    "SUPERSHIFT, 6, movetoworkspace, 6"
-    "SUPERSHIFT, 7, movetoworkspace, 12"
-    "SUPERSHIFT, 8, movetoworkspace, 13"
+    # Center Monitor (DP-3 - AOC) - Primary - Workspaces 5, 6, 13, 14
+    "$mainMod SHIFT, 5, movetoworkspace, 5"
+    "$mainMod SHIFT, 6, movetoworkspace, 6"
+    "$mainMod SHIFT, code:191, movetoworkspace, 13"
+    "$mainMod SHIFT, code:192, movetoworkspace, 14"
     
     # Right Monitor (DP-5 - Acer) - Workspaces 7-10
-    "SUPERSHIFT, 9, movetoworkspace, 7"
-    "SUPERSHIFT, 0, movetoworkspace, 8"
-    "SUPERSHIFT, minus, movetoworkspace, 9"
-    "SUPERSHIFT, equal, movetoworkspace, 10"
+    "$mainMod SHIFT, 7, movetoworkspace, 7"
+    "$mainMod SHIFT, 8, movetoworkspace, 8"
+    "$mainMod SHIFT, 9, movetoworkspace, 9"
+    "$mainMod SHIFT, 0 , movetoworkspace, 10"
 
     # Navigation
-    "SUPER, h, movefocus, l"
-    "SUPER, l, movefocus, r"
-    "SUPER, k, movefocus, u"
-    "SUPER, j, movefocus, d"
+    "$mainMod, h, movefocus, l"
+    "$mainMod, l, movefocus, r"
+    "$mainMod, k, movefocus, u"
+    "$mainMod, j, movefocus, d"
     
     # Multi-monitor navigation
-    "SUPERALT, h, focusmonitor, l"
-    "SUPERALT, l, focusmonitor, r"
-    "SUPERALT, k, focusmonitor, u"
-    "SUPERALT, j, focusmonitor, d"
-    "SUPERSHIFTALT, h, movewindow, mon:l"
-    "SUPERSHIFTALT, l, movewindow, mon:r"
-    "SUPERSHIFTALT, k, movewindow, mon:u"
-    "SUPERSHIFTALT, j, movewindow, mon:d"
+    "$mainMod ALT, h, focusmonitor, l"
+    "$mainMod ALT, l, focusmonitor, r"
+    "$mainMod ALT, k, focusmonitor, u"
+    "$mainMod ALT, j, focusmonitor, d"
+    "$mainMod SHIFT ALT, h, movewindow, mon:l"
+    "$mainMod SHIFT ALT, l, movewindow, mon:r"
+    "$mainMod SHIFT ALT, k, movewindow, mon:u"
+    "$mainMod SHIFT ALT, j, movewindow, mon:d"
 
     # Applications
-    "SUPERALT, s, exec, ${userSettings.browser}"
-    "SUPERALT, e, exec, ${userSettings.term} --hold -e yazi"
-    "SUPERALT, o, exec, obsidian"
-    "SUPER, r, exec, pkill fuzzel || fuzzel"
-    "SUPERALT, n, exec, swaync-client -t -sw"
+    "$mainMod ALT, s, exec, ${userSettings.browser}"
+    "$mainMod ALT, e, exec, ${userSettings.term} --hold -e yazi"
+    "$mainMod ALT, o, exec, obsidian"
+    "$mainMod, r, exec, pkill fuzzel || fuzzel"
+    "$mainMod ALT, n, exec, swaync-client -t -sw"
+    "$mainMod, n, exec, pgrep -f obsidian || obsidian; hyprctl dispatch togglespecialworkspace obsidian"
 
     # Reaper DAW controls
-    "SUPERALT, r, exec, reaper"
-    "SUPERALT, R, exec, hyprctl dispatch workspace 1"
-    "SUPERSHIFT, R, exec, hyprctl dispatch movetoworkspace 1"
+    "$mainMod ALT, r, exec, reaper"
+    "$mainMod ALT, R, exec, hyprctl dispatch workspace 1"
+    "$mainMod SHIFT, R, exec, hyprctl dispatch movetoworkspace 1"
 
     # Clipboard
-    "SUPERALT, v, exec, pkill fuzzel || cliphist list | fuzzel --no-fuzzy --dmenu | cliphist decode | wl-copy"
+    "$mainMod ALT, v, exec, pkill fuzzel || cliphist list | fuzzel --no-fuzzy --dmenu | cliphist decode | wl-copy"
 
     # Screencapture
-    "SUPER, s, exec, grim | wl-copy"
-    "SUPERSHIFTALT, s, exec, grim -g \"$(slurp)\" - | swappy -f -"
+    "$mainMod, s, exec, grim | wl-copy"
+    "$mainMod SHIFT ALT, s, exec, grim -g \"$(slurp)\" - | swappy -f -"
 
     # System
-    "SUPERALT, w, exec, pkill wlogout || wlogout"
+    "$mainMod ALT, w, exec, pkill wlogout || wlogout"
 
-    # Scroll through existing workspaces with SUPER + scroll
-    "SUPER, mouse_down, workspace, e+1"
-    "SUPER, mouse_up, workspace, e-1"
+    # Scroll through existing workspaces with $mainMod + scroll
+    "$mainMod, mouse_down, workspace, e+1"
+    "$mainMod, mouse_up, workspace, e-1"
 
     # Volume control
     ", XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
@@ -111,7 +112,7 @@
   ];
 
   bindm = [
-    "$mod, mouse:272, movewindow"
-    "$mod, mouse:273, resizewindow"
+    "$mainMod, mouse:272, movewindow"
+    "$mainMod, mouse:273, resizewindow"
   ];
 }

@@ -128,16 +128,20 @@
     "workspace 3,class:^(firefox)$"
     "workspace 4,class:^(thunderbird)$"
     
-    # Center Monitor (DP-3 - AOC) - Primary - Workspaces 5, 12, 13, 6
+    # Center Monitor (DP-3 - AOC) - Primary - Workspaces 5, 6, 13, 14
     "workspace 5,class:^(code)$"
-    "workspace 12,class:^(jetbrains-idea)$"
-    "workspace 13,class:^(intellij-idea)$"
     "workspace 6,class:^(discord)$"
+    "workspace 13,class:^(jetbrains-idea)$"
+    "workspace 14,class:^(intellij-idea)$"
     
     # Right Monitor (DP-5 - Acer) - Workspaces 7-10
     "workspace 7,class:^(steam)$"
     "workspace 8,class:^(spotify)$"
     "workspace 9,class:^(telegram)$"
     "workspace 10,class:^(signal)$"
+    
+    # Special workspace for Obsidian
+    "workspace special:obsidian,class:^(obsidian)$"
+
   ];
 } 

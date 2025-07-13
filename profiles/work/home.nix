@@ -13,6 +13,10 @@
     ../../user/coding/coding.nix
     ../../user/music/music.nix
     ../../user/nix/wm/${userSettings.wm}/${userSettings.wm}.nix # My window manager selected from flake
+    ../../user/shared/browser/brave.nix
+    ../../user/shared/browser/zen.nix
+    ../../user/shared/browser/vivaldi.nix
+    ../../user/shared/browser/ungoogled-chromium.nix
   ];
 
   home.stateVersion = "25.05"; # Please read the comment before changing.

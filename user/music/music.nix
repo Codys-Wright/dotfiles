@@ -3,6 +3,7 @@
 {
   imports = [
     ./reaper/reaper.nix
+    ./plugins/neural-amp-modeler.nix
   ];
 
   # Enable Reaper

@@ -4,6 +4,7 @@
   imports = [
     ./reaper/reaper.nix
     ./plugins/neural-amp-modeler.nix
+    ./plugins/lsp-plugins.nix
   ];
 
   # Enable Reaper

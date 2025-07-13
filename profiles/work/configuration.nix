@@ -11,6 +11,7 @@
       ../../system/nix/nix.nix
       ../../system/music/music.nix
       ../../system/shared/cli-collection.nix
+      ../../system/coding/coding.nix
     ];
 
   # Bootloader.

@@ -41,7 +41,7 @@
       ];
 
       xwayland = {
-        force_zero_scaling = true;
+        force_zero_scaling = false;
       };
 
       general = {
@@ -139,43 +139,25 @@
         disable_splash_rendering = true;
       };
 
-      # Comprehensive Reaper window rules based on Reddit recommendations
+      # Fixed Reaper window rules - minimal interference with native behavior
       windowrulev2 = [
-        # Main Reaper window - fullscreen and stay focused
-        # Only apply fullscreen to the main window, not popups
-        "fullscreen,class:^(REAPER)$,title:^(REAPER)$"
-        "stayfocused,class:^(REAPER)$,title:^(REAPER)$"
-        "noanim,class:^(REAPER)$,title:^(REAPER)$"
-        "opacity 1.0 override,class:^(REAPER)$,title:^(REAPER)$"
+        # Main Reaper window - let it manage itself naturally
+        "workspace 1,class:^(REAPER)$"
+        "opacity 1.0 override,class:^(REAPER)$"
         
-        # Child windows - floating and properly sized
-        "float,class:REAPER,title:^(?!REAPER).*$"
+        # Only float specific dialog windows, not all child windows
+        "float,class:REAPER,title:^(Preferences)$"
+        "float,class:REAPER,title:^(Project Settings)$"
+        "float,class:REAPER,title:^(Render to file)$"
+        "float,class:REAPER,title:^(Export)$"
+        "float,class:REAPER,title:^(Save As)$"
+        "float,class:REAPER,title:^(Open)$"
+        
+        # Move dialogs to cursor but don't force size
         "move cursor,class:REAPER,floating:1"
-        "size 800 600,class:REAPER,floating:1"
-        "bordercolor rgb(00FF00),class:REAPER,floating:1"
         
-        # Performance optimizations for child windows
-        "noanim,class:REAPER,floating:1"
-        "opacity 0.95 override,class:REAPER,floating:1"
-        
-        # Menu and popup handling - float but don't steal focus
-        "float,class:REAPER,title:^(menu)$"
-        "float,class:REAPER,title:^(.*popup.*)$"
-        "float,class:REAPER,title:^(.*dialog.*)$"
-        "float,class:REAPER,title:^(.*window.*)$"
-        "nofocus,class:REAPER,title:^(menu)$"
-        "nofocus,class:REAPER,title:^(.*popup.*)$"
-        "nofocus,class:REAPER,title:^(.*dialog.*)$"
-        "nofocus,class:REAPER,title:^(.*window.*)$"
-        
-        # Handle empty titles (tooltips, etc.)
-        "float,class:REAPER,title:^$"
-        "nofocus,class:REAPER,title:^$"
-        
-        # Border styling for different window types
-        "bordercolor rgb(00AA00),class:REAPER,title:^(menu)$"
-        "bordercolor rgb(008800),class:REAPER,title:^(.*popup.*)$"
-        "bordercolor rgb(006600),class:REAPER,title:^(.*dialog.*)$"
+        # Performance optimization for main window only
+        "noanim,class:^(REAPER)$,title:^(REAPER)$"
         
         # Additional audio production applications
         # JACK Control
@@ -210,19 +192,16 @@
         "opacity 1.0 override,class:^(com.usebottles.bottles)$"
         "noanim,class:^(com.usebottles.bottles)$"
         
-        # Wine applications (general)
+        # Wine applications (general) - less aggressive rules
         "float,class:^(wine)$"
         "move cursor,class:^(wine)$"
-        "size 800 600,class:^(wine)$"
         "opacity 1.0 override,class:^(wine)$"
-        "noanim,class:^(wine)$"
         
-        # Wine popup windows
-        "float,class:^(wine),title:^(.*)$"
-        "move cursor,class:^(wine),title:^(.*)$"
-        "size 600 400,class:^(wine),title:^(.*)$"
-        "opacity 1.0 override,class:^(wine),title:^(.*)$"
-        "noanim,class:^(wine),title:^(.*)$"
+        # Wine dialogs - float but don't force size
+        "float,class:^(wine),title:^(.*Setup.*)$"
+        "float,class:^(wine),title:^(.*Install.*)$"
+        "float,class:^(wine),title:^(.*Config.*)$"
+        "move cursor,class:^(wine),floating:1"
       ];
 
       bind = (import ./config/keybindings.nix { inherit config userSettings pkgs; }).bind;

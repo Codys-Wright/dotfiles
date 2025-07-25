@@ -1,0 +1,238 @@
+#############################################################
+#
+#  THEBATTLESHIP - Main Desktop
+#  NixOS running on Ryzen 9 5900XT, Radeon RX 5700 XT, 64GB RAM
+#
+###############################################################
+
+{
+  inputs,
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+{
+  imports = lib.flatten [
+    #
+    # ========== Hardware ==========
+    #
+    ./hardware-configuration.nix
+    inputs.hardware.nixosModules.common-cpu-amd
+    inputs.hardware.nixosModules.common-gpu-amd
+    inputs.hardware.nixosModules.common-pc-ssd
+
+    #
+    # ========== Disk Layout ==========
+    #
+    inputs.disko.nixosModules.disko
+    (lib.custom.relativeToRoot "hosts/common/disks/THEBATTLESHIP.nix")
+
+    #
+    # ========== Misc Inputs ==========
+    #
+    inputs.stylix.nixosModules.stylix
+
+    (map lib.custom.relativeToRoot [
+      #
+      # ========== Required Configs ==========
+      #
+      "hosts/common/core"
+
+      #
+      # ========== Optional Configs ==========
+      #
+      "hosts/common/optional/services/greetd.nix" # display manager
+      "hosts/common/optional/services/openssh.nix" # allow remote SSH access
+      "hosts/common/optional/services/printing.nix" # CUPS
+      "hosts/common/optional/audio.nix" # pipewire and cli controls
+      "hosts/common/optional/libvirt.nix" # vm tools
+      "hosts/common/optional/gaming.nix" # steam, gamescope, gamemode, and related hardware
+      "hosts/common/optional/hyprland.nix" # window manager
+      "hosts/common/optional/msmtp.nix" # for sending email notifications
+      "hosts/common/optional/nvtop.nix" # GPU monitor (not available in home-manager)
+      "hosts/common/optional/amdgpu_top.nix" # GPU monitor (not available in home-manager)
+      "hosts/common/optional/obsidian.nix" # wiki
+      "hosts/common/optional/plymouth.nix" # fancy boot screen
+      "hosts/common/optional/protonvpn.nix" # vpn
+      "hosts/common/optional/scanning.nix" # SANE and simple-scan
+      "hosts/common/optional/thunar.nix" # file manager
+      "hosts/common/optional/vlc.nix" # media player
+      "hosts/common/optional/wayland.nix" # wayland components and pkgs not available in home-manager
+      "hosts/common/optional/yubikey.nix" # yubikey related packages and configs
+      "hosts/common/optional/zsa-keeb.nix" # Moonlander keeb flashing stuff
+
+    ])
+    #
+    # ========== THEBATTLESHIP Specific ==========
+    #
+    ./samba.nix
+
+  ];
+
+  #
+  # ========== Host Specification ==========
+  #
+
+  hostSpec = {
+    hostName = "THEBATTLESHIP";
+
+    # Primary user for system-level configurations
+    primaryUser = "cody";
+
+    # Multi-user configuration for this host
+    users = {
+      cody = {
+        enable = true;
+        isAdmin = true;
+        extraGroups = [
+          "wheel"
+          "networkmanager"
+          "audio"
+          "video"
+        ];
+        # shell = "zsh";  # Will use default from user profile
+      };
+      # Add more users here as needed:
+      # anotherUser = {
+      #   enable = true;
+      #   isAdmin = false;
+      #   extraGroups = [ "audio" "video" ];
+      # };
+    };
+
+    # Host-level configuration
+    useYubikey = lib.mkForce false;
+    hdr = lib.mkForce false;
+    persistFolder = "/persist"; # added for "completion" because of the disko spec that was used even though impermanence isn't actually enabled here yet.
+  };
+
+  # set custom autologin options. see greetd.nix for details
+  #  autoLogin.enable = true;
+  #  autoLogin.username = config.userSpec.username;
+  #
+  #  services.gnome.gnome-keyring.enable = true;
+
+  networking = {
+    networkmanager.enable = true;
+    enableIPv6 = false;
+  };
+
+  #FIXME(clamav): something not working. disabled to reduce log spam
+  semi-active-av.enable = false;
+
+  services.backup =
+    lib.mkIf (config.hostSpec.networking.subnets ? grove && config.hostSpec.networking.ports.tcp ? oops)
+      {
+        enable = true;
+        borgBackupStartTime = "02:00:00";
+        borgServer = "${config.hostSpec.networking.subnets.grove.hosts.oops.ip}";
+        borgUser = "${config.userSpec.username}";
+        borgPort = "${builtins.toString config.hostSpec.networking.ports.tcp.oops}";
+        borgBackupPath = "/var/services/homes/${config.userSpec.username}/backups";
+        borgNotifyFrom = "${config.userSpec.email.notifier}";
+        borgNotifyTo = "${config.userSpec.email.backup}";
+      };
+
+  boot.loader = {
+    systemd-boot = {
+      enable = true;
+      # When using plymouth, initrd can expand by a lot each time, so limit how many we keep around
+      configurationLimit = lib.mkDefault 10;
+    };
+    efi.canTouchEfiVariables = true;
+    timeout = 3;
+  };
+
+  boot.initrd = {
+    systemd.enable = true;
+  };
+
+  # needed to unlock LUKS on secondary drives
+  # use partition UUID
+  # https://wiki.nixos.org/wiki/Full_Disk_Encryption#Unlocking_secondary_drives
+  environment.etc.crypttab.text = lib.optionalString (!config.hostSpec.isMinimal) ''
+    cryptextra UUID=d90345b2-6673-4f8e-a5ef-dc764958ea14 /luks-secondary-unlock.key
+    cryptvms UUID=ce5f47f8-d5df-4c96-b2a8-766384780a91 /luks-secondary-unlock.key
+  '';
+
+  #TODO(stylix): move this stuff to separate file but define theme itself per host
+  # host-wide styling
+  stylix = {
+    enable = true;
+    image = (lib.custom.relativeToRoot "assets/wallpapers/zen-01.png");
+    #      base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-medium.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+    #      cursor = {
+    #        package = pkgs.foo;
+    #        name = "";
+    #      };
+    #     fonts = {
+    #monospace = {
+    #    package = pkgs.foo;
+    #    name = "";
+    #};
+    #sanSerif = {
+    #    package = pkgs.foo;
+    #    name = "";
+    #};
+    #serif = {
+    #    package = pkgs.foo;
+    #    name = "";
+    #};
+    #    sizes = {
+    #        applications = 12;
+    #        terminal = 12;
+    #        desktop = 12;
+    #        popups = 10;
+    #    };
+    #};
+    opacity = {
+      applications = 1.0;
+      terminal = 1.0;
+      desktop = 1.0;
+      popups = 0.8;
+    };
+    polarity = "dark";
+    # program specific exclusions
+    #targets.foo.enable = false;
+  };
+  #hyprland border override example
+  #  wayland.windowManager.hyprland.settings.general."col.active_border" = lib.mkForce "rgb(${config.stylix.base16Scheme.base0E});
+
+  boot = {
+    kernelModules = [
+      "amdgpu-i2c"
+    ];
+    kernelPackages = pkgs.unstable.linuxPackages_latest;
+
+    initrd.kernelModules = [ "amdgpu" ];
+    kernelParams = [
+      "amdgpu.ppfeaturemask=0xfffd3fff" # https://kernel.org/doc/html/latest/gpu/amdgpu/module-parameters.html#ppfeaturemask-hexint
+      "amdgpu.dcdebugmask=0x400" # Allegedly might help with some crashes
+      "split_lock_detect=off" # Alleged gaming perf increase
+    ];
+    # Fix for XBox controller disconnects
+    extraModprobeConfig = ''options bluetooth disable_ertm=1 '';
+  };
+
+  hardware = {
+    #   graphics.enable = true;
+    graphics.package = pkgs.unstable.mesa;
+  };
+
+  #hardware.graphics.package = lib.mkForce pkgs.unstable.mesa.drivers;
+  #hardware.amdgpu.initrd.enable = true; # load amdgpu kernelModules in stage 1.
+  #hardware.amdgpu.opencl.enable = true; # OpenCL support - general compute API for gpu
+  #hardware.amdgpu.amdvlk.enable = true; # additional, alternative drivers
+
+  environment.systemPackages = builtins.attrValues {
+    inherit (pkgs)
+      clinfo # opencl testing
+      vulkan-tools # vulkaninfo
+      ;
+  };
+
+  # https://wiki.nixos.org/wiki/FAQ/When_do_I_update_stateVersion
+  system.stateVersion = "24.05";
+}

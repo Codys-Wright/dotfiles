@@ -60,7 +60,10 @@
       nixfmt-rfc-style.enable = true;
       deadnix = {
         enable = true;
-        excludes = [ "hosts/nixos/*/hardware-configuration.nix" ];
+        args = [
+          "--exclude"
+          "hardware-configuration.nix"
+        ];
         settings = {
           noLambdaArg = true;
         };

@@ -34,8 +34,10 @@ lib.custom.mkUnifiedModule {
     home.packages = with pkgs; [
       # Digital Audio Workstations
       ardour # Professional DAW
-      # reaper        # Commercial DAW (unfree)
-      # bitwig-studio # Commercial DAW (unfree)
+      reaper # Commercial DAW (unfree)
+      reaper-reapack-extension # Package manager for REAPER
+      reaper-sws-extension # REAPER Plugin Extension
+      bitwig-studio # Commercial DAW (unfree)
 
       # Audio editors
       audacity # Audio editor
@@ -53,7 +55,7 @@ lib.custom.mkUnifiedModule {
       musescore # Music notation software
 
       # Audio plugins (LV2/VST)
-      # calf          # Audio plugins
+      calf # Audio plugins
       # guitarix      # Guitar amp simulator
 
       # MIDI tools

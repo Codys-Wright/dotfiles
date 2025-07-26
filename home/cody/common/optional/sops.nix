@@ -47,6 +47,7 @@ in
       #placeholder for tokens that I haven't gotten to yet
       #"tokens/foo" = {
       #};
-    } // yubikeySecrets;
+    }
+    // yubikeySecrets;
   };
 }

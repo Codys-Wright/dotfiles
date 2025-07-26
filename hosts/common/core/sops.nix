@@ -42,15 +42,17 @@ in
         # We need to ensure the entire directory structure is that of the user...
         path = "${config.userSpec.home}/.config/sops/age/keys.txt";
       };
-      # extract password/username to /run/secrets-for-users/ so it can be used to create the user
-      "passwords/${config.userSpec.username}" = {
-        sopsFile = "${sopsFolder}/shared.yaml";
-        neededForUsers = true;
-      };
-      "passwords/msmtp" = {
-        sopsFile = "${sopsFolder}/shared.yaml";
-      };
+
     }
+    # Define password secrets for all enabled users
+    (lib.mkMerge (
+      lib.mapAttrsToList (username: hostUserConfig: {
+        "passwords/${username}" = {
+          sopsFile = "${sopsFolder}/shared.yaml";
+          neededForUsers = true;
+        };
+      }) config.hostSpec.users
+    ))
     # only reference borg password if host is using backup
     (lib.mkIf config.services.backup.enable {
       "passwords/borg" = {

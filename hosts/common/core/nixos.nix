@@ -23,7 +23,7 @@
     enable = true;
     clean.enable = true;
     clean.extraArgs = "--keep-since 20d --keep 20";
-          flake = "${config.userSpec.home}/nix-config";
+    flake = "${config.userSpec.home}/nix-config";
   };
 
   services.keyd = {

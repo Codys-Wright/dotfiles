@@ -6,8 +6,8 @@ in
   sops.secrets = {
     "passwords/msmtp" = {
       sopsFile = "${sopsFolder}/shared.yaml";
-          owner = config.users.users.${config.userSpec.username}.name;
-    inherit (config.users.users.${config.userSpec.username}) group;
+      owner = config.users.users.${config.userSpec.username}.name;
+      inherit (config.users.users.${config.userSpec.username}) group;
     };
   };
 

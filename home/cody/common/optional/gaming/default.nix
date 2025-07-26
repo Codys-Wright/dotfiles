@@ -37,14 +37,13 @@ let
     '';
 in
 {
-  home.packages =
-    [
-      steam-session
-    ]
-    ++ builtins.attrValues {
-      inherit (pkgs.unstable)
-        path-of-building
-        ;
-    };
+  home.packages = [
+    steam-session
+  ]
+  ++ builtins.attrValues {
+    inherit (pkgs.unstable)
+      path-of-building
+      ;
+  };
 
 }

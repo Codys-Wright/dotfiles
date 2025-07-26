@@ -52,10 +52,22 @@
       "hosts/common/optional/thunar.nix" # file manager
       "hosts/common/optional/vlc.nix" # media player
       "hosts/common/optional/wayland.nix" # wayland components and pkgs not available in home-manager
+
     ])
+
+    #
+    # ========== Unified Modules (System) ==========
+    #
+    (lib.custom.importSystemModules {
+      path = lib.custom.relativeToOptionalModules "";
+      modules = [
+        "audio" # Core audio system (pipewire, etc.)
+        "audio/music" # Music-specific configuration
+        "audio/music/production" # Professional music production tools
+      ];
+    })
   ];
 
-  #
   # ========== Host Specification ==========
   #
   hostSpec = {

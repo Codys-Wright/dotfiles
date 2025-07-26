@@ -483,7 +483,8 @@ in
           borg-backup-test-email
           borg-backup-delete
           borg-backup-restore
-        ] ++ lib.optional isImpermanent borg-backup-btrfs-subvolume;
+        ]
+        ++ lib.optional isImpermanent borg-backup-btrfs-subvolume;
         sops.secrets = {
           #FIXME(borg): make this an optional path
           "keys/ssh/borg" = {

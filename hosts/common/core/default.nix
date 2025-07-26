@@ -25,7 +25,7 @@ in
       "hosts/common/core/sops.nix" # Core because it's used for backups, mail
       "hosts/common/core/ssh.nix"
       #"hosts/common/core/services" #not used yet
-      "hosts/common/users/multi-user.nix"  # New multi-user system
+      "hosts/common/users/multi-user.nix" # New multi-user system
     ])
   ];
 

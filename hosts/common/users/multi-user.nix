@@ -55,6 +55,9 @@ in
   # Expose primary user's userSpec through config.userSpec
   userSpec = mergeUserConfig primaryUser primaryUserConfig;
 
+  # Only allow declarative user management; Required for SOPS passwords to work during system activation
+  users.mutableUsers = false;
+
   # Create system users for all enabled users + configure root
   users.users =
     (lib.mapAttrs (

@@ -7,7 +7,7 @@
   ...
 }:
 let
-        homeDirectory = "${config.userSpec.home}";
+  homeDirectory = "${config.userSpec.home}";
   yubikey-up =
     let
       yubikeyIds = lib.concatStringsSep " " (

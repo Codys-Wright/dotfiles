@@ -6,7 +6,6 @@
     common/optional/comms
     common/optional/desktops
     common/optional/development
-    common/optional/gaming
     common/optional/helper-scripts
     common/optional/media
     common/optional/tools
@@ -17,6 +16,9 @@
       "audio" # Core audio system
       "audio/music" # Music-specific user configuration
       "audio/music/production" # Professional music production tools
+      "gaming" # Gaming applications and tools
+      "virtualization" # Docker, Podman, VM tools
+      "wm" # Window managers (KDE Plasma + Hyprland user configs)
     ];
   };
 

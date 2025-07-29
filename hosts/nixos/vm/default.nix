@@ -46,8 +46,6 @@
       "hosts/common/optional/services/printing.nix" # CUPS
       "hosts/common/optional/audio.nix" # pipewire and cli controls
       "hosts/common/optional/libvirt.nix" # vm tools
-      "hosts/common/optional/gaming.nix" # steam, gamescope, gamemode, and related hardware
-      "hosts/common/optional/hyprland.nix" # window manager
       "hosts/common/optional/scanning.nix" # SANE and simple-scan
       "hosts/common/optional/thunar.nix" # file manager
       "hosts/common/optional/vlc.nix" # media player
@@ -64,6 +62,9 @@
         "audio" # Core audio system (pipewire, etc.)
         "audio/music" # Music-specific configuration
         "audio/music/production" # Professional music production tools
+        "gaming" # Steam, GameMode, gaming tools
+        "virtualization" # Docker, Podman, libvirt tools
+        "wm" # Window managers (KDE Plasma + Hyprland)
       ];
     })
   ];
@@ -91,49 +92,9 @@
     };
   };
 
-  services.gnome.gnome-keyring.enable = true;
+  # KDE Plasma configuration is now handled by the unified wm/kdePlasma module
 
-  services = {
-    desktopManager.plasma6.enable = true;
-
-    displayManager = {
-      sddm.enable = true;
-      autoLogin = {
-        enable = true;
-        user = config.hostSpec.primaryUser;
-      };
-    };
-
-    xrdp = {
-      defaultWindowManager = "startplasma-x11";
-      enable = true;
-      openFirewall = true;
-    };
-
-    xserver = {
-      enable = true;
-
-      xkb = {
-        layout = "us";
-        variant = "";
-      };
-    };
-  };
-
-  environment.systemPackages = with pkgs; [
-    # KDE
-    kdePackages.discover # Optional: Install if you use Flatpak or fwupd firmware update sevice
-    kdePackages.kcalc # Calculator
-    kdePackages.kcharselect # Tool to select and copy special characters from all installed fonts
-    kdePackages.kcolorchooser # A small utility to select a color
-    kdePackages.kolourpaint # Easy-to-use paint program
-    kdePackages.ksystemlog # KDE SystemLog Application
-    kdePackages.sddm-kcm # Configuration module for SDDM
-    kdiff3 # Compares and merges 2 or 3 files or directories
-    hardinfo2 # System information and benchmarks for Linux systems
-    haruna # Open source video player built with Qt/QML and libmpv
-    xclip # Tool to access the X clipboard from a console application
-  ];
+  # System packages are now handled by unified modules
 
   networking = {
     networkmanager.enable = true;

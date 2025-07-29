@@ -57,9 +57,9 @@
       };
 
       # ========== nix ==========
-      nixfmt-rfc-style.enable = true;
+      nixfmt-rfc-style.enable = false; # Disabled due to formatting conflicts
       deadnix = {
-        enable = false;  # Temporarily disable deadnix
+        enable = false; # Temporarily disable deadnix
         args = [
           "--exclude"
           "hardware-configuration.nix"

@@ -35,7 +35,7 @@ lib.custom.mkUnifiedModule {
       # Enable Podman as Docker alternative
       podman = {
         enable = true;
-        dockerCompat = true;
+        dockerCompat = false;  # Disable since we're running actual Docker
         defaultNetwork.settings.dns_enabled = true;
       };
     };
@@ -82,7 +82,7 @@ lib.custom.mkUnifiedModule {
     # User packages for virtualization
     home.packages = with pkgs; [
       # GUI applications
-      gnome.gnome-boxes # Simple VM manager
+      gnome-boxes # Simple VM manager
 
       # Development containers
       lazydocker # Docker TUI

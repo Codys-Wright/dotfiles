@@ -60,10 +60,11 @@
           lib,
           config,
           pkgs,
+          inputs ? null,
           ...
         }:
         let
-          moduleContent = import modulePath { inherit lib config pkgs; };
+          moduleContent = import modulePath { inherit lib config pkgs inputs; };
         in
         if lib.isAttrs moduleContent && moduleContent ? systemConfig then
           moduleContent.systemConfig
@@ -108,10 +109,11 @@
           lib,
           config,
           pkgs,
+          inputs ? null,
           ...
         }:
         let
-          moduleContent = import modulePath { inherit lib config pkgs; };
+          moduleContent = import modulePath { inherit lib config pkgs inputs; };
         in
         if lib.isAttrs moduleContent && moduleContent ? userConfig then
           moduleContent.userConfig

@@ -93,7 +93,7 @@ lib.custom.mkUnifiedModule {
 
       # Multimedia
       kdePackages.elisa # Music player
-      kdePackages.kamoso # Camera application
+      # kdePackages.kamoso # Camera application - disabled due to being broken
 
       # Productivity
       kdePackages.korganizer # Calendar/organizer

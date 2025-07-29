@@ -2,6 +2,7 @@
   lib,
   inputs,
   pkgs,
+  config,
   ...
 }:
 
@@ -24,7 +25,7 @@ lib.custom.mkUnifiedModule {
         settings = {
           default_session = {
             command = "${pkgs.greetd.tuigreet}/bin/tuigreet --asterisks --time --time-format '%I:%M %p | %a • %h | %F' --cmd Hyprland";
-            user = "greeter";
+            user = config.hostSpec.primaryUser;
           };
         };
       };
@@ -93,7 +94,7 @@ lib.custom.mkUnifiedModule {
       waybar # Highly customizable status bar
 
       # File managers
-      thunar # Lightweight file manager
+      xfce.thunar # Lightweight file manager
 
       # Terminal emulators optimized for Wayland
       foot # Fast Wayland terminal
@@ -115,7 +116,7 @@ lib.custom.mkUnifiedModule {
 
       # Theme tools
       nwg-look # GTK theme manager
-      qt5ct # Qt5 theme manager
+      libsForQt5.qt5ct # Qt5 theme manager
 
       # Image viewers
       imv # Wayland image viewer
@@ -124,17 +125,17 @@ lib.custom.mkUnifiedModule {
       zathura # Lightweight document viewer
     ];
 
-    # Hyprland configuration
+    # Hyprland configuration (basic fallback - user configs can override)
     wayland.windowManager.hyprland = {
-      enable = true;
+      enable = lib.mkDefault true;
       settings = {
         # Basic configuration
-        monitor = [
+        monitor = lib.mkDefault [
           ",preferred,auto,1" # Auto-configure monitors
         ];
 
         # Input configuration
-        input = {
+        input = lib.mkDefault {
           kb_layout = "us";
           follow_mouse = 1;
           touchpad = {
@@ -144,7 +145,7 @@ lib.custom.mkUnifiedModule {
         };
 
         # General settings
-        general = {
+        general = lib.mkDefault {
           gaps_in = 5;
           gaps_out = 10;
           border_size = 2;
@@ -154,7 +155,7 @@ lib.custom.mkUnifiedModule {
         };
 
         # Decoration
-        decoration = {
+        decoration = lib.mkDefault {
           rounding = 8;
           blur = {
             enabled = true;
@@ -168,7 +169,7 @@ lib.custom.mkUnifiedModule {
         };
 
         # Animations
-        animations = {
+        animations = lib.mkDefault {
           enabled = true;
           bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
           animation = [
@@ -182,11 +183,11 @@ lib.custom.mkUnifiedModule {
         };
 
         # Basic keybindings
-        bind = [
+        bind = lib.mkDefault [
           "SUPER, Return, exec, foot"
           "SUPER, Q, killactive"
           "SUPER, M, exit"
-          "SUPER, E, exec, thunar"
+          "SUPER, E, exec, ${pkgs.xfce.thunar}/bin/thunar"
           "SUPER, V, togglefloating"
           "SUPER, R, exec, wofi --show drun"
 
@@ -216,13 +217,13 @@ lib.custom.mkUnifiedModule {
         ];
 
         # Mouse bindings
-        bindm = [
+        bindm = lib.mkDefault [
           "SUPER, mouse:272, movewindow"
           "SUPER, mouse:273, resizewindow"
         ];
 
         # Startup applications
-        exec-once = [
+        exec-once = lib.mkDefault [
           "waybar"
           "mako"
           "hyprpaper"
@@ -233,8 +234,8 @@ lib.custom.mkUnifiedModule {
 
     # Waybar configuration
     programs.waybar = {
-      enable = true;
-      settings = {
+      enable = lib.mkDefault true;
+      settings = lib.mkDefault {
         mainBar = {
           layer = "top";
           position = "top";
@@ -295,19 +296,21 @@ lib.custom.mkUnifiedModule {
 
     # Mako notification daemon configuration
     services.mako = {
-      enable = true;
-      backgroundColor = "#1f1d2e";
-      borderColor = "#c4a7e7";
-      textColor = "#e0def4";
-      borderRadius = 8;
-      borderSize = 2;
-      defaultTimeout = 5000;
+      enable = lib.mkDefault true;
+      settings = lib.mkDefault {
+        background-color = "#1f1d2e";
+        border-color = "#c4a7e7";
+        text-color = "#e0def4";
+        border-radius = 8;
+        border-size = 2;
+        default-timeout = 5000;
+      };
     };
 
     # XDG MIME associations for Hyprland/Wayland
     xdg.mimeApps = {
-      enable = true;
-      defaultApplications = {
+      enable = lib.mkDefault true;
+      defaultApplications = lib.mkDefault {
         "image/jpeg" = [ "imv.desktop" ];
         "image/png" = [ "imv.desktop" ];
         "image/gif" = [ "imv.desktop" ];

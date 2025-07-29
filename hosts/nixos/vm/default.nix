@@ -41,11 +41,11 @@
       # ========== Optional Configs ==========
       #
       "hosts/common/optional/services/openssh.nix"
-      "hosts/common/optional/services/greetd.nix" # display manager
+      # greetd is provided by the Hyprland module
       "hosts/common/optional/services/openssh.nix" # allow remote SSH access
       "hosts/common/optional/services/printing.nix" # CUPS
       "hosts/common/optional/audio.nix" # pipewire and cli controls
-      "hosts/common/optional/libvirt.nix" # vm tools
+      # libvirt is provided by the virtualization unified module
       "hosts/common/optional/scanning.nix" # SANE and simple-scan
       "hosts/common/optional/thunar.nix" # file manager
       "hosts/common/optional/vlc.nix" # media player

@@ -10,7 +10,7 @@ lib.custom.mkUnifiedModule {
   #
   systemConfig = {
     # Core audio system - use modern hardware.alsa instead of deprecated sound.enable
-    hardware.pulseaudio.enable = false;
+    services.pulseaudio.enable = false;
 
     # Base system packages for audio
     environment.systemPackages = with pkgs; [

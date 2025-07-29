@@ -19,6 +19,16 @@ check ARGS="":
 	NIXPKGS_ALLOW_UNFREE=1 REPO_PATH=$(pwd) nix flake check --impure --keep-going --show-trace {{ARGS}}
 	cd nixos-installer && NIXPKGS_ALLOW_UNFREE=1 REPO_PATH=$(pwd) nix flake check --impure --keep-going --show-trace {{ARGS}}
 
+# Evaluate a specific configuration (e.g., just eval vm, just eval THEBATTLESHIP)
+eval CONFIG:
+	@echo "Evaluating configuration: {{CONFIG}}"
+	NIXPKGS_ALLOW_UNFREE=1 nix eval .#nixosConfigurations.{{CONFIG}}.config.system.build.toplevel --impure --show-trace
+
+# Build a specific configuration (e.g., just build vm, just build THEBATTLESHIP)
+build CONFIG:
+	@echo "Building configuration: {{CONFIG}}"
+	NIXPKGS_ALLOW_UNFREE=1 nix build .#nixosConfigurations.{{CONFIG}}.config.system.build.toplevel --impure --show-trace
+
 # Rebuild the system
 rebuild: rebuild-pre && rebuild-post
   # NOTE: Add --option eval-cache false if you end up caching a failure you can't get around

@@ -35,7 +35,7 @@ lib.custom.mkUnifiedModule {
       # Enable Podman as Docker alternative
       podman = {
         enable = true;
-        dockerCompat = false;  # Disable since we're running actual Docker
+        dockerCompat = false; # Disable since we're running actual Docker
         defaultNetwork.settings.dns_enabled = true;
       };
     };

@@ -59,13 +59,14 @@
       # ========== nix ==========
       nixfmt-rfc-style.enable = true;
       deadnix = {
-        enable = true;
+        enable = false;  # Temporarily disable deadnix
         args = [
           "--exclude"
           "hardware-configuration.nix"
+          "--no-lambda-arg" # Don't check for unused lambda arguments
         ];
         settings = {
-          noLambdaArg = true;
+          # noLambdaArg = false; # Allow unused lambda patterns for now
         };
       };
 

@@ -112,7 +112,7 @@
       command = "${pkgs.greetd.tuigreet}/bin/tuigreet --asterisks --time --time-format '%I:%M %p | %a • %h | %F' --cmd startplasma-wayland";
       user = "cody";
     };
-    
+
     initial_session = {
       command = "startplasma-wayland";
       user = "cody";

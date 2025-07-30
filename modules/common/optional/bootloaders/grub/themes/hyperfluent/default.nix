@@ -20,10 +20,10 @@ pkgs.stdenv.mkDerivation {
   installPhase = ''
     # Create output directory
     mkdir -p $out
-    
+
     # Copy the nixos theme files to output
     cp -r $src/nixos/* $out/
-    
+
     # Ensure theme.txt exists and is properly formatted
     if [ ! -f $out/theme.txt ]; then
       echo "Error: theme.txt not found in HyperFluent theme"

@@ -16,6 +16,11 @@ let
   cfg = config.custom.displayManagers;
 in
 {
+  # Import theme-specific configurations
+  imports = [
+    ./sddm
+  ];
+
   options.custom.displayManagers = {
     enable = mkEnableOption "custom display manager configurations";
 
@@ -35,17 +40,11 @@ in
   };
 
   config = mkIf cfg.enable {
-    services.xserver = {
+    services.xserver.enable = true;
+    
+    services.displayManager.sddm = mkIf cfg.sddm.enable {
       enable = true;
-      displayManager.sddm = mkIf cfg.sddm.enable {
-        enable = true;
-        theme = cfg.sddm.theme;
-      };
+      # Theme is set by the specific theme modules
     };
-
-    # Import theme-specific configurations
-    imports = [
-      ./sddm
-    ];
   };
 }

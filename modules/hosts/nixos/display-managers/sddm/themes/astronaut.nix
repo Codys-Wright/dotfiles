@@ -7,8 +7,9 @@
 
 let
   inherit (lib) mkIf mkOption types;
-
+  
   cfg = config.custom.displayManagers.sddm;
+  displayManagerCfg = config.custom.displayManagers;
 
   # Fetch the astronaut theme from GitHub
   sddm-astronaut-theme = pkgs.fetchFromGitHub {
@@ -47,12 +48,8 @@ in
     };
   };
 
-  config = mkIf (cfg.enable && cfg.theme == "astronaut") {
-    # Add any theme-specific configuration here
-    services.xserver.displayManager.sddm.settings = {
-      Theme = {
-        Current = "sddm-astronaut-theme";
-      };
-    };
+  config = mkIf (displayManagerCfg.enable && cfg.enable && cfg.theme == "astronaut") {
+    # Set the SDDM theme to the astronaut theme
+    services.displayManager.sddm.theme = "sddm-astronaut-theme";
   };
 }

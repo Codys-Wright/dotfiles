@@ -19,6 +19,11 @@
       "coding" # Development tools, editors, and programming languages
       "gaming" # Gaming applications and tools
       "virtualization" # Docker, Podman, VM tools
+    ];
+  }
+  ++ lib.custom.importNixOsUserModules {
+    path = lib.custom.relativeToNixOsModules "";
+    modules = [
       "wm" # Window managers (KDE Plasma + Hyprland user configs)
     ];
   };

@@ -7,7 +7,7 @@
 
 let
   # Import bootloader options from the dedicated options file
-  bootloaderOptionsModule = import ./optional/bootloaders/options.nix { inherit lib; };
+  bootloaderOptionsModule = import ../hosts/nixos/bootloaders/options.nix { inherit lib; };
 
 in
 {

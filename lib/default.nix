@@ -13,6 +13,114 @@
   relativeToNixOsModules =
     subPath: lib.path.append ../. "modules/hosts/nixos${if subPath != "" then "/${subPath}" else ""}";
 
+  # Import system configurations from NixOS-specific unified modules
+  importNixOsSystemModules =
+    {
+      path,
+      modules ? null,
+    }:
+    let
+      # Get all .nix files and directories in the path (excluding default.nix)
+      dirContents = builtins.readDir path;
+      allModules = lib.attrNames (
+        lib.filterAttrs (
+          name: type:
+          (type == "regular" && lib.hasSuffix ".nix" name && name != "default.nix") || (type == "directory")
+        ) dirContents
+      );
+
+      # Filter to requested modules or use all
+      selectedModules =
+        if modules != null then modules else (map (name: lib.removeSuffix ".nix" name) allModules);
+
+      # Create a wrapper module that extracts systemConfig
+      createSystemWrapper =
+        moduleName:
+        let
+          # Try directory with default.nix first, then .nix file
+          moduleDir = path + "/${moduleName}";
+          moduleFile = path + "/${moduleName}.nix";
+          modulePath =
+            if builtins.pathExists (moduleDir + "/default.nix") then moduleDir + "/default.nix" else moduleFile;
+        in
+        {
+          lib,
+          config,
+          pkgs,
+          inputs ? null,
+          ...
+        }:
+        let
+          moduleContent = import modulePath {
+            inherit
+              lib
+              config
+              pkgs
+              inputs
+              ;
+          };
+        in
+        if lib.isAttrs moduleContent && moduleContent ? systemConfig then
+          moduleContent.systemConfig
+        else
+          moduleContent;
+    in
+    map createSystemWrapper selectedModules;
+
+  # Import user configurations from NixOS-specific unified modules
+  importNixOsUserModules =
+    {
+      path,
+      modules ? null,
+    }:
+    let
+      # Get all .nix files and directories in the path (excluding default.nix)
+      dirContents = builtins.readDir path;
+      allModules = lib.attrNames (
+        lib.filterAttrs (
+          name: type:
+          (type == "regular" && lib.hasSuffix ".nix" name && name != "default.nix") || (type == "directory")
+        ) dirContents
+      );
+
+      # Filter to requested modules or use all
+      selectedModules =
+        if modules != null then modules else (map (name: lib.removeSuffix ".nix" name) allModules);
+
+      # Create a wrapper module that extracts userConfig
+      createUserWrapper =
+        moduleName:
+        let
+          # Try directory with default.nix first, then .nix file
+          moduleDir = path + "/${moduleName}";
+          moduleFile = path + "/${moduleName}.nix";
+          modulePath =
+            if builtins.pathExists (moduleDir + "/default.nix") then moduleDir + "/default.nix" else moduleFile;
+        in
+        {
+          lib,
+          config,
+          pkgs,
+          inputs ? null,
+          ...
+        }:
+        let
+          moduleContent = import modulePath {
+            inherit
+              lib
+              config
+              pkgs
+              inputs
+              ;
+          };
+        in
+        if lib.isAttrs moduleContent && moduleContent ? userConfig then
+          moduleContent.userConfig
+        else
+          { }; # Return empty config if no userConfig found
+    in
+    map createUserWrapper selectedModules;
+
   scanPaths =
     path:
     builtins.map (f: (path + "/${f}")) (

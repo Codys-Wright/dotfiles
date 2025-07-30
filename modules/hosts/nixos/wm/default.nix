@@ -10,7 +10,7 @@ lib.custom.mkUnifiedModule {
   #
   systemConfig = {
     # Import all window manager system configurations
-    imports = lib.custom.importSystemModules {
+    imports = lib.custom.importNixOsSystemModules {
       path = lib.custom.relativeToNixOsModules "wm";
       modules = [
         "hyprland"
@@ -49,7 +49,7 @@ lib.custom.mkUnifiedModule {
   #
   userConfig = {
     # Import all window manager user configurations
-    imports = lib.custom.importUserModules {
+    imports = lib.custom.importNixOsUserModules {
       path = lib.custom.relativeToNixOsModules "wm";
       modules = [
         "hyprland"

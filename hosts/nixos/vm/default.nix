@@ -78,9 +78,20 @@
         "audio/music/production" # Professional music production tools
         "gaming" # Steam, GameMode, gaming tools
         "virtualization" # Docker, Podman, libvirt tools
-        "wm/kdePlasma" # KDE Plasma only (not Hyprland) - now in modules/hosts/nixos/wm
       ];
     })
+
+    #
+    # ========== NixOS-Specific Modules ==========
+    #
+    ({ lib, config, pkgs, ... }:
+      let
+        kdePlasmaModule = import (lib.custom.relativeToRoot "modules/hosts/nixos/wm/kdePlasma") {
+          inherit lib config pkgs;
+        };
+      in
+      kdePlasmaModule.systemConfig
+    )
   ];
 
   # ========== Display Manager Configuration ==========

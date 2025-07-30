@@ -16,13 +16,11 @@ in
     ./themes/astronaut.nix
   ];
 
-  config = mkIf (displayManagerCfg.enable && cfg.enable) {
-    services.xserver.displayManager.sddm = {
+    config = mkIf (displayManagerCfg.enable && cfg.enable) {
+    services.displayManager.sddm = {
       enable = true;
       wayland.enable = true;
-
-      # Configure theme based on selection
-      theme = mkIf (cfg.theme == "astronaut") "sddm-astronaut-theme";
+      # Theme configuration is handled by individual theme modules
     };
 
     # Enable theme packages based on selection

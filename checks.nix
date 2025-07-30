@@ -59,7 +59,7 @@
       # ========== nix ==========
       nixfmt-rfc-style.enable = false; # Disabled due to formatting conflicts
       deadnix = {
-        enable = false; # Temporarily disable deadnix
+        enable = false; # Disable deadnix - too noisy with auto-generated files
         args = [
           "--exclude"
           "hardware-configuration.nix"

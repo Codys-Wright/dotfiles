@@ -23,8 +23,7 @@ lib.custom.mkUnifiedModule {
 
     # Global development tools at system level
     environment.systemPackages = with pkgs; [
-      # Version control
-      git
+      # Version control (git is provided by core config)
       git-lfs
 
       # Build tools
@@ -97,22 +96,7 @@ lib.custom.mkUnifiedModule {
       COLORTERM = lib.mkDefault "truecolor";
     };
 
-    # Git global configuration (basic setup, specific per-language configs in their modules)
-    programs.git = {
-      enable = true;
-      delta.enable = true; # Better diff viewer
-
-      extraConfig = {
-        init.defaultBranch = "main";
-        pull.rebase = true;
-        core.autocrlf = false;
-
-        # Performance settings
-        core.preloadindex = true;
-        core.fscache = true;
-        gc.auto = 256;
-      };
-    };
+    # Git configuration is handled by core git config and development modules
 
     # Shell aliases for development
     programs.bash.shellAliases = {

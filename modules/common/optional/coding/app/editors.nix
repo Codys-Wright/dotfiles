@@ -31,8 +31,7 @@ lib.custom.mkUnifiedModule {
       # IDE and code editors
       code-cursor # Cursor - AI-first coding environment
 
-      # Additional development tools
-      git
+      # Additional development tools (git provided by core config)
       gh # GitHub CLI
     ];
 
@@ -42,15 +41,7 @@ lib.custom.mkUnifiedModule {
       # VISUAL is set in coding/default.nix
     };
 
-    # Git configuration for code editors
-    programs.git = {
-      enable = true;
-      extraConfig = {
-        core = {
-          editor = "code-cursor --wait";
-        };
-      };
-    };
+    # Git editor configuration is handled by core git config
 
     # XDG file associations
     xdg.mimeApps = {

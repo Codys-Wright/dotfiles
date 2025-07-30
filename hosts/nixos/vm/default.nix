@@ -8,6 +8,7 @@
 {
   inputs,
   lib,
+  pkgs,
   ...
 }:
 {
@@ -72,7 +73,7 @@
         "audio/music/production" # Professional music production tools
         "gaming" # Steam, GameMode, gaming tools
         "virtualization" # Docker, Podman, libvirt tools
-        "wm" # Window managers (KDE Plasma + Hyprland)
+        "wm/kdePlasma" # KDE Plasma only (not Hyprland)
       ];
     })
   ];
@@ -100,24 +101,56 @@
     };
   };
 
-  # Enable auto-login for VM (development convenience)
-  autoLogin = {
-    enable = true;
-    username = "cody"; # Use the primary user
-  };
-
   # Override greetd to use KDE Plasma instead of Hyprland
   services.greetd.settings = {
     default_session = {
       command = "${pkgs.greetd.tuigreet}/bin/tuigreet --asterisks --time --time-format '%I:%M %p | %a • %h | %F' --cmd startplasma-wayland";
       user = "cody";
     };
-
+    
     initial_session = {
       command = "startplasma-wayland";
       user = "cody";
     };
   };
+
+  # Disable SDDM from KDE module (conflicts with greetd)
+  services.displayManager.sddm.enable = lib.mkForce false;
+  services.displayManager.autoLogin.enable = lib.mkForce false;
+
+  # Enable proper Wayland support for KDE Plasma
+  services.desktopManager.plasma6.enableQt5Integration = true;
+  
+  # XDG portals for Wayland
+  xdg.portal = {
+    enable = true;
+    extraPortals = with pkgs; [
+      kdePackages.xdg-desktop-portal-kde
+      xdg-desktop-portal-gtk
+    ];
+  };
+
+  # Environment variables for KDE Plasma Wayland
+  environment.sessionVariables = {
+    # KDE Wayland
+    QT_QPA_PLATFORM = "wayland;xcb";
+    QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
+    
+    # General Wayland
+    MOZ_ENABLE_WAYLAND = "1";
+    NIXOS_OZONE_WL = "1";
+    
+    # XDG
+    XDG_SESSION_TYPE = "wayland";
+    XDG_CURRENT_DESKTOP = "KDE";
+  };
+
+  # Ensure necessary packages for Wayland
+  environment.systemPackages = with pkgs; [
+    kdePackages.plasma-wayland-protocols
+    wayland
+    wayland-utils
+  ];
 
   # KDE Plasma configuration is now handled by the unified wm/kdePlasma module
 

@@ -19,10 +19,23 @@
 
     # Primary bootloader configuration - GRUB works well in VMs
     primary = {
-      type = "grub"; # GRUB for maximum VM compatibility
-      theme = "hyperfluent"; # Modern HyperFluent theme fetched from GitHub
-      customName = "NixOS VM"; # Clear identification
-      timeout = 8; # Reasonable timeout for development
+      type = "grub";                    # GRUB for maximum VM compatibility
+      theme = null;                     # Disabled when using chained themes
+      customName = "NixOS VM";          # Clear identification
+      timeout = 8;                      # Reasonable timeout for development
+      
+      # Enable chained Minecraft theme system!
+      chainedTheme = {
+        enable = true;
+        mainTheme = "minegrub";                    # Minecraft main menu for first screen
+        submenuTheme = "minegrub-world-sel";       # Minecraft world selection for boot options
+        mainMenuEntries = [
+          "Singleplayer"              # Main NixOS boot option
+          "Multiplayer"               # Could be used for network boot
+          "Minecraft Realms"          # Advanced options/recovery
+          "Options"                   # Settings and firmware
+        ];
+      };
     };
 
     # Menu entries configuration
@@ -36,47 +49,26 @@
         visible = true;
       }
 
-      # NixOS Generations submenu - useful for development/testing
+      # More Options submenu - contains all additional tools and settings
       {
-        name = "NixOS Generations";
+        name = "More Options";
         type = "submenu";
-        priority = 20;
-        submenu = {
-          bootloader = "grub"; # GRUB for all menus
-          theme = "hyperfluent"; # Use same theme
-          entries = [ ]; # Auto-populated with generations
-        };
-      }
-
-      # VM-specific: Direct access to UEFI firmware
-      {
-        name = "BIOS/Firmware Settings";
-        type = "firmware";
         priority = 30;
-        visible = true;
-      }
-
-      # Other options submenu - contains all additional tools
-      {
-        name = "Other";
-        type = "submenu";
-        priority = 40;
         submenu = {
           bootloader = "grub"; # GRUB for all menus
           theme = "hyperfluent"; # Use same theme
           entries = [
+            # BIOS/Firmware settings
+            {
+              name = "BIOS/Firmware Settings";
+              type = "firmware";
+              priority = 10;
+            }
             # Recovery options for development
             {
               name = "NixOS Recovery Mode";
               type = "os";
               osType = "nixos";
-              priority = 10;
-            }
-            # Memory test option
-            {
-              name = "Memory Test";
-              type = "os";
-              osType = "memtest";
               priority = 20;
             }
           ];
@@ -87,11 +79,11 @@
     # Advanced features - good for development VM
     features = {
       chainloading = true; # Enable for testing different bootloader configs
-      memtest = false; # Disabled - handled manually in "Other" submenu
+      memtest = false; # Disabled - not needed in VM
       recovery = false; # Disabled - handled manually in "Other" submenu
 
       generationsMenu = {
-        enable = true; # Essential for NixOS development
+        enable = true; # Re-enabled - will appear as "NixOS - All configurations"
         maxEntries = 15; # Reasonable number for development
       };
     };

@@ -34,21 +34,51 @@ in
           type = lib.types.submodule {
             options = {
               type = lib.mkOption {
-                type = lib.types.enum (lib.attrValues bootloaderTypes);
-                default = "grub";
+                type = lib.types.enum [ "grub" "systemd-boot" "rEFInd" ];
                 description = "Primary bootloader type";
               };
 
               theme = lib.mkOption {
                 type = lib.types.nullOr lib.types.str;
                 default = null;
-                description = "Theme name for the primary bootloader";
+                description = "Theme name for the bootloader";
+              };
+
+              # Chained theme support for double-menu systems (like double-minegrub)
+              chainedTheme = lib.mkOption {
+                type = lib.types.nullOr (lib.types.submodule {
+                  options = {
+                    enable = lib.mkOption {
+                      type = lib.types.bool;
+                      default = false;
+                      description = "Enable chained theme system (double menu)";
+                    };
+
+                    mainTheme = lib.mkOption {
+                      type = lib.types.str;
+                      description = "Theme for the initial main menu";
+                    };
+
+                    submenuTheme = lib.mkOption {
+                      type = lib.types.str;
+                      description = "Theme for submenus, generations, and actual boot options";
+                    };
+
+                    mainMenuEntries = lib.mkOption {
+                      type = lib.types.listOf lib.types.str;
+                      default = [ "Singleplayer" "Multiplayer" "Options" ];
+                      description = "Custom entries for the main menu";
+                    };
+                  };
+                });
+                default = null;
+                description = "Chained theme configuration for double-menu systems";
               };
 
               customName = lib.mkOption {
                 type = lib.types.str;
                 default = "NixOS";
-                description = "Custom display name for NixOS";
+                description = "Custom name for the main boot entry";
               };
 
               timeout = lib.mkOption {

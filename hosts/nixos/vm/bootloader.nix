@@ -23,7 +23,7 @@
       theme = null;                     # Disabled when using chained themes
       customName = "NixOS VM";          # Clear identification
       timeout = 8;                      # Reasonable timeout for development
-      
+
       # Enable chained Minecraft theme system!
       chainedTheme = {
         enable = true;
@@ -31,7 +31,7 @@
         submenuTheme = "minegrub-world-selection";     # Minecraft world selection for boot options
         mainMenuEntries = [
           "Singleplayer"              # Main NixOS boot option
-          "Multiplayer"               # Alternative boot entry  
+          "Multiplayer"               # Alternative boot entry
           "Minecraft Realms"          # Advanced options submenu
           "Options"                   # Settings/firmware access
         ];

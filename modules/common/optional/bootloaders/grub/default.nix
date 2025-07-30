@@ -368,38 +368,38 @@ lib.mkIf (cfg.primary.type == "grub") {
     ${lib.optionalString (cfg.primary.chainedTheme != null && cfg.primary.chainedTheme.enable) ''
       # Copy both themes for chained theme system
       echo "Setting up chained theme files..."
-
-      # Copy main theme (e.g., minegrub)
+      
+      # Copy main theme (e.g., minegrub) to /boot/grub/themes/minegrub/
       MAIN_THEME="${getTheme cfg.primary.chainedTheme.mainTheme}"
       if [ -d "$MAIN_THEME" ]; then
         echo "Copying main theme: ${cfg.primary.chainedTheme.mainTheme}"
-        mkdir -p /boot/grub/themes/${cfg.primary.chainedTheme.mainTheme}
-        cp -r "$MAIN_THEME"/* /boot/grub/themes/${cfg.primary.chainedTheme.mainTheme}/
+        mkdir -p /boot/grub/themes/minegrub
+        cp -r "$MAIN_THEME"/* /boot/grub/themes/minegrub/
       fi
-
-      # Copy submenu theme (e.g., minegrub-world-sel)
+      
+      # Copy submenu theme (e.g., minegrub-world-selection) to /boot/grub/themes/minegrub-world-selection/
       SUBMENU_THEME="${getTheme cfg.primary.chainedTheme.submenuTheme}"
       if [ -d "$SUBMENU_THEME" ]; then
         echo "Copying submenu theme: ${cfg.primary.chainedTheme.submenuTheme}"
-        mkdir -p /boot/grub/themes/${cfg.primary.chainedTheme.submenuTheme}
-        cp -r "$SUBMENU_THEME"/* /boot/grub/themes/${cfg.primary.chainedTheme.submenuTheme}/
+        mkdir -p /boot/grub/themes/minegrub-world-selection
+        cp -r "$SUBMENU_THEME"/* /boot/grub/themes/minegrub-world-selection/
       fi
-
+      
       # Generate main menu config file
       cat > /boot/grub/mainmenu.cfg << 'EOF'
 ${generateMainMenuConfig cfg.primary.chainedTheme}
 EOF
-
+      
       # Generate 05_twomenus script
       cat > /etc/grub.d/05_twomenus << 'EOF'
 ${generateTwoMenusScript}
 EOF
       chmod +x /etc/grub.d/05_twomenus
-
+      
       # Ensure grub environment file exists
       mkdir -p /boot/grub
       touch /boot/grub/grubenv
-
+      
       # Set up chained theme if not already configured
       if ! ${pkgs.grub2}/bin/grub-editenv /boot/grub/grubenv list | ${pkgs.gnugrep}/bin/grep -q "config_file=mainmenu.cfg"; then
         echo "Enabling chained theme system..."

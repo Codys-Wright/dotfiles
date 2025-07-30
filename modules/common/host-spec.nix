@@ -5,6 +5,12 @@
   lib,
   ...
 }:
+
+let
+  # Import bootloader options from the dedicated options file
+  bootloaderOptionsModule = import ./optional/bootloaders/options.nix { inherit lib; };
+
+in
 {
   options.hostSpec = lib.mkOption {
     type = lib.types.submodule {
@@ -148,6 +154,9 @@
           default = "1";
           description = "Used to indicate what scaling to use. Floating point number";
         };
+
+        # Bootloader configuration imported from bootloader options module
+        bootloader = bootloaderOptionsModule.bootloaderOptions;
       };
     };
   };

@@ -8,8 +8,8 @@
 }:
 
 {
-  # Enable the Universal Bootloader System
-  bootloaderSpec = {
+  # Enable the Universal Bootloader System via hostSpec
+  hostSpec.bootloader = {
     enable = true;
 
     # Primary bootloader configuration
@@ -110,7 +110,8 @@
   # You could define different configurations for different use cases:
 
   # Gaming-focused configuration
-  # bootloaderSpec = {
+  # hostSpec.bootloader = {
+  #   enable = true;
   #   primary.type = "rEFInd";         # rEFInd for visual appeal
   #   primary.theme = "cyberpunk";
   #   entries = [
@@ -130,7 +131,8 @@
   # };
 
   # Server/minimal configuration
-  # bootloaderSpec = {
+  # hostSpec.bootloader = {
+  #   enable = true;
   #   primary.type = "systemd-boot";   # Fastest boot time
   #   primary.theme = "minimal";
   #   entries = [

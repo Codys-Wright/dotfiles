@@ -38,6 +38,11 @@
       "hosts/common/core"
 
       #
+      # ========== Bootloader ==========
+      #
+      "modules/common/optional/bootloaders" # Universal Bootloader System
+
+      #
       # ========== Optional Configs ==========
       #
       "hosts/common/optional/services/openssh.nix"
@@ -52,6 +57,11 @@
       "hosts/common/optional/wayland.nix" # wayland components and pkgs not available in home-manager
 
     ])
+
+    #
+    # ========== Host-Specific Bootloader ==========
+    #
+    ./bootloader.nix
 
     #
     # ========== Unified Modules (System) ==========
@@ -101,11 +111,8 @@
     enableIPv6 = false;
   };
 
-  boot.loader = {
-    systemd-boot.enable = true;
-    efi.canTouchEfiVariables = true;
-    timeout = 3;
-  };
+  # Bootloader configuration moved to ./bootloader.nix
+  # Uses Universal Bootloader System with GRUB
 
   boot.initrd = {
     systemd.enable = true;

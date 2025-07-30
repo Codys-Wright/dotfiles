@@ -41,7 +41,7 @@ bootloaders/
 
 ```nix
 {
-  bootloaderSpec = {
+  hostSpec.bootloader = {
     enable = true;
 
     primary = {
@@ -73,7 +73,7 @@ bootloaders/
 
 ```nix
 {
-  bootloaderSpec = {
+  hostSpec.bootloader = {
     enable = true;
 
     primary = {

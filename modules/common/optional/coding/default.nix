@@ -16,13 +16,8 @@ lib.custom.mkUnifiedModule {
         # Editor applications
         "app/editors"
 
-        # Programming languages
-        "lang/android"
-        "lang/cc"
-        "lang/godot"
-        "lang/haskell"
-        "lang/python"
-        "lang/rust"
+        # Programming languages (all imported via lang/default.nix)
+        "lang"
       ];
     };
 
@@ -62,13 +57,8 @@ lib.custom.mkUnifiedModule {
         # Editor applications
         "app/editors"
 
-        # Programming languages
-        "lang/android"
-        "lang/cc"
-        "lang/godot"
-        "lang/haskell"
-        "lang/python"
-        "lang/rust"
+        # Programming languages (all imported via lang/default.nix)
+        "lang"
       ];
     };
 

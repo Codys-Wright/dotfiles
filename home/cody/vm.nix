@@ -16,6 +16,7 @@
       "audio" # Core audio system
       "audio/music" # Music-specific user configuration
       "audio/music/production" # Professional music production tools
+      "coding" # Development tools, editors, and programming languages
       "gaming" # Gaming applications and tools
       "virtualization" # Docker, Podman, VM tools
       "wm" # Window managers (KDE Plasma + Hyprland user configs)

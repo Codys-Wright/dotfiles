@@ -93,8 +93,8 @@ lib.custom.mkUnifiedModule {
       BROWSER = lib.mkDefault "firefox";
 
       # Development settings
-      TERM = "xterm-256color";
-      COLORTERM = "truecolor";
+      TERM = lib.mkDefault "xterm-256color"; # Terminal capabilities for development
+      COLORTERM = lib.mkDefault "truecolor";
     };
 
     # Git global configuration (basic setup, specific per-language configs in their modules)

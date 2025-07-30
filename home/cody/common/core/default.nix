@@ -46,8 +46,8 @@ in
     sessionVariables = {
       FLAKE = "$HOME/src/nix/nix-config";
       SHELL = "zsh";
-      TERM = "kitty";
-      TERMINAL = "kitty";
+      # TERM is set by specific modules (e.g., coding module sets "xterm-256color")
+      TERMINAL = "kitty"; # Terminal emulator to use
       VISUAL = "nvim";
       EDITOR = "nvim";
       MANPAGER = "batman"; # see ./cli/bat.nix

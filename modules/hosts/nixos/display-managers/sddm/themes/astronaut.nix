@@ -7,7 +7,7 @@
 
 let
   inherit (lib) mkIf mkOption types;
-  
+
   cfg = config.custom.displayManagers.sddm;
   displayManagerCfg = config.custom.displayManagers;
 

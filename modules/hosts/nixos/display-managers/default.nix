@@ -41,7 +41,7 @@ in
 
   config = mkIf cfg.enable {
     services.xserver.enable = true;
-    
+
     services.displayManager.sddm = mkIf cfg.sddm.enable {
       enable = true;
       # Theme is set by the specific theme modules

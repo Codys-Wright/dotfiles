@@ -5,12 +5,12 @@
 let
   # Exclude specialized module directories that use unified module system or need manual importing
   excludedDirs = [ "wm" "display-managers" "bootloaders" ];
-  
+
   # Get all files and directories in current path
   allPaths = lib.custom.scanPaths ./.;
-  
+
   # Filter out excluded directories
-  filteredPaths = builtins.filter (path: 
+  filteredPaths = builtins.filter (path:
     let
       pathName = baseNameOf (toString path);
     in

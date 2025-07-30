@@ -246,8 +246,8 @@ submenu "Recovery Options" {
       set timeout=${toString cfg.primary.timeout}
       set default=0
 
-      # Set theme for main menu
-      set theme=$prefix/themes/${chainedCfg.mainTheme}/theme.txt
+      # Set theme for main menu (minegrub theme)
+      set theme=$prefix/themes/minegrub/theme.txt
 
       # Main menu entries
       ${menuEntries}
@@ -276,8 +276,8 @@ submenu "Recovery Options" {
   # Determine which theme to use based on chained theme configuration
   effectiveTheme =
     if cfg.primary.chainedTheme != null && cfg.primary.chainedTheme.enable then
-      # Use submenu theme for the main grub.cfg when chained theme is enabled
-      getTheme cfg.primary.chainedTheme.submenuTheme
+      # Use world-selection theme as main GRUB theme (following install script approach)
+      "/boot/grub/themes/minegrub-world-selection"
     else
       # Use regular theme
       getTheme cfg.primary.theme;
@@ -392,7 +392,7 @@ EOF
       
       # Generate 05_twomenus script
       cat > /etc/grub.d/05_twomenus << 'EOF'
-${generateTwoMenusScript}
+${generate05TwomenusScript}
 EOF
       chmod +x /etc/grub.d/05_twomenus
       

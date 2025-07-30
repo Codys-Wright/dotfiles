@@ -88,31 +88,10 @@ let
   themeConfig =
     let
       themePath = helpers.getThemePath "grub" cfg.primary.theme;
-
-      # Custom theme handling - check if it's a special theme name that needs to be fetched
-      customTheme =
-        if cfg.primary.theme == "hyperfluent" then
-          pkgs.stdenv.mkDerivation {
-            pname = "hyperfluent-grub-theme";
-            version = "1.0.1";
-            src = pkgs.fetchFromGitHub {
-              owner = "Coopydood";
-              repo = "HyperFluent-GRUB-Theme";
-              rev = "v1.0.1";
-              hash = "sha256-zryQsvue+YKGV681Uy6GqnDMxGUAEfmSJEKCoIuu2z8=";
-            };
-            installPhase = "cp -r $src/nixos $out";
-          }
-        else
-          null;
-
-      # Use custom theme if available, otherwise use local theme path
-      finalThemePath = if customTheme != null then customTheme else themePath;
     in
     lib.optionalString (cfg.primary.theme != null) ''
-      # GRUB Theme Configuration
-      set theme=${finalThemePath}/theme.txt
-      export theme
+      # GRUB Theme Configuration (handled by NixOS theme option)
+      # Theme: ${cfg.primary.theme}
     '';
 
   # Generate custom GRUB configuration
@@ -143,6 +122,23 @@ let
     ''}
   '';
 
+  # Get theme - either a package (if default.nix exists) or a path
+  getTheme =
+    themeName:
+    if themeName == null then
+      null
+    else
+      let
+        themeDir = ./. + "/themes/${themeName}";
+        themePackageFile = themeDir + "/default.nix";
+      in
+      if builtins.pathExists themePackageFile then
+        # Import as package if default.nix exists
+        import themePackageFile { inherit pkgs; }
+      else
+        # Use as static path
+        helpers.getThemePath "grub" themeName;
+
 in
 lib.mkIf (cfg.primary.type == "grub") {
   # Enable GRUB and configure it
@@ -157,23 +153,8 @@ lib.mkIf (cfg.primary.type == "grub") {
       # Custom configuration
       extraConfig = customGrubConfig;
 
-      # Theme support - use custom theme if available, otherwise use local theme
-      theme = lib.mkIf (cfg.primary.theme != null) (
-        if cfg.primary.theme == "hyperfluent" then
-          pkgs.stdenv.mkDerivation {
-            pname = "hyperfluent-grub-theme";
-            version = "1.0.1";
-            src = pkgs.fetchFromGitHub {
-              owner = "Coopydood";
-              repo = "HyperFluent-GRUB-Theme";
-              rev = "v1.0.1";
-              hash = "sha256-zryQsvue+YKGV681Uy6GqnDMxGUAEfmSJEKCoIuu2z8=";
-            };
-            installPhase = "cp -r $src/nixos $out";
-          }
-        else
-          (helpers.getThemePath "grub" cfg.primary.theme)
-      );
+      # Theme support - auto-detects package themes vs static themes
+      theme = lib.mkIf (cfg.primary.theme != null) (getTheme cfg.primary.theme);
 
       # Timeout configuration
       timeout = cfg.primary.timeout;

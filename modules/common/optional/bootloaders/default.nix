@@ -3,47 +3,46 @@
 {
   lib,
   config,
-  pkgs,
   ...
 }:
 
 let
-  # Import shared options and types
-  bootloaderOptionsModule = import ./options.nix { inherit lib; };
-  bootloaderTypes = bootloaderOptionsModule.bootloaderTypes;
-  entryTypes = bootloaderOptionsModule.entryTypes;
-
   # Helper functions factory (to avoid circular dependency)
   mkHelpers = cfg: {
     # Generate menu entries sorted by priority
-    sortedEntries = lib.sort (a: b: a.priority < b.priority)
-      (lib.filter (entry: entry.visible) cfg.entries);
+    sortedEntries = lib.sort (a: b: a.priority < b.priority) (
+      lib.filter (entry: entry.visible) cfg.entries
+    );
 
     # Get theme path for a bootloader type (bootloader-specific themes)
-    getThemePath = bootloaderType: themeName:
+    getThemePath =
+      bootloaderType: themeName:
       let
         themeDir = ./. + "/${bootloaderType}/themes";
         selectedTheme = if themeName != null then themeName else cfg.themes.fallback;
-      in "${themeDir}/${selectedTheme}";
+      in
+      "${themeDir}/${selectedTheme}";
 
     # Check if theme exists for specific bootloader
-    themeExists = bootloaderType: themeName:
+    themeExists =
+      bootloaderType: themeName:
       let
         themeDir = ./. + "/${bootloaderType}/themes";
         selectedTheme = if themeName != null then themeName else cfg.themes.fallback;
         themePath = "${themeDir}/${selectedTheme}";
-      in builtins.pathExists themePath;
+      in
+      builtins.pathExists themePath;
 
     # Generate submenu configurations
-    generateSubmenus = entries:
-      lib.filter (entry: entry.type == "submenu") entries;
+    generateSubmenus = entries: lib.filter (entry: entry.type == "submenu") entries;
   };
 
-in {
+in
+{
   # Separate internal options to avoid circular dependency
   options.bootloaderConfig = lib.mkOption {
     type = lib.types.attrs;
-    default = {};
+    default = { };
     internal = true;
     description = "Internal bootloader configuration for implementations";
   };
@@ -57,13 +56,20 @@ in {
 
   config = lib.mkIf (config.hostSpec.bootloader != null && config.hostSpec.bootloader.enable) {
     # Export processed configuration for bootloader implementations
-    bootloaderConfig = let
-      cfg = config.hostSpec.bootloader;
-      helpers = mkHelpers cfg;
-    in {
-      inherit (cfg) primary entries themes features;
-      inherit helpers;
-    };
+    bootloaderConfig =
+      let
+        cfg = config.hostSpec.bootloader;
+        helpers = mkHelpers cfg;
+      in
+      {
+        inherit (cfg)
+          primary
+          entries
+          themes
+          features
+          ;
+        inherit helpers;
+      };
 
     # Basic bootloader assertions
     assertions = [
@@ -72,7 +78,7 @@ in {
         message = "hostSpec.bootloader.primary.type must be specified";
       }
       {
-        assertion = config.hostSpec.bootloader.entries != [];
+        assertion = config.hostSpec.bootloader.entries != [ ];
         message = "hostSpec.bootloader.entries cannot be empty";
       }
     ];

@@ -2,8 +2,6 @@
 # This demonstrates the complete functionality you described
 
 {
-  config,
-  lib,
   ...
 }:
 
@@ -14,10 +12,10 @@
 
     # Primary bootloader configuration
     primary = {
-      type = "grub";                    # Primary bootloader: GRUB, rEFInd, or systemd-boot
-      theme = "default";                # Theme name (must exist in grub/themes/)
-      customName = "FastTrackStudio";   # Custom name for NixOS
-      timeout = 10;                     # Boot timeout in seconds
+      type = "grub"; # Primary bootloader: GRUB, rEFInd, or systemd-boot
+      theme = "default"; # Theme name (must exist in grub/themes/)
+      customName = "FastTrackStudio"; # Custom name for NixOS
+      timeout = 10; # Boot timeout in seconds
     };
 
     # Menu entries configuration
@@ -35,7 +33,7 @@
         name = "Windows";
         type = "os";
         osType = "windows";
-        device = "/dev/nvme0n1p1";  # Windows EFI partition
+        device = "/dev/nvme0n1p1"; # Windows EFI partition
         priority = 20;
       }
 
@@ -45,8 +43,8 @@
         type = "submenu";
         priority = 30;
         submenu = {
-          bootloader = "rEFInd";        # Use rEFInd for this submenu
-          theme = "default";            # rEFInd theme
+          bootloader = "rEFInd"; # Use rEFInd for this submenu
+          theme = "default"; # rEFInd theme
           entries = [
             {
               name = "Ubuntu";
@@ -79,9 +77,9 @@
         type = "submenu";
         priority = 40;
         submenu = {
-          bootloader = "grub";          # Use GRUB for generations menu
-          theme = "minimal";            # Different theme for generations
-          entries = []; # Will be auto-populated with generations
+          bootloader = "grub"; # Use GRUB for generations menu
+          theme = "minimal"; # Different theme for generations
+          entries = [ ]; # Will be auto-populated with generations
         };
       }
 
@@ -95,13 +93,13 @@
 
     # Advanced features
     features = {
-      chainloading = true;              # Enable chainloading between bootloaders
-      memtest = true;                   # Include memtest86+ entry
-      recovery = true;                  # Include recovery options
+      chainloading = true; # Enable chainloading between bootloaders
+      memtest = true; # Include memtest86+ entry
+      recovery = true; # Include recovery options
 
       generationsMenu = {
-        enable = true;                  # Separate generations menu
-        maxEntries = 20;                # Show last 20 generations
+        enable = true; # Separate generations menu
+        maxEntries = 20; # Show last 20 generations
       };
     };
   };

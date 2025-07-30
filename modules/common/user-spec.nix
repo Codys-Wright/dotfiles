@@ -1,7 +1,5 @@
 # Specifications For Individual User Profiles
 {
-  config,
-  pkgs,
   lib,
   ...
 }:

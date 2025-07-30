@@ -8,8 +8,6 @@
 {
   inputs,
   lib,
-  config,
-  pkgs,
   ...
 }:
 {

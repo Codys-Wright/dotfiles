@@ -12,58 +12,78 @@ let
   helpers = cfg.helpers;
 
   # Generate systemd-boot entries
-  generateSystemdEntry = entry: let
-    entryName = lib.replaceStrings [" "] ["_"] (lib.toLower entry.name);
-    entryConfig = {
-      os = ''
-        # Entry: ${entry.name}
-        title ${entry.name}
-        ${if entry.osType == "nixos" then ''
+  generateSystemdEntry =
+    entry:
+    let
+      entryConfig = {
+        os = ''
+          # Entry: ${entry.name}
+          title ${entry.name}
+          ${
+            if entry.osType == "nixos" then
+              ''
+                linux /nixos/kernel
+                initrd /nixos/initrd
+                options init=/nix/store/*-nixos-system-*/init
+              ''
+            else if entry.osType == "windows" then
+              ''
+                efi /EFI/Microsoft/Boot/bootmgfw.efi
+              ''
+            else
+              ''
+                efi ${entry.device or "/EFI/BOOT/bootx64.efi"}
+              ''
+          }
+        '';
+
+        submenu = ''
+          # Submenu: ${entry.name}
+          # systemd-boot doesn't support submenus, creating chainload entry
+          title ${entry.name}
+          ${
+            if entry.submenu.bootloader == "grub" then
+              ''
+                efi /EFI/grub/grubx64.efi
+              ''
+            else if entry.submenu.bootloader == "rEFInd" then
+              ''
+                efi /EFI/refind/refind_x64.efi
+              ''
+            else
+              ''
+                efi /EFI/systemd/systemd-bootx64.efi
+              ''
+          }
+        '';
+
+        generations = ''
+          # NixOS Generations
+          title ${entry.name}
           linux /nixos/kernel
           initrd /nixos/initrd
-          options init=/nix/store/*-nixos-system-*/init
-        '' else if entry.osType == "windows" then ''
-          efi /EFI/Microsoft/Boot/bootmgfw.efi
-        '' else ''
-          efi ${entry.device or "/EFI/BOOT/bootx64.efi"}
-        ''}
-      '';
+          options init=/nix/store/*-nixos-system-*/init systemd.unit=multi-user.target
+        '';
 
-      submenu = ''
-        # Submenu: ${entry.name}
-        # systemd-boot doesn't support submenus, creating chainload entry
-        title ${entry.name}
-        ${if entry.submenu.bootloader == "grub" then ''
-          efi /EFI/grub/grubx64.efi
-        '' else if entry.submenu.bootloader == "rEFInd" then ''
-          efi /EFI/refind/refind_x64.efi
-        '' else ''
+        firmware = ''
+          # Firmware Settings
+          title ${entry.name}
           efi /EFI/systemd/systemd-bootx64.efi
-        ''}
-      '';
-
-      generations = ''
-        # NixOS Generations
-        title ${entry.name}
-        linux /nixos/kernel
-        initrd /nixos/initrd
-        options init=/nix/store/*-nixos-system-*/init systemd.unit=multi-user.target
-      '';
-
-      firmware = ''
-        # Firmware Settings
-        title ${entry.name}
-        efi /EFI/systemd/systemd-bootx64.efi
-        options systemd.reboot-to-firmware-setup
-      '';
-    };
-  in entryConfig.${entry.type} or "";
+          options systemd.reboot-to-firmware-setup
+        '';
+      };
+    in
+    entryConfig.${entry.type} or "";
 
   # Create boot entries directory structure
-  bootEntries = lib.listToAttrs (lib.imap0 (i: entry: {
-    name = "${toString (10 + i * 10)}-${lib.replaceStrings [" "] ["_"] (lib.toLower entry.name)}.conf";
-    value = generateSystemdEntry entry;
-  }) helpers.sortedEntries);
+  bootEntries = lib.listToAttrs (
+    lib.imap0 (i: entry: {
+      name = "${toString (10 + i * 10)}-${
+        lib.replaceStrings [ " " ] [ "_" ] (lib.toLower entry.name)
+      }.conf";
+      value = generateSystemdEntry entry;
+    }) helpers.sortedEntries
+  );
 
   # Generate loader configuration
   loaderConfig = ''
@@ -78,20 +98,20 @@ let
     console-mode auto
 
     ${lib.optionalString (cfg.primary.theme != null) ''
-    # Theme settings (limited support)
-    # systemd-boot themes are mainly console colors
+      # Theme settings (limited support)
+      # systemd-boot themes are mainly console colors
     ''}
   '';
 
-in lib.mkIf (cfg.primary.type == "systemd-boot") {
+in
+lib.mkIf (cfg.primary.type == "systemd-boot") {
   # Enable systemd-boot
   boot.loader = {
     grub.enable = false;
 
     systemd-boot = {
       enable = true;
-      configurationLimit = lib.mkIf cfg.features.generationsMenu.enable
-        cfg.features.generationsMenu.maxEntries;
+      configurationLimit = lib.mkIf cfg.features.generationsMenu.enable cfg.features.generationsMenu.maxEntries;
 
       # Custom entries will be managed by our system
       extraEntries = lib.concatStringsSep "\n\n" (lib.attrValues bootEntries);
@@ -113,12 +133,15 @@ in lib.mkIf (cfg.primary.type == "systemd-boot") {
   };
 
   # Install systemd-boot and related packages
-  environment.systemPackages = with pkgs; [
-    efibootmgr
-    systemd
-  ] ++ lib.optionals cfg.features.memtest [
-    memtest86plus
-  ];
+  environment.systemPackages =
+    with pkgs;
+    [
+      efibootmgr
+      systemd
+    ]
+    ++ lib.optionals cfg.features.memtest [
+      memtest86plus
+    ];
 
   # systemd-boot configuration management
   system.activationScripts.systemdBootSetup = ''
@@ -132,28 +155,30 @@ in lib.mkIf (cfg.primary.type == "systemd-boot") {
     EOF
 
     # Generate custom boot entries
-    ${lib.concatStringsSep "\n" (lib.mapAttrsToList (filename: content: ''
-      cat > /boot/loader/entries/${filename} << 'EOF'
-      ${content}
-      EOF
-    '') bootEntries)}
+    ${lib.concatStringsSep "\n" (
+      lib.mapAttrsToList (filename: content: ''
+        cat > /boot/loader/entries/${filename} << 'EOF'
+        ${content}
+        EOF
+      '') bootEntries
+    )}
 
     ${lib.optionalString cfg.features.memtest ''
-    # Add memtest entry
-    cat > /boot/loader/entries/99-memtest.conf << 'EOF'
-    title Memory Test (memtest86+)
-    efi /EFI/tools/memtest86.efi
-    EOF
+      # Add memtest entry
+      cat > /boot/loader/entries/99-memtest.conf << 'EOF'
+      title Memory Test (memtest86+)
+      efi /EFI/tools/memtest86.efi
+      EOF
     ''}
 
     ${lib.optionalString cfg.features.recovery ''
-    # Add recovery entry
-    cat > /boot/loader/entries/98-recovery.conf << 'EOF'
-    title NixOS Recovery Mode
-    linux /nixos/kernel
-    initrd /nixos/initrd
-    options init=/bin/sh
-    EOF
+      # Add recovery entry
+      cat > /boot/loader/entries/98-recovery.conf << 'EOF'
+      title NixOS Recovery Mode
+      linux /nixos/kernel
+      initrd /nixos/initrd
+      options init=/bin/sh
+      EOF
     ''}
 
     # Install systemd-boot (this is usually done automatically)
@@ -183,10 +208,10 @@ in lib.mkIf (cfg.primary.type == "systemd-boot") {
     mkdir -p /boot/nixos
 
     ${lib.optionalString cfg.features.chainloading ''
-    # Create chainloading directory structure
-    mkdir -p /boot/EFI/grub
-    mkdir -p /boot/EFI/refind
-    mkdir -p /boot/EFI/tools
+      # Create chainloading directory structure
+      mkdir -p /boot/EFI/grub
+      mkdir -p /boot/EFI/refind
+      mkdir -p /boot/EFI/tools
     ''}
   '';
 

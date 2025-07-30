@@ -12,71 +12,108 @@ let
   helpers = cfg.helpers;
 
   # Generate GRUB menu entries
-  generateGrubEntry = entry: let
-    entryConfig = {
-      os = ''
-        menuentry "${entry.name}" {
-          ${if entry.osType == "windows" then ''
-            search --set=root --label WINDOWS
-            chainloader +1
-          '' else if entry.osType == "nixos" then ''
-            # NixOS entry will be auto-generated
-          '' else ''
-            # Custom OS entry
-            search --set=root --file /boot/grub/grub.cfg --hint hd0,gpt1
-            configfile /boot/grub/grub.cfg
-          ''}
-        }
-      '';
+  generateGrubEntry =
+    entry:
+    let
+      entryConfig = {
+        os = ''
+          menuentry "${entry.name}" {
+            ${
+              if entry.osType == "windows" then
+                ''
+                  search --set=root --label WINDOWS
+                  chainloader +1
+                ''
+              else if entry.osType == "nixos" then
+                ''
+                  # NixOS entry will be auto-generated
+                ''
+              else
+                ''
+                  # Custom OS entry
+                  search --set=root --file /boot/grub/grub.cfg --hint hd0,gpt1
+                  configfile /boot/grub/grub.cfg
+                ''
+            }
+          }
+        '';
 
-      submenu = ''
-        submenu "${entry.name}" {
-          ${generateSubmenuEntries entry.submenu}
-        }
-      '';
+        submenu = ''
+          submenu "${entry.name}" {
+            ${generateSubmenuEntries entry.submenu}
+          }
+        '';
 
-      generations = ''
-        submenu "${entry.name}" {
-          # NixOS generations will be auto-populated by NixOS
-          configfile /boot/grub/generations.cfg
-        }
-      '';
+        generations = ''
+          submenu "${entry.name}" {
+            # NixOS generations will be auto-populated by NixOS
+            configfile /boot/grub/generations.cfg
+          }
+        '';
 
-      firmware = ''
-        menuentry "${entry.name}" {
-          fwsetup
-        }
-      '';
-    };
-  in entryConfig.${entry.type} or "";
+        firmware = ''
+          menuentry "${entry.name}" {
+            fwsetup
+          }
+        '';
+      };
+    in
+    entryConfig.${entry.type} or "";
 
   # Generate submenu entries (for hierarchical navigation)
-  generateSubmenuEntries = submenuCfg:
+  generateSubmenuEntries =
+    submenuCfg:
     if submenuCfg != null then
       let
-        submenuEntries = lib.concatStringsSep "\n"
-          (map generateGrubEntry submenuCfg.entries);
-      in ''
-        # Submenu using ${submenuCfg.bootloader}
-        ${if submenuCfg.bootloader == "grub" then
-          submenuEntries
-        else ''
-          # Chainload to ${submenuCfg.bootloader}
-          menuentry "Load ${submenuCfg.bootloader}" {
-            chainloader /boot/${submenuCfg.bootloader}/bootloader.efi
-          }
-        ''}
+        submenuEntries = lib.concatStringsSep "\n" (map generateGrubEntry submenuCfg.entries);
+      in
       ''
-    else "";
+        # Submenu using ${submenuCfg.bootloader}
+        ${
+          if submenuCfg.bootloader == "grub" then
+            submenuEntries
+          else
+            ''
+              # Chainload to ${submenuCfg.bootloader}
+              menuentry "Load ${submenuCfg.bootloader}" {
+                chainloader /boot/${submenuCfg.bootloader}/bootloader.efi
+              }
+            ''
+        }
+      ''
+    else
+      "";
 
   # Generate theme configuration
-  themeConfig = let
-    themePath = helpers.getThemePath "grub" cfg.primary.theme;
-  in lib.optionalString (cfg.primary.theme != null) ''
-    # GRUB Theme Configuration
-    set theme=${themePath}/theme.txt
-    export theme
-  '';
+  themeConfig =
+    let
+      themePath = helpers.getThemePath "grub" cfg.primary.theme;
+
+      # Custom theme handling - check if it's a special theme name that needs to be fetched
+      customTheme =
+        if cfg.primary.theme == "hyperfluent" then
+          pkgs.stdenv.mkDerivation {
+            pname = "hyperfluent-grub-theme";
+            version = "1.0.1";
+            src = pkgs.fetchFromGitHub {
+              owner = "Coopydood";
+              repo = "HyperFluent-GRUB-Theme";
+              rev = "v1.0.1";
+              hash = "sha256-zryQsvue+YKGV681Uy6GqnDMxGUAEfmSJEKCoIuu2z8=";
+            };
+            installPhase = "cp -r $src/nixos $out";
+          }
+        else
+          null;
+
+      # Use custom theme if available, otherwise use local theme path
+      finalThemePath = if customTheme != null then customTheme else themePath;
+    in
+    lib.optionalString (cfg.primary.theme != null) ''
+      # GRUB Theme Configuration
+      set theme=${finalThemePath}/theme.txt
+      export theme
+    '';
 
   # Generate custom GRUB configuration
   customGrubConfig = ''
@@ -91,22 +128,23 @@ let
 
     # Advanced features
     ${lib.optionalString cfg.features.memtest ''
-    menuentry "Memory Test (memtest86+)" {
-      linux /boot/memtest86+.bin
-    }
+      menuentry "Memory Test (memtest86+)" {
+        linux /boot/memtest86+.bin
+      }
     ''}
 
     ${lib.optionalString cfg.features.recovery ''
-    submenu "Recovery Options" {
-      menuentry "NixOS Recovery Mode" {
-        # Recovery boot parameters
-        linux /boot/nixos/kernel init=/bin/sh
+      submenu "Recovery Options" {
+        menuentry "NixOS Recovery Mode" {
+          # Recovery boot parameters
+          linux /boot/nixos/kernel init=/bin/sh
+        }
       }
-    }
     ''}
   '';
 
-in lib.mkIf (cfg.primary.type == "grub") {
+in
+lib.mkIf (cfg.primary.type == "grub") {
   # Enable GRUB and configure it
   boot.loader = {
     grub = {
@@ -119,9 +157,23 @@ in lib.mkIf (cfg.primary.type == "grub") {
       # Custom configuration
       extraConfig = customGrubConfig;
 
-      # Theme support
-      theme = lib.mkIf (cfg.primary.theme != null)
-        (helpers.getThemePath "grub" cfg.primary.theme);
+      # Theme support - use custom theme if available, otherwise use local theme
+      theme = lib.mkIf (cfg.primary.theme != null) (
+        if cfg.primary.theme == "hyperfluent" then
+          pkgs.stdenv.mkDerivation {
+            pname = "hyperfluent-grub-theme";
+            version = "1.0.1";
+            src = pkgs.fetchFromGitHub {
+              owner = "Coopydood";
+              repo = "HyperFluent-GRUB-Theme";
+              rev = "v1.0.1";
+              hash = "sha256-zryQsvue+YKGV681Uy6GqnDMxGUAEfmSJEKCoIuu2z8=";
+            };
+            installPhase = "cp -r $src/nixos $out";
+          }
+        else
+          (helpers.getThemePath "grub" cfg.primary.theme)
+      );
 
       # Timeout configuration
       timeout = cfg.primary.timeout;
@@ -132,15 +184,17 @@ in lib.mkIf (cfg.primary.type == "grub") {
       # Enable chainloading support
       extraEntries = lib.optionalString cfg.features.chainloading ''
         # Chainloading support entries
-        ${lib.concatStringsSep "\n" (map (entry:
-          lib.optionalString (entry.type == "submenu" &&
-                            entry.submenu.bootloader != "grub") ''
-            menuentry "${entry.name}" {
-              search --set=root --file /boot/${entry.submenu.bootloader}/bootloader.efi
-              chainloader /boot/${entry.submenu.bootloader}/bootloader.efi
-            }
-          ''
-        ) helpers.sortedEntries)}
+        ${lib.concatStringsSep "\n" (
+          map (
+            entry:
+            lib.optionalString (entry.type == "submenu" && entry.submenu.bootloader != "grub") ''
+              menuentry "${entry.name}" {
+                search --set=root --file /boot/${entry.submenu.bootloader}/bootloader.efi
+                chainloader /boot/${entry.submenu.bootloader}/bootloader.efi
+              }
+            ''
+          ) helpers.sortedEntries
+        )}
       '';
     };
 
@@ -155,15 +209,19 @@ in lib.mkIf (cfg.primary.type == "grub") {
   };
 
   # Install additional packages for advanced features
-  environment.systemPackages = with pkgs; [
-    grub2
-    efibootmgr
-  ] ++ lib.optionals cfg.features.memtest [
-    memtest86plus
-  ] ++ lib.optionals cfg.features.chainloading [
-    # Additional tools for chainloading
-    grub2_efi
-  ];
+  environment.systemPackages =
+    with pkgs;
+    [
+      grub2
+      efibootmgr
+    ]
+    ++ lib.optionals cfg.features.memtest [
+      memtest86plus
+    ]
+    ++ lib.optionals cfg.features.chainloading [
+      # Additional tools for chainloading
+      grub2_efi
+    ];
 
   # Create theme directories and files
   system.activationScripts.grubThemes = lib.mkIf (cfg.primary.theme != null) ''
@@ -184,11 +242,13 @@ in lib.mkIf (cfg.primary.type == "grub") {
     # NixOS Generations Menu
     # This file is auto-generated
 
-    ${lib.concatStringsSep "\n" (lib.genList (i: ''
-      menuentry "Generation ${toString i}" {
-        configfile /nix/var/nix/profiles/system-${toString i}-link/boot/grub/grub.cfg
-      }
-    '') cfg.features.generationsMenu.maxEntries)}
+    ${lib.concatStringsSep "\n" (
+      lib.genList (i: ''
+        menuentry "Generation ${toString i}" {
+          configfile /nix/var/nix/profiles/system-${toString i}-link/boot/grub/grub.cfg
+        }
+      '') cfg.features.generationsMenu.maxEntries
+    )}
     EOF
   '';
 

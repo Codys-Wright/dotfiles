@@ -12,64 +12,83 @@ let
   helpers = cfg.helpers;
 
   # Generate rEFInd menu entries
-  generateRefindEntry = entry: let
-    entryConfig = {
-      os = ''
-        menuentry "${entry.name}" {
-          ${if entry.osType == "windows" then ''
-            loader /EFI/Microsoft/Boot/bootmgfw.efi
-            icon /EFI/refind/icons/os_win.png
-          '' else if entry.osType == "nixos" then ''
-            loader /EFI/nixos/kernel
-            initrd /EFI/nixos/initrd
-            icon /EFI/refind/icons/os_nixos.png
-            options "init=/nix/store/\*-nixos-system-*/init"
-          '' else if entry.osType == "linux" then ''
-            loader /EFI/Linux/vmlinuz
-            initrd /EFI/Linux/initrd.img
-            icon /EFI/refind/icons/os_linux.png
-          '' else ''
-            # Custom OS entry
-            loader ${entry.device}/bootloader.efi
-            icon /EFI/refind/icons/os_unknown.png
-          ''}
-        }
-      '';
+  generateRefindEntry =
+    entry:
+    let
+      entryConfig = {
+        os = ''
+          menuentry "${entry.name}" {
+            ${
+              if entry.osType == "windows" then
+                ''
+                  loader /EFI/Microsoft/Boot/bootmgfw.efi
+                  icon /EFI/refind/icons/os_win.png
+                ''
+              else if entry.osType == "nixos" then
+                ''
+                  loader /EFI/nixos/kernel
+                  initrd /EFI/nixos/initrd
+                  icon /EFI/refind/icons/os_nixos.png
+                  options "init=/nix/store/\*-nixos-system-*/init"
+                ''
+              else if entry.osType == "linux" then
+                ''
+                  loader /EFI/Linux/vmlinuz
+                  initrd /EFI/Linux/initrd.img
+                  icon /EFI/refind/icons/os_linux.png
+                ''
+              else
+                ''
+                  # Custom OS entry
+                  loader ${entry.device}/bootloader.efi
+                  icon /EFI/refind/icons/os_unknown.png
+                ''
+            }
+          }
+        '';
 
-      submenu = ''
-        # Submenu entry for ${entry.name}
-        # rEFInd doesn't support nested menus natively, so we use manual entries
-        menuentry "${entry.name} >" {
-          ${if entry.submenu.bootloader == "rEFInd" then ''
-            # Load secondary rEFInd configuration
-            loader /EFI/refind/refind_${entry.submenu.theme or "default"}.efi
-          '' else if entry.submenu.bootloader == "grub" then ''
-            # Chainload to GRUB
-            loader /EFI/grub/grubx64.efi
-            icon /EFI/refind/icons/os_grub.png
-          '' else ''
-            # Chainload to systemd-boot
-            loader /EFI/systemd/systemd-bootx64.efi
-            icon /EFI/refind/icons/os_systemd.png
-          ''}
-        }
-      '';
+        submenu = ''
+          # Submenu entry for ${entry.name}
+          # rEFInd doesn't support nested menus natively, so we use manual entries
+          menuentry "${entry.name} >" {
+            ${
+              if entry.submenu.bootloader == "rEFInd" then
+                ''
+                  # Load secondary rEFInd configuration
+                  loader /EFI/refind/refind_${entry.submenu.theme or "default"}.efi
+                ''
+              else if entry.submenu.bootloader == "grub" then
+                ''
+                  # Chainload to GRUB
+                  loader /EFI/grub/grubx64.efi
+                  icon /EFI/refind/icons/os_grub.png
+                ''
+              else
+                ''
+                  # Chainload to systemd-boot
+                  loader /EFI/systemd/systemd-bootx64.efi
+                  icon /EFI/refind/icons/os_systemd.png
+                ''
+            }
+          }
+        '';
 
-      generations = ''
-        # NixOS Generations submenu
-        submenu_title "NixOS Generations"
-        include /EFI/refind/nixos-generations.conf
-      '';
+        generations = ''
+          # NixOS Generations submenu
+          submenu_title "NixOS Generations"
+          include /EFI/refind/nixos-generations.conf
+        '';
 
-      firmware = ''
-        # Firmware settings entry
-        menuentry "UEFI Firmware Settings" {
-          firmware
-          icon /EFI/refind/icons/tool_fwupdate.png
-        }
-      '';
-    };
-  in entryConfig.${entry.type} or "";
+        firmware = ''
+          # Firmware settings entry
+          menuentry "UEFI Firmware Settings" {
+            firmware
+            icon /EFI/refind/icons/tool_fwupdate.png
+          }
+        '';
+      };
+    in
+    entryConfig.${entry.type} or "";
 
   # Generate rEFInd configuration file
   refindConfig = ''
@@ -103,48 +122,41 @@ let
 
     # Advanced features
     ${lib.optionalString cfg.features.memtest ''
-    # Memory test tool
-    menuentry "Memory Test" {
-      loader /EFI/tools/memtest86.efi
-      icon /EFI/refind/icons/tool_memtest.png
-    }
+      # Memory test tool
+      menuentry "Memory Test" {
+        loader /EFI/tools/memtest86.efi
+        icon /EFI/refind/icons/tool_memtest.png
+      }
     ''}
 
     ${lib.optionalString cfg.features.recovery ''
-    # Recovery options
-    menuentry "NixOS Recovery" {
-      loader /EFI/nixos/kernel
-      initrd /EFI/nixos/initrd
-      options "init=/bin/sh"
-      icon /EFI/refind/icons/os_nixos_rescue.png
-    }
+      # Recovery options
+      menuentry "NixOS Recovery" {
+        loader /EFI/nixos/kernel
+        initrd /EFI/nixos/initrd
+        options "init=/bin/sh"
+        icon /EFI/refind/icons/os_nixos_rescue.png
+      }
     ''}
-  '';
-
-  # Generate theme configuration
-  themeConfig = lib.optionalString (cfg.primary.theme != null) ''
-    # Theme: ${cfg.primary.theme}
-    # Custom theme configuration
-    banner themes/${cfg.primary.theme}/banner.png
-    selection_big themes/${cfg.primary.theme}/selection_big.png
-    selection_small themes/${cfg.primary.theme}/selection_small.png
-    font themes/${cfg.primary.theme}/font.png
   '';
 
   # Generate generations configuration
   generationsConfig = lib.optionalString cfg.features.generationsMenu.enable ''
     # NixOS Generations Configuration
-    ${lib.concatStringsSep "\n" (lib.genList (i: ''
-      menuentry "Generation ${toString i}" {
-        loader /nix/var/nix/profiles/system-${toString i}-link/kernel
-        initrd /nix/var/nix/profiles/system-${toString i}-link/initrd
-        icon /EFI/refind/icons/os_nixos.png
-        options "init=/nix/var/nix/profiles/system-${toString i}-link/init"
-      }
-    '') cfg.features.generationsMenu.maxEntries)}
+    ${lib.concatStringsSep "\n" (
+      lib.genList (i: ''
+        menuentry "Generation ${toString i}" {
+          loader /nix/var/nix/profiles/system-${toString i}-link/kernel
+          initrd /nix/var/nix/profiles/system-${toString i}-link/initrd
+          icon /EFI/refind/icons/os_nixos.png
+          options "init=/nix/var/nix/profiles/system-${toString i}-link/init"
+        }
+      '') cfg.features.generationsMenu.maxEntries
+    )}
   '';
 
-in lib.mkIf (cfg.primary.type == "rEFInd") {
+in
+lib.mkIf (cfg.primary.type == "rEFInd") {
   # Enable rEFInd
   boot.loader = {
     grub.enable = false;
@@ -160,12 +172,15 @@ in lib.mkIf (cfg.primary.type == "rEFInd") {
   };
 
   # Install rEFInd package
-  environment.systemPackages = with pkgs; [
-    refind
-    efibootmgr
-  ] ++ lib.optionals cfg.features.memtest [
-    memtest86plus
-  ];
+  environment.systemPackages =
+    with pkgs;
+    [
+      refind
+      efibootmgr
+    ]
+    ++ lib.optionals cfg.features.memtest [
+      memtest86plus
+    ];
 
   # rEFInd installation and configuration
   system.activationScripts.refindSetup = ''
@@ -187,18 +202,18 @@ in lib.mkIf (cfg.primary.type == "rEFInd") {
     EOF
 
     ${lib.optionalString (cfg.primary.theme != null) ''
-    # Install theme
-    THEME_PATH="${helpers.getThemePath "rEFInd" cfg.primary.theme}"
-    if [ -d "$THEME_PATH" ]; then
-      cp -r "$THEME_PATH" /boot/EFI/refind/themes/
-    fi
+      # Install theme
+      THEME_PATH="${helpers.getThemePath "rEFInd" cfg.primary.theme}"
+      if [ -d "$THEME_PATH" ]; then
+        cp -r "$THEME_PATH" /boot/EFI/refind/themes/
+      fi
     ''}
 
     ${lib.optionalString cfg.features.generationsMenu.enable ''
-    # Generate generations configuration
-    cat > /boot/EFI/refind/nixos-generations.conf << 'EOF'
-    ${generationsConfig}
-    EOF
+      # Generate generations configuration
+      cat > /boot/EFI/refind/nixos-generations.conf << 'EOF'
+      ${generationsConfig}
+      EOF
     ''}
 
     # Register rEFInd as default boot loader
@@ -212,7 +227,12 @@ in lib.mkIf (cfg.primary.type == "rEFInd") {
   ];
 
   # rEFInd-specific filesystem support
-  boot.supportedFilesystems = [ "vfat" "ntfs" "ext4" "btrfs" ];
+  boot.supportedFilesystems = [
+    "vfat"
+    "ntfs"
+    "ext4"
+    "btrfs"
+  ];
 
   # Assertions for rEFInd-specific requirements
   assertions = [

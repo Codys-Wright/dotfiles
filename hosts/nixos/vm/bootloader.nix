@@ -8,7 +8,6 @@
 
 {
   config,
-  lib,
   ...
 }:
 
@@ -20,10 +19,10 @@
 
     # Primary bootloader configuration - GRUB works well in VMs
     primary = {
-      type = "grub";                    # GRUB for maximum VM compatibility
-      theme = "default";                # Clean, readable theme for development
-      customName = "NixOS VM";          # Clear identification
-      timeout = 8;                      # Reasonable timeout for development
+      type = "grub"; # GRUB for maximum VM compatibility
+      theme = "hyperfluent"; # Modern HyperFluent theme fetched from GitHub
+      customName = "NixOS VM"; # Clear identification
+      timeout = 8; # Reasonable timeout for development
     };
 
     # Menu entries configuration
@@ -43,9 +42,9 @@
         type = "submenu";
         priority = 20;
         submenu = {
-          bootloader = "grub";          # GRUB for all menus
-          theme = "default";            # Default theme as requested
-          entries = [];                 # Auto-populated with generations
+          bootloader = "grub"; # GRUB for all menus
+          theme = "default"; # Default theme as requested
+          entries = [ ]; # Auto-populated with generations
         };
       }
 
@@ -55,8 +54,8 @@
         type = "submenu";
         priority = 30;
         submenu = {
-          bootloader = "grub";          # GRUB for all menus
-          theme = "default";            # Default theme as requested
+          bootloader = "grub"; # GRUB for all menus
+          theme = "default"; # Default theme as requested
           entries = [
             # Recovery options for development
             {
@@ -87,13 +86,13 @@
 
     # Advanced features - good for development VM
     features = {
-      chainloading = true;              # Enable for testing different bootloader configs
-      memtest = true;                   # Memory testing (useful for VM debugging)
-      recovery = true;                  # Recovery options for development
+      chainloading = true; # Enable for testing different bootloader configs
+      memtest = true; # Memory testing (useful for VM debugging)
+      recovery = true; # Recovery options for development
 
       generationsMenu = {
-        enable = true;                  # Essential for NixOS development
-        maxEntries = 15;                # Reasonable number for development
+        enable = true; # Essential for NixOS development
+        maxEntries = 15; # Reasonable number for development
       };
     };
 
@@ -110,10 +109,10 @@
 
     # VM-friendly kernel parameters
     kernelParams = [
-      "quiet"                           # Clean boot output
-      "splash"                          # Show splash screen
-      "console=tty1"                    # Ensure console access
-      "console=ttyS0,115200"            # Serial console for VM debugging
+      "quiet" # Clean boot output
+      "splash" # Show splash screen
+      "console=tty1" # Ensure console access
+      "console=ttyS0,115200" # Serial console for VM debugging
     ];
 
     # Enable systemd in initrd for faster boot

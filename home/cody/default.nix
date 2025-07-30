@@ -1,9 +1,8 @@
 # Cody's Portable User Profile
 {
   inputs,
-  pkgs,
-  config,
   lib,
+  config,
   ...
 }:
 {

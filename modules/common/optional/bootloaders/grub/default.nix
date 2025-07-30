@@ -8,9 +8,8 @@
 }:
 
 let
-  cfg = config.bootloaderSpec;
-  grubCfg = cfg.internal;
-  helpers = grubCfg.helpers;
+  cfg = config.bootloaderConfig;
+  helpers = cfg.helpers;
 
   # Generate GRUB menu entries
   generateGrubEntry = entry: let
@@ -107,7 +106,7 @@ let
     ''}
   '';
 
-in {
+in lib.mkIf (cfg.primary.type == "grub") {
   # Enable GRUB and configure it
   boot.loader = {
     grub = {

@@ -8,9 +8,8 @@
 }:
 
 let
-  cfg = config.bootloaderSpec;
-  refindCfg = cfg.internal;
-  helpers = refindCfg.helpers;
+  cfg = config.bootloaderConfig;
+  helpers = cfg.helpers;
 
   # Generate rEFInd menu entries
   generateRefindEntry = entry: let
@@ -145,7 +144,7 @@ let
     '') cfg.features.generationsMenu.maxEntries)}
   '';
 
-in {
+in lib.mkIf (cfg.primary.type == "rEFInd") {
   # Enable rEFInd
   boot.loader = {
     grub.enable = false;

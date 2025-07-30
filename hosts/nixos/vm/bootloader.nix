@@ -43,8 +43,8 @@
         type = "submenu";
         priority = 20;
         submenu = {
-          bootloader = "grub";          # Stay with GRUB for consistency
-          theme = "minimal";            # Clean theme for generations list
+          bootloader = "grub";          # GRUB for all menus
+          theme = "default";            # Default theme as requested
           entries = [];                 # Auto-populated with generations
         };
       }
@@ -55,8 +55,8 @@
         type = "submenu";
         priority = 30;
         submenu = {
-          bootloader = "grub";
-          theme = "minimal";
+          bootloader = "grub";          # GRUB for all menus
+          theme = "default";            # Default theme as requested
           entries = [
             # Recovery options for development
             {
@@ -65,7 +65,13 @@
               osType = "nixos";
               priority = 10;
             }
-            # Could add more development-specific entries here
+            # Memory test option
+            {
+              name = "Memory Test";
+              type = "os";
+              osType = "memtest";
+              priority = 20;
+            }
           ];
         };
       }
@@ -97,7 +103,7 @@
     };
   };
 
-  # VM-specific boot configuration
+  # VM-specific boot configuration (non-bootloader settings)
   boot = {
     # Enable boot logo for visual feedback
     plymouth.enable = true;
@@ -110,11 +116,10 @@
       "console=ttyS0,115200"            # Serial console for VM debugging
     ];
 
-    # VM-optimized settings
-    loader.timeout = lib.mkDefault 8;   # Allow override but default to 8 seconds
-
     # Enable systemd in initrd for faster boot
     initrd.systemd.enable = true;
+
+    # Note: boot.loader settings are managed by Universal Bootloader System
   };
 
   # Development-friendly assertions

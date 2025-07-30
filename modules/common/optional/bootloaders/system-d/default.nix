@@ -8,9 +8,8 @@
 }:
 
 let
-  cfg = config.bootloaderSpec;
-  systemdCfg = cfg.internal;
-  helpers = systemdCfg.helpers;
+  cfg = config.bootloaderConfig;
+  helpers = cfg.helpers;
 
   # Generate systemd-boot entries
   generateSystemdEntry = entry: let
@@ -84,7 +83,7 @@ let
     ''}
   '';
 
-in {
+in lib.mkIf (cfg.primary.type == "systemd-boot") {
   # Enable systemd-boot
   boot.loader = {
     grub.enable = false;

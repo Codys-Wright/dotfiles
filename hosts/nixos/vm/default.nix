@@ -107,7 +107,7 @@
       command = "${pkgs.greetd.tuigreet}/bin/tuigreet --asterisks --time --time-format '%I:%M %p | %a • %h | %F' --cmd startplasma-wayland";
       user = "cody";
     };
-    
+
     initial_session = {
       command = "startplasma-wayland";
       user = "cody";
@@ -120,7 +120,7 @@
 
   # Enable proper Wayland support for KDE Plasma
   services.desktopManager.plasma6.enableQt5Integration = true;
-  
+
   # XDG portals for Wayland
   xdg.portal = {
     enable = true;
@@ -135,11 +135,11 @@
     # KDE Wayland
     QT_QPA_PLATFORM = "wayland;xcb";
     QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-    
+
     # General Wayland
     MOZ_ENABLE_WAYLAND = "1";
     NIXOS_OZONE_WL = "1";
-    
+
     # XDG
     XDG_SESSION_TYPE = "wayland";
     XDG_CURRENT_DESKTOP = "KDE";

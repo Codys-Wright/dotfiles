@@ -27,13 +27,13 @@
       # Enable chained Minecraft theme system!
       chainedTheme = {
         enable = true;
-        mainTheme = "minegrub";                    # Minecraft main menu for first screen
-        submenuTheme = "minegrub-world-sel";       # Minecraft world selection for boot options
+        mainTheme = "minegrub";                        # Minecraft main menu for first screen
+        submenuTheme = "minegrub-world-selection";     # Minecraft world selection for boot options
         mainMenuEntries = [
           "Singleplayer"              # Main NixOS boot option
-          "Multiplayer"               # Could be used for network boot
-          "Minecraft Realms"          # Advanced options/recovery
-          "Options"                   # Settings and firmware
+          "Multiplayer"               # Alternative boot entry  
+          "Minecraft Realms"          # Advanced options submenu
+          "Options"                   # Settings/firmware access
         ];
       };
     };

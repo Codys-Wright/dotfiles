@@ -1,0 +1,52 @@
+# GRUB Default Theme Configuration
+# This is a basic theme for the Universal Bootloader System
+
+# Desktop settings
+desktop-image: "background.png"
+desktop-color: "#2E3440"
+
+# Terminal settings
+terminal-font: "DejaVu Sans Mono 12"
+terminal-box: "terminal_box_*.png"
+
+# Title settings
+title-font: "DejaVu Sans Bold 16"
+title-color: "#ECEFF4"
+title-text: ""
+
+# Menu settings
+menu-color-normal: "#D8DEE9"
+menu-color-highlight: "#88C0D0"
+menu-font: "DejaVu Sans 14"
+
+# Progress bar settings
+progress_bar_font: "DejaVu Sans 12"
+progress_bar_fg_color: "#88C0D0"
+progress_bar_bg_color: "#4C566A"
+
+# Boot menu settings
+boot_menu {
+  left = 20%
+  top = 20%
+  width = 60%
+  height = 60%
+  item_font = "DejaVu Sans 14"
+  item_color = "#D8DEE9"
+  selected_item_color = "#2E3440"
+  item_height = 24
+  item_padding = 5
+  item_spacing = 5
+  selected_item_pixmap_style = "select_*.png"
+}
+
+# Label for showing boot menu title
+label {
+  top = 10%
+  left = 0
+  width = 100%
+  height = 40
+  align = "center"
+  color = "#ECEFF4"
+  font = "DejaVu Sans Bold 18"
+  text = "Universal Bootloader System"
+}

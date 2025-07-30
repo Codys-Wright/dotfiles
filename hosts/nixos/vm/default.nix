@@ -39,7 +39,12 @@
       #
       # ========== Bootloader ==========
       #
-      "modules/common/optional/bootloaders" # Universal Bootloader System
+      "modules/hosts/nixos/bootloaders" # Universal Bootloader System
+
+      #
+      # ========== Display Managers ==========
+      #
+      "modules/hosts/nixos/display-managers" # SDDM and other display managers
 
       #
       # ========== Optional Configs ==========
@@ -73,10 +78,20 @@
         "audio/music/production" # Professional music production tools
         "gaming" # Steam, GameMode, gaming tools
         "virtualization" # Docker, Podman, libvirt tools
-        "wm/kdePlasma" # KDE Plasma only (not Hyprland)
+        "wm/kdePlasma" # KDE Plasma only (not Hyprland) - now in modules/hosts/nixos/wm
       ];
     })
   ];
+
+  # ========== Display Manager Configuration ==========
+  #
+  custom.displayManagers = {
+    enable = true;
+    sddm = {
+      enable = true;
+      theme = "astronaut";
+    };
+  };
 
   # ========== Host Specification ==========
   #
@@ -101,22 +116,25 @@
     };
   };
 
-  # Override greetd to use KDE Plasma instead of Hyprland
-  services.greetd.settings = {
-    default_session = {
-      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --asterisks --time --time-format '%I:%M %p | %a • %h | %F' --cmd startplasma-wayland";
-      user = "cody";
-    };
+  # SDDM is now configured through custom.displayManagers
+  # Disable greetd since we're using SDDM with astronaut theme
+  # services.greetd.settings = {
+  #   default_session = {
+  #     command = "${pkgs.greetd.tuigreet}/bin/tuigreet --asterisks --time --time-format '%I:%M %p | %a • %h | %F' --cmd startplasma-wayland";
+  #     user = "cody";
+  #   };
+  #
+  #   initial_session = {
+  #     command = "startplasma-wayland";
+  #     user = "cody";
+  #   };
+  # };
 
-    initial_session = {
-      command = "startplasma-wayland";
-      user = "cody";
-    };
+  # Auto-login configuration
+  services.displayManager.autoLogin = {
+    enable = true;
+    user = "cody";
   };
-
-  # Disable SDDM from KDE module (conflicts with greetd)
-  services.displayManager.sddm.enable = lib.mkForce false;
-  services.displayManager.autoLogin.enable = lib.mkForce false;
 
   # Enable proper Wayland support for KDE Plasma
   services.desktopManager.plasma6.enableQt5Integration = true;

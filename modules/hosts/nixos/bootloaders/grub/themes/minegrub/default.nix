@@ -8,13 +8,13 @@
 
 pkgs.stdenv.mkDerivation {
   pname = "minegrub-grub-theme";
-  version = "3.1.0";
+  version = "latest";
 
   src = pkgs.fetchFromGitHub {
     owner = "Lxtharia";
     repo = "minegrub-theme";
-    rev = "v3.1.0";
-    hash = "sha256-+7b0jXVVAyIAtYKeZZONZv2qzfESjwITSng1TVjyAfQ=";
+    rev = "040b163268be6e7cf743ba990177525dc47ed944";
+    hash = "sha256-bcWxBAAvf5hp0TmMbYrwU4SlBxc5sB/T2VsIBdX1gDk=";
   };
 
   installPhase = ''

@@ -9,6 +9,10 @@
     subPath:
     lib.path.append ../. "modules/common/optional${if subPath != "" then "/${subPath}" else ""}";
 
+  # use path relative to modules/hosts/nixos (for NixOS-specific modules)
+  relativeToNixOsModules =
+    subPath: lib.path.append ../. "modules/hosts/nixos${if subPath != "" then "/${subPath}" else ""}";
+
   scanPaths =
     path:
     builtins.map (f: (path + "/${f}")) (

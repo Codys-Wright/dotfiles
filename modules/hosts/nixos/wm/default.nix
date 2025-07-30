@@ -11,7 +11,7 @@ lib.custom.mkUnifiedModule {
   systemConfig = {
     # Import all window manager system configurations
     imports = lib.custom.importSystemModules {
-      path = lib.custom.relativeToOptionalModules "wm";
+      path = lib.custom.relativeToNixOsModules "wm";
       modules = [
         "hyprland"
         "kdePlasma"
@@ -50,7 +50,7 @@ lib.custom.mkUnifiedModule {
   userConfig = {
     # Import all window manager user configurations
     imports = lib.custom.importUserModules {
-      path = lib.custom.relativeToOptionalModules "wm";
+      path = lib.custom.relativeToNixOsModules "wm";
       modules = [
         "hyprland"
         "kdePlasma"

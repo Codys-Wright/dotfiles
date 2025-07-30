@@ -19,21 +19,21 @@
 
     # Primary bootloader configuration - GRUB works well in VMs
     primary = {
-      type = "grub";                    # GRUB for maximum VM compatibility
-      theme = null;                     # Disabled when using chained themes
-      customName = "NixOS VM";          # Clear identification
-      timeout = 8;                      # Reasonable timeout for development
+      type = "grub"; # GRUB for maximum VM compatibility
+      theme = null; # Disabled when using chained themes
+      customName = "NixOS VM"; # Clear identification
+      timeout = 8; # Reasonable timeout for development
 
       # Enable chained Minecraft theme system!
       chainedTheme = {
         enable = true;
-        mainTheme = "minegrub";                        # Minecraft main menu for first screen
-        submenuTheme = "minegrub-world-selection";     # Minecraft world selection for boot options
+        mainTheme = "minegrub"; # Minecraft main menu for first screen (mainmenu.cfg)
+        submenuTheme = "minegrub-world-selection"; # Minecraft world selection for main GRUB (grub.cfg)
         mainMenuEntries = [
-          "Singleplayer"              # Main NixOS boot option
-          "Multiplayer"               # Alternative boot entry
-          "Minecraft Realms"          # Advanced options submenu
-          "Options"                   # Settings/firmware access
+          "Singleplayer" # Main NixOS boot option
+          "Multiplayer" # Alternative boot entry
+          "Minecraft Realms" # Advanced options submenu
+          "Options" # Settings/firmware access
         ];
       };
     };

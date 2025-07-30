@@ -8,13 +8,13 @@
 
 pkgs.stdenv.mkDerivation {
   pname = "minegrub-world-selection-grub-theme";
-  version = "1.0.0";
+  version = "latest";
 
   src = pkgs.fetchFromGitHub {
     owner = "Lxtharia";
     repo = "minegrub-world-sel-theme";
-    rev = "v1.0.0";
-    hash = "sha256-rsnmjQH+/luj+erDK4HjzRwpVnorV9Eh7tdA7FeIbpw=";
+    rev = "3e0f8fff8340c996991841a36d52e37d1cdb54a3";
+    hash = "sha256-D9D64eCXbSv2VwDzl0y6uE6liUzKSl6DRs4VG/TnkSc=";
   };
 
   installPhase = ''

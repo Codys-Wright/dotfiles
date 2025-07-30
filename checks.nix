@@ -58,17 +58,7 @@
 
       # ========== nix ==========
       nixfmt-rfc-style.enable = false; # Disabled due to formatting conflicts
-      deadnix = {
-        enable = false; # Disable deadnix - too noisy with auto-generated files
-        args = [
-          "--exclude"
-          "hardware-configuration.nix"
-          "--no-lambda-arg" # Don't check for unused lambda arguments
-        ];
-        settings = {
-          # noLambdaArg = false; # Allow unused lambda patterns for now
-        };
-      };
+      deadnix.enable = false; # Disable deadnix - too noisy with auto-generated files
 
       # ========== shellscripts ==========
       shfmt.enable = true;

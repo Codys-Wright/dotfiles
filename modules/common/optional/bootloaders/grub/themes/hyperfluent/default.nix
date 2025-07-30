@@ -20,19 +20,15 @@ pkgs.stdenv.mkDerivation {
   installPhase = ''
     # Create output directory
     mkdir -p $out
-
+    
     # Copy the nixos theme files to output
     cp -r $src/nixos/* $out/
-
+    
     # Ensure theme.txt exists and is properly formatted
     if [ ! -f $out/theme.txt ]; then
       echo "Error: theme.txt not found in HyperFluent theme"
       exit 1
     fi
-
-    # Set proper permissions
-    chmod -R 644 $out/*
-    find $out -type d -exec chmod 755 {} \;
   '';
 
   meta = with pkgs.lib; {

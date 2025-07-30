@@ -43,19 +43,27 @@
         priority = 20;
         submenu = {
           bootloader = "grub"; # GRUB for all menus
-          theme = "default"; # Default theme as requested
+          theme = "hyperfluent"; # Use same theme
           entries = [ ]; # Auto-populated with generations
         };
       }
 
-      # Advanced Options submenu - demonstrates hierarchical menu
+      # VM-specific: Direct access to UEFI firmware
       {
-        name = "Advanced Options";
-        type = "submenu";
+        name = "BIOS/Firmware Settings";
+        type = "firmware";
         priority = 30;
+        visible = true;
+      }
+
+      # Other options submenu - contains all additional tools
+      {
+        name = "Other";
+        type = "submenu";
+        priority = 40;
         submenu = {
           bootloader = "grub"; # GRUB for all menus
-          theme = "default"; # Default theme as requested
+          theme = "hyperfluent"; # Use same theme
           entries = [
             # Recovery options for development
             {
@@ -74,21 +82,13 @@
           ];
         };
       }
-
-      # VM-specific: Direct access to UEFI firmware (useful for VM testing)
-      {
-        name = "VM Firmware Settings";
-        type = "firmware";
-        priority = 40;
-        visible = true;
-      }
     ];
 
     # Advanced features - good for development VM
     features = {
       chainloading = true; # Enable for testing different bootloader configs
-      memtest = true; # Memory testing (useful for VM debugging)
-      recovery = true; # Recovery options for development
+      memtest = false; # Disabled - handled manually in "Other" submenu
+      recovery = false; # Disabled - handled manually in "Other" submenu
 
       generationsMenu = {
         enable = true; # Essential for NixOS development

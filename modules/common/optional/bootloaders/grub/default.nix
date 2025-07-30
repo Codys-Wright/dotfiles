@@ -145,7 +145,6 @@ lib.mkIf (cfg.primary.type == "grub") {
   boot.loader = {
     grub = {
       enable = true;
-      version = 2;
       device = "nodev"; # For UEFI systems
       efiSupport = true;
       useOSProber = true; # Detect other operating systems
@@ -155,9 +154,6 @@ lib.mkIf (cfg.primary.type == "grub") {
 
       # Theme support - auto-detects package themes vs static themes
       theme = lib.mkIf (cfg.primary.theme != null) (getTheme cfg.primary.theme);
-
-      # Timeout configuration
-      timeout = cfg.primary.timeout;
 
       # Custom NixOS name
       configurationName = cfg.primary.customName;
@@ -185,7 +181,7 @@ lib.mkIf (cfg.primary.type == "grub") {
       efiSysMountPoint = "/boot";
     };
 
-    # Timeout for systemd-boot (fallback)
+    # Timeout configuration (moved from grub.timeout)
     timeout = cfg.primary.timeout;
   };
 

@@ -100,6 +100,25 @@
     };
   };
 
+  # Enable auto-login for VM (development convenience)
+  autoLogin = {
+    enable = true;
+    username = "cody"; # Use the primary user
+  };
+
+  # Override greetd to use KDE Plasma instead of Hyprland
+  services.greetd.settings = {
+    default_session = {
+      command = "${pkgs.greetd.tuigreet}/bin/tuigreet --asterisks --time --time-format '%I:%M %p | %a • %h | %F' --cmd startplasma-wayland";
+      user = "cody";
+    };
+    
+    initial_session = {
+      command = "startplasma-wayland";
+      user = "cody";
+    };
+  };
+
   # KDE Plasma configuration is now handled by the unified wm/kdePlasma module
 
   # System packages are now handled by unified modules

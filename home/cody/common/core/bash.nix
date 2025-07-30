@@ -1,17 +1,18 @@
+{ lib, ... }:
 {
   programs.bash = {
     enable = true;
     enableCompletion = true;
     shellAliases = {
-      ll = "ls -alF";
-      la = "ls -A";
-      l = "ls -CF";
-      vi = "nvim";
-      vim = "nvim";
+      ll = lib.mkDefault "ls -alF";
+      la = lib.mkDefault "ls -A";
+      l = lib.mkDefault "ls -CF";
+      vi = lib.mkDefault "nvim";
+      vim = lib.mkDefault "nvim";
 
       # Add an "alert" alias for long running commands.  Use like so:
       #   sleep 10; alert
-      alert = "notify-send --urgency=low -i \"$([ $? = 0 ] && echo terminal || echo error)\" \"$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')\"";
+      alert = lib.mkDefault "notify-send --urgency=low -i \"$([ $? = 0 ] && echo terminal || echo error)\" \"$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')\"";
     };
 
     initExtra = ''

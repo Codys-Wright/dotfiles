@@ -48,8 +48,8 @@ in
       SHELL = "zsh";
       # TERM is set by specific modules (e.g., coding module sets "xterm-256color")
       TERMINAL = "kitty"; # Terminal emulator to use
-      VISUAL = "nvim";
-      EDITOR = "nvim";
+      VISUAL = lib.mkOptionDefault "nvim"; # Lower priority, can be overridden by development modules
+      EDITOR = lib.mkDefault "nvim";
       MANPAGER = "batman"; # see ./cli/bat.nix
     };
     preferXdgDirectories = true; # whether to make programs use XDG directories whenever supported

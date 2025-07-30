@@ -79,8 +79,8 @@ in
       save.directory = "${config.home.homeDirectory}/sync/obsidian-vault-01/wiki";
 
       log.showSignature = "true";
-      init.defaultBranch = "main";
-      pull.rebase = "true";
+      init.defaultBranch = lib.mkDefault "main";
+      pull.rebase = lib.mkDefault true; # Use boolean instead of string for consistency
 
       # Don't warn on empty git add calls. Because of "git re-commit" automation
       advice.addEmptyPathspec = false;

@@ -57,9 +57,9 @@
         );
       in
       {
-        core.pager = "delta";
+        # core.pager is automatically set by delta.enable = true
         delta = {
-          enable = true;
+          enable = lib.mkDefault true; # Can be overridden by development modules
           features = [
             "side-by-side"
             "line-numbers"

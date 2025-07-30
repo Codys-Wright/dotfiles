@@ -38,8 +38,8 @@ lib.custom.mkUnifiedModule {
 
     # Configure default editor
     home.sessionVariables = {
-      EDITOR = "nvim";
-      VISUAL = "code-cursor";
+      EDITOR = lib.mkDefault "nvim";
+      # VISUAL is set in coding/default.nix
     };
 
     # Git configuration for code editors

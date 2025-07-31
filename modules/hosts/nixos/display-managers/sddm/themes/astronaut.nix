@@ -51,7 +51,7 @@ in
   config = mkIf (displayManagerCfg.enable && cfg.enable && cfg.theme == "astronaut") {
     # Set the SDDM theme to the astronaut theme
     services.displayManager.sddm.theme = "sddm-astronaut-theme";
-    
+
     # Add required Qt multimedia components for the astronaut theme
     environment.systemPackages = with pkgs; [
       pkgs.unstable.kdePackages.qtmultimedia

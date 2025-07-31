@@ -63,7 +63,7 @@ in
       # Essential Wayland packages
       (if cfg.unstable then pkgs.unstable.wayland else wayland)
       (if cfg.unstable then pkgs.unstable.wayland-utils else wayland-utils)
-      
+
       # Desktop-specific packages
       (lib.mkIf (cfg.desktop == "plasma") (
         if cfg.unstable then pkgs.unstable.kdePackages.plasma-wayland-protocols else kdePackages.plasma-wayland-protocols
@@ -79,4 +79,4 @@ in
       };
     };
   };
-} 
+}

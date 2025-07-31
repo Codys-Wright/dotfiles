@@ -13,6 +13,7 @@ lib.custom.mkUnifiedModule {
     # Enable KDE Plasma 6 desktop environment
     services = {
       desktopManager.plasma6.enable = true;
+      desktopManager.plasma6.package = pkgs.unstable.kdePackages.plasma-desktop;
 
       # SDDM display manager configuration
       displayManager = {
@@ -46,20 +47,20 @@ lib.custom.mkUnifiedModule {
     # Essential KDE system packages
     environment.systemPackages = with pkgs; [
       # KDE Core Applications
-      kdePackages.discover # Software center
-      kdePackages.kcalc # Calculator
-      kdePackages.kcharselect # Character selector
-      kdePackages.kcolorchooser # Color picker
-      kdePackages.kate # Text editor
-      kdePackages.konsole # Terminal
-      kdePackages.dolphin # File manager
-      kdePackages.gwenview # Image viewer
-      kdePackages.spectacle # Screenshot tool
+      pkgs.unstable.kdePackages.discover # Software center
+      pkgs.unstable.kdePackages.kcalc # Calculator
+      pkgs.unstable.kdePackages.kcharselect # Character selector
+      pkgs.unstable.kdePackages.kcolorchooser # Color picker
+      pkgs.unstable.kdePackages.kate # Text editor
+      pkgs.unstable.kdePackages.konsole # Terminal
+      pkgs.unstable.kdePackages.dolphin # File manager
+      pkgs.unstable.kdePackages.gwenview # Image viewer
+      pkgs.unstable.kdePackages.spectacle # Screenshot tool
 
       # KDE System Tools
-      kdePackages.systemsettings # System settings
-      kdePackages.sddm-kcm # SDDM configuration module
-      kdePackages.plasma-systemmonitor # System monitor
+      pkgs.unstable.kdePackages.systemsettings # System settings
+      pkgs.unstable.kdePackages.sddm-kcm # SDDM configuration module
+      pkgs.unstable.kdePackages.plasma-systemmonitor # System monitor
 
       # Development Tools
       kdiff3 # Diff tool
@@ -85,25 +86,25 @@ lib.custom.mkUnifiedModule {
     # User-level KDE packages
     home.packages = with pkgs; [
       # Additional KDE applications
-      kdePackages.okular # Document viewer
-      kdePackages.ark # Archive manager
-      kdePackages.filelight # Disk usage analyzer
-      kdePackages.krdc # Remote desktop client
-      kdePackages.krfb # Desktop sharing
+      pkgs.unstable.kdePackages.okular # Document viewer
+      pkgs.unstable.kdePackages.ark # Archive manager
+      pkgs.unstable.kdePackages.filelight # Disk usage analyzer
+      pkgs.unstable.kdePackages.krdc # Remote desktop client
+      pkgs.unstable.kdePackages.krfb # Desktop sharing
 
       # Multimedia
-      kdePackages.elisa # Music player
+      pkgs.unstable.kdePackages.elisa # Music player
       # kdePackages.kamoso # Camera application - disabled due to being broken
 
       # Productivity
-      kdePackages.korganizer # Calendar/organizer
-      kdePackages.kontact # PIM suite
+      pkgs.unstable.kdePackages.korganizer # Calendar/organizer
+      pkgs.unstable.kdePackages.kontact # PIM suite
 
       # Graphics
-      kdePackages.kolourpaint # Paint program
+      pkgs.unstable.kdePackages.kolourpaint # Paint program
 
       # Network
-      kdePackages.kget # Download manager
+      pkgs.unstable.kdePackages.kget # Download manager
     ];
 
     # KDE-specific configurations

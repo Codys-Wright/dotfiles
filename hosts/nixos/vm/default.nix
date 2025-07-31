@@ -41,10 +41,11 @@
       #
       "modules/hosts/nixos/bootloaders" # Universal Bootloader System
 
-      #
-      # ========== Display Managers ==========
-      #
-      "modules/hosts/nixos/display-managers" # SDDM and other display managers
+          #
+    # ========== Display Managers ==========
+    #
+    "modules/hosts/nixos/display-managers" # SDDM and other display managers
+    "modules/hosts/nixos/display-protocol" # Wayland/X11 protocol configuration
 
       #
       # ========== Optional Configs ==========
@@ -104,6 +105,15 @@
     };
   };
 
+  # ========== Display Protocol Configuration ==========
+  #
+  custom.displayProtocol = {
+    enable = true;
+    type = "wayland";
+    desktop = "plasma";
+    unstable = true;
+  };
+
   # ========== Host Specification ==========
   #
   hostSpec = {
@@ -149,37 +159,6 @@
 
   # Enable proper Wayland support for KDE Plasma
   services.desktopManager.plasma6.enableQt5Integration = true;
-
-  # XDG portals for Wayland
-  xdg.portal = {
-    enable = true;
-    extraPortals = with pkgs; [
-      kdePackages.xdg-desktop-portal-kde
-      xdg-desktop-portal-gtk
-    ];
-  };
-
-  # Environment variables for KDE Plasma Wayland
-  environment.sessionVariables = {
-    # KDE Wayland
-    QT_QPA_PLATFORM = "wayland;xcb";
-    QT_WAYLAND_DISABLE_WINDOWDECORATION = "1";
-
-    # General Wayland
-    MOZ_ENABLE_WAYLAND = "1";
-    NIXOS_OZONE_WL = "1";
-
-    # XDG
-    XDG_SESSION_TYPE = "wayland";
-    XDG_CURRENT_DESKTOP = "KDE";
-  };
-
-  # Ensure necessary packages for Wayland
-  environment.systemPackages = with pkgs; [
-    kdePackages.plasma-wayland-protocols
-    wayland
-    wayland-utils
-  ];
 
   # KDE Plasma configuration is now handled by the unified wm/kdePlasma module
 

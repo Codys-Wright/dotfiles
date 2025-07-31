@@ -13,16 +13,6 @@ lib.custom.mkUnifiedModule {
     # Enable KDE Plasma 6 desktop environment
     services = {
       desktopManager.plasma6.enable = true;
-      desktopManager.plasma6.package = pkgs.unstable.kdePackages.plasma-desktop;
-
-      # SDDM display manager configuration
-      displayManager = {
-        sddm.enable = true;
-        autoLogin = {
-          enable = true;
-          user = config.hostSpec.primaryUser;
-        };
-      };
 
       # XRDP for remote desktop access
       xrdp = {
@@ -31,7 +21,7 @@ lib.custom.mkUnifiedModule {
         openFirewall = true;
       };
 
-      # X11 server configuration
+      # X11 server configuration (enabled for XWayland support)
       xserver = {
         enable = true;
         xkb = {

@@ -56,6 +56,11 @@ in
       # XDG
       XDG_SESSION_TYPE = "wayland";
       XDG_CURRENT_DESKTOP = lib.mkIf (cfg.desktop == "plasma") "KDE";
+
+      # Additional Wayland compatibility
+      GDK_BACKEND = "wayland";
+      SDL_VIDEODRIVER = "wayland";
+      CLUTTER_BACKEND = "wayland";
     };
 
     # System packages based on session type and desktop

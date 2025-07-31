@@ -20,9 +20,17 @@ in
     services.displayManager.sddm = {
       enable = true;
       wayland.enable = true;
-      package = pkgs.unstable.sddm;
       # Theme configuration is handled by individual theme modules
     };
+
+    # Auto-login configuration
+    services.displayManager.autoLogin = {
+      enable = true;
+      user = config.hostSpec.primaryUser;
+    };
+
+    # Set default session for auto-login
+    services.displayManager.defaultSession = "plasma";
 
     # Enable theme packages based on selection
     environment.systemPackages = mkIf (cfg.theme == "astronaut") [

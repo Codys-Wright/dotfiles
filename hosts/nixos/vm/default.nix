@@ -50,16 +50,7 @@
       #
       # ========== Optional Configs ==========
       #
-      "hosts/common/optional/services/openssh.nix"
-      # greetd is provided by the Hyprland module
-      "hosts/common/optional/services/openssh.nix" # allow remote SSH access
-      "hosts/common/optional/services/printing.nix" # CUPS
-      "hosts/common/optional/audio.nix" # pipewire and cli controls
-      # libvirt is provided by the virtualization unified module
-      "hosts/common/optional/scanning.nix" # SANE and simple-scan
-      "hosts/common/optional/thunar.nix" # file manager
-      "hosts/common/optional/vlc.nix" # media player
-      "hosts/common/optional/wayland.nix" # wayland components and pkgs not available in home-manager
+
 
     ])
 
@@ -151,11 +142,7 @@
   #   };
   # };
 
-  # Auto-login configuration
-  services.displayManager.autoLogin = {
-    enable = true;
-    user = "cody";
-  };
+  # Auto-login is configured in the KDE Plasma module
 
   # Enable proper Wayland support for KDE Plasma
   services.desktopManager.plasma6.enableQt5Integration = true;

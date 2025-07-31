@@ -2,13 +2,13 @@
 {
   imports = [
     common/core
-    common/optional/browsers
-    common/optional/comms
-    common/optional/desktops
-    common/optional/development
-    common/optional/helper-scripts
-    common/optional/media
-    common/optional/tools
+    # common/optional/browsers
+    # common/optional/comms
+    # common/optional/desktops
+    # common/optional/development
+    # common/optional/helper-scripts
+    # common/optional/media
+    # common/optional/tools
   ]
   ++ lib.custom.importUserModules {
     path = lib.custom.relativeToOptionalModules "";

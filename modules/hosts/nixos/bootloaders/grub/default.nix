@@ -343,6 +343,8 @@ lib.mkIf (cfg.primary.type == "grub") {
 
       # Modify the generated grub.cfg to rename the submenu and set up chained theme
       extraInstallCommands = ''
+        # Ensure coreutils is available for cp command
+        export PATH="${pkgs.coreutils}/bin:$PATH"
         # Replace "All configurations" with "Generations" in the submenu title
         if [ -f /boot/grub/grub.cfg ]; then
           ${pkgs.gnused}/bin/sed -i 's/submenu "NixOS - All configurations"/submenu "NixOS - Generations"/g' /boot/grub/grub.cfg || true
@@ -354,7 +356,7 @@ lib.mkIf (cfg.primary.type == "grub") {
 
           # Copy mainmenu.cfg if it doesn't exist
           if [ -f "${mainMenuConfigFile}" ] && [ ! -f /boot/grub/mainmenu.cfg ]; then
-            cp "${mainMenuConfigFile}" /boot/grub/mainmenu.cfg
+            ${pkgs.coreutils}/bin/cp "${mainMenuConfigFile}" /boot/grub/mainmenu.cfg
             echo "Installed mainmenu.cfg"
           fi
 
